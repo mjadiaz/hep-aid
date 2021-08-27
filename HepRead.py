@@ -64,10 +64,12 @@ class Block:
 
 
 class LesHouches:
-    def __init__(self, file_dir):
+    def __init__(self, file_dir, work_dir, model):
         self.file_dir = file_dir
         self._blocks = LesHouches.read_leshouches(file_dir)
         self.block_list = [name.block_name for name in self._blocks]
+        self.work_dir = work_dir
+        self.model = model
     
     #@property
     #def block_list(self):
@@ -132,17 +134,19 @@ class LesHouches:
                     #LesHouches.find_block(in_block,block_list).block_body.append()
         return block_list
 
-    def new_file(self, new_file_name, new_file_dir=None):
+    #def new_file(self, new_file_name, new_file_dir=None):
+    def new_file(self, new_file_name):
         '''
         Writes a new LesHouches file with the blocks defined in the instance. \n
         Possibly with new values for the parameters and options.
         '''
-        if new_file_dir == None:
-            file_dir = new_file_name            
-        else:
-            if not(os.path.exists(new_file_dir)):
-                os.makedirs(new_file_dir)
-            file_dir=os.path.join(new_file_dir,new_file_name)
+        new_file_dir = os.path.join(self.work_dir, 'SPheno'+self.model+'_input')
+        #if new_file_dir == None:
+        #    file_dir = new_file_name            
+        #else:
+        if not(os.path.exists(new_file_dir)):
+            os.makedirs(new_file_dir)
+        file_dir=os.path.join(new_file_dir,new_file_name)
         print(f'Writing new LesHouches in :{file_dir}')
         
         with open(file_dir,'w+') as f:

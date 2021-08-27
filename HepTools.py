@@ -45,8 +45,9 @@ class Spheno:
         return models_in_dir
 
     #def run(self, in_file, out_file_name, out_dir=None):
-    def run(self, in_file, out_file_name):
+    def run(self, in_file_name, out_file_name):
         out_dir = os.path.join(self.work_dir, 'SPheno'+self._model+'_output')
+        in_file = os.path.join(self.work_dir, 'SPheno'+self._model+'_input',in_file_name)
 
         #if out_dir == None:
         #    file_dir = out_file_name            

@@ -31,7 +31,7 @@ class Block:
         '''
         Print block information in the LesHouches format.
         '''
-        print('{:6s} {:15s}  {:10s}'.format('Block',self.block_name,self.block_comment))
+        print('{} {}   {:10s}'.format('Block',self.block_name,self.block_comment))
         for b in self.block_body:
             print(b.line_format.format(*b.entries))
     
@@ -147,7 +147,7 @@ class LesHouches:
         
         with open(file_dir,'w+') as f:
             for block in self._blocks:
-                head = '{:6s} {:15s}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
+                head = '{} {}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
                 f.write(head)
                 for b in block.block_body:
                     f.write(b.line_format.format(*b.entries)+'\n')

@@ -45,7 +45,7 @@ class Spheno:
 
     def run(self, in_file, out_file):
        
-        run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, out_file], capture_output=True, text=True)        
+        run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, out_file], capture_output=True,  encoding='utf-8')        
         if 'Finished' in run.stdout:
             print(run.stdout)                
         else:

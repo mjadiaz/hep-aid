@@ -1,0 +1,14 @@
+import HepRead
+import HepTools
+
+
+spheno_dir = '/scratch/mjad1g20/HEP/SPHENO/SPheno-3.3.8'
+model = 'BLSSM'
+input_lhs = spheno_dir + '/LesHouches.in.BLSSM_low'
+
+
+SPhenoBLSSM = HepTools.Spheno(spheno_dir, model=model)
+lhs  = HepRead.LesHouches(input_lhs)
+
+
+

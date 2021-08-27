@@ -43,13 +43,22 @@ class Spheno:
                 models_in_dir.append(m)
         return models_in_dir
 
-    def run(self, in_file, out_file):
-       
-        run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, out_file], capture_output=True,  encoding='utf-8')        
+    def run(self, in_file, out_file_name, out_dir=None):
+
+        if out_dir == None:
+            file_dir = out_file_name            
+        else:
+            if not(os.path.exists(out_dir)):
+                os.makedirs(out_dir)
+            file_dir=os.path.join(out_dir,out_file_name)
+
+        print(f'Save {out_file_name} in :{file_dir}')
+        
+        run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
         if 'Finished' in run.stdout:
             print(run.stdout)                
         else:
-            print('Error, check this!')
+            print('Parameer Error, check this!')
 
     #def scan
 

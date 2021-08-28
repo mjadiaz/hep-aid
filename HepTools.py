@@ -67,9 +67,6 @@ class Spheno:
     #def scan
 
 
-# In[3]:
-
-
 class Scanner:
     
     
@@ -118,4 +115,4 @@ class Scanner:
         ar=np.random.uniform(min, max ,size = 1)        
         return ar[0]
 
-    
+

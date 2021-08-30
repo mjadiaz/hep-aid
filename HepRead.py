@@ -7,6 +7,8 @@ import numpy as np
 from tabulate import tabulate
 import os
 
+# Todo:
+# - Explain LesHouches.
 
 #########################################
 # Classes for reading LesHouches files. #
@@ -174,7 +176,7 @@ class LesHouches:
 class Particle():
     def __init__(self, pid, ufo_name=None, total_width=None, mass=None, comment=None, decays=None):
         self.pid = pid
-        self.ufo_name = ufo_name
+        self._ufo_name = ufo_name  # To link it with madgraph but maybe it is not necessary.
         self.total_width = total_width
         self.mass = mass
         self.comment = comment 
@@ -213,9 +215,16 @@ class Particle():
 
 
 class Slha:
-    def __init__(self, model_file, model_name):
+    '''
+    Read the given model file in SLHA format. It stores PID of all the particles of the models in .model_particles \n
+    in a list of tuples (PID, NAME) to have a sense of what particles are in the model. \n
+    The internal list _particles contain each particle saved as a Particle class so that we can use \n
+    all the internal methods and properties of this class, for example: 
+    - .particle('25').show() ---> It display all the information about the particle.
+    - .particle('25').mass    
+    '''
+    def __init__(self, model_file):
         self.model_file = model_file
-        self.model_name = model_name
         self._particles, self.model_particles = Slha.read_file(model_file)
     
     def read_file(model_file):
@@ -353,17 +362,23 @@ class MG5Script:
         
 
     def launch(self, name='pph1aa'):
-        output_dir = os.path.join(self.work_dir,name)
-        out = 'output {}'.format(output_dir)
+        launch_dir = os.path.join(self.work_dir,name)
+        out = 'launch {}'.format(launch_dir)
         self._launch = out
 
         
     def shower(self,shower='Pythia8'):
+        '''
+        Call .shower('OFF') to deactivate shower effects.
+        '''
         out ='shower={}'.format(shower)
         self._shower = out
  
          
     def detector(self,detector='Delphes'):
+        '''
+        Call .detector('OFF') to deactivate detector effects.
+        '''
         out ='detector={}'.format(detector)
         self._detector = out
 

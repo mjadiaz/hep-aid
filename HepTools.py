@@ -13,6 +13,15 @@ import HepRead
 
 
 class Spheno:
+    '''
+    ## Spheno class
+    -   Identifies what models are available in the work direction. \n 
+        and store all the models in .model_list  \n
+        
+    -   Call .run(in, out) to run Spheno with input and output files. \n
+        The output file will be stored in a folder called SPhenoModel_output \n
+        inside work_dir.  
+    '''
     def __init__(self, spheno_dir, work_dir, model=None, input_lhs=None):
         self._dir=spheno_dir
         self.model_list = Spheno._models_in_dir(self)
@@ -68,6 +77,13 @@ class Spheno:
 
 
 class Scanner:
+    '''
+    Class containing useful tools to do scans with SPheno and Madgraph.
+    Maybe it will a bunch of functions.
+    To do: 
+    - Implement general scanner function (for loops)
+    - How to store these functions Class or what...
+    '''
     
     
     def rlog_array(min, max, n_points, show=False):
@@ -116,3 +132,19 @@ class Scanner:
         return ar[0]
 
 
+class Madgraph:
+    '''
+    Basicaly just run madgraph with in the script mode with the scripts created \n
+    by the MG5Script class. \n
+    Todo:
+    - Figure out how to print some output from madgraph.
+    '''
+    def __init__(self, madgraph_dir, work_dir=None):
+        self._dir = madgraph_dir
+        self.work_dir = work_dir       
+    
+    def run(self, input_file):
+        '''
+        Enter input_file as the Script
+        '''
+        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), input_file])    

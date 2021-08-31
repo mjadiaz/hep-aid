@@ -1,11 +1,11 @@
 import re 
 import os
 
-import re
+
 import awkward as ak
 import numpy as np
 from tabulate import tabulate
-import os
+
 
 # Todo:
 # - Explain LesHouches.
@@ -16,11 +16,18 @@ import os
 #########################################
 
 class BlockLine:
+    '''## Line:
+        Each line can be of a different category:
+        - block_header
+        - on_off
+        - value
+        - matrix_value '''
     def __init__(self, entries, line_category):
         self.entries = entries
         self.line_category = line_category
         self.line_format = BlockLine.fline(line_category)
     def fline(cat):
+        ''' Text format of each line'''
         if cat == 'block_header':
             line_format = '{:6s} {:20s}  {:13s}'
         elif cat == 'on_off':
@@ -33,6 +40,12 @@ class BlockLine:
 
 
 class Block:
+    '''
+    ## Block
+    It holds each line of a block.\n
+    Call .show() to print a block. \n
+    Call .set(parameter_number, value) to change the parameter value in the instance.
+    '''
     def __init__(self, block_name, block_comment=None, category=None):
         self.block_name = block_name
         self.block_comment = block_comment
@@ -76,6 +89,13 @@ class Block:
 
 
 class LesHouches:
+    '''
+    ## LesHuches
+    Read a LesHouches file and stores each block in block classes. \n
+    - To get all the names of the blocks call .block_list. \n
+    - work_dir is the directory where all the outputs will be saved. \n
+    - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
+    '''
     def __init__(self, file_dir, work_dir, model):
         self.file_dir = file_dir
         self._blocks = LesHouches.read_leshouches(file_dir)
@@ -83,11 +103,6 @@ class LesHouches:
         self.work_dir = work_dir
         self.model = model
     
-    #@property
-    #def block_list(self):
-    #    print('Blocks in LesHouches file:')
-    #    return [name.block_name for name in self._blocks]
-
 
     def block(self, name):
         block = LesHouches.find_block(name.upper(), self._blocks)
@@ -143,19 +158,16 @@ class LesHouches:
                 m_body =  re.match(paterns['matrix_value'], line.strip())
                 if not(m_body == None):            
                     LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
-                    #LesHouches.find_block(in_block,block_list).block_body.append()
         return block_list
 
-    #def new_file(self, new_file_name, new_file_dir=None):
+  
     def new_file(self, new_file_name):
         '''
         Writes a new LesHouches file with the blocks defined in the instance. \n
         Possibly with new values for the parameters and options.
         '''
         new_file_dir = os.path.join(self.work_dir, 'SPheno'+self.model+'_input')
-        #if new_file_dir == None:
-        #    file_dir = new_file_name            
-        #else:
+
         if not(os.path.exists(new_file_dir)):
             os.makedirs(new_file_dir)
         file_dir=os.path.join(new_file_dir,new_file_name)
@@ -216,12 +228,17 @@ class Particle():
 
 class Slha:
     '''
+    ## Read SLHA
     Read the given model file in SLHA format. It stores PID of all the particles of the models in .model_particles \n
     in a list of tuples (PID, NAME) to have a sense of what particles are in the model. \n
     The internal list _particles contain each particle saved as a Particle class so that we can use \n
     all the internal methods and properties of this class, for example: 
     - .particle('25').show() ---> It display all the information about the particle.
     - .particle('25').mass    
+    \n
+    This class focuses on extracting information not writing the file because we always can \n
+    change the parameters inside madgraph by the command: set parameter = value.
+
     '''
     def __init__(self, model_file):
         self.model_file = model_file

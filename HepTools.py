@@ -21,13 +21,15 @@ class Spheno:
     -   Call .run(in, out) to run Spheno with input and output files. \n
         The output file will be stored in a folder called SPhenoModel_output \n
         inside work_dir.  
+    Todo:
+    - Figure out how to redirect the additional files that spheno creates in a run.
     '''
     def __init__(self, spheno_dir, work_dir, model=None, input_lhs=None):
         self._dir=spheno_dir
         self.model_list = Spheno._models_in_dir(self)
         self._model = Spheno._model_init(self, model)
         self.work_dir = work_dir
-        #self.lhs = Spheno._read_input_leshouches(input_lhs)
+  
 
     def _model_init(self, model):
         if model == None:
@@ -39,11 +41,7 @@ class Spheno:
             print(f'{model} model activated.')
             return model
 
-    #def _read_input_leshouches(input_lhs):
-    #    if input_lhs==None:
-    #        print('Insert the path for the Leshouches.in.Model file as input_lhs')
-    #    else:
-    #        return HepRead.LesHouches(input_lhs)
+
             
     def _models_in_dir(self):
         models_in_dir = []
@@ -53,14 +51,10 @@ class Spheno:
                 models_in_dir.append(m)
         return models_in_dir
 
-    #def run(self, in_file, out_file_name, out_dir=None):
     def run(self, in_file_name, out_file_name):
         out_dir = os.path.join(self.work_dir, 'SPheno'+self._model+'_output')
         in_file = os.path.join(self.work_dir, 'SPheno'+self._model+'_input',in_file_name)
 
-        #if out_dir == None:
-        #    file_dir = out_file_name            
-        #else:
         if not(os.path.exists(out_dir)):
             os.makedirs(out_dir)
         file_dir=os.path.join(out_dir,out_file_name)
@@ -73,7 +67,7 @@ class Spheno:
         else:
             print('Parameer Error, check this!')
 
-    #def scan
+
 
 
 class Scanner:

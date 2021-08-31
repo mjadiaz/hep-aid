@@ -6,3 +6,7 @@ BR*
 *.dat
 SPheno.out
 Messages.out
+.ipynb_checkpoints/BLSSM_scan-checkpoint.ipynb
+.ipynb_checkpoints/Untitled-checkpoint.ipynb
+.ipynb_checkpoints/cTSM_scan-checkpoint.ipynb
+py.py

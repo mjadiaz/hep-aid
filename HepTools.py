@@ -133,7 +133,7 @@ class Madgraph:
     Todo:
     - Figure out how to print some output from madgraph.
     '''
-    def __init__(self, madgraph_dir, work_dir=None):
+    def __init__(self, madgraph_dir, work_dir):
         self._dir = madgraph_dir
         self.work_dir = work_dir       
         self.input_file = 'MG5Script.txt'
@@ -141,4 +141,4 @@ class Madgraph:
         '''
         Enter input_file as the Script
         '''
-        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), self.input_file])    
+        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.join.path(self.work_dir,self.input_file)])    

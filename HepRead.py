@@ -449,6 +449,9 @@ class MG5Script:
                 elif isinstance(w,list):
                     [print(i) for i in w]
     def write(self):
+        '''
+        Write a new madgraph script as MG5Script.txt used internally by madgraph.
+        '''
         write = [self._import_model, self._define_multiparticles, self._process, self._add_process, self._output, self._launch, self._shower,
         self._detector, '0', self._param_card, self._delphes_card, self._set_parameters, '0']
         f = open(os.path.join(self.work_dir,'MG5Script.txt'),'w+')
@@ -459,4 +462,5 @@ class MG5Script:
                 elif isinstance(w,list):
                     [f.write(i+'\n') for i in w]
         f.close()
+        return 
         

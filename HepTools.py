@@ -136,9 +136,9 @@ class Madgraph:
     def __init__(self, madgraph_dir, work_dir=None):
         self._dir = madgraph_dir
         self.work_dir = work_dir       
-    
-    def run(self, input_file):
+        self.input_file = 'MG5Script.txt'
+    def run(self):
         '''
         Enter input_file as the Script
         '''
-        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), input_file])    
+        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), self.input_file])    

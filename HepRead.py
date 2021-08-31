@@ -98,6 +98,7 @@ class LesHouches:
     '''
     def __init__(self, file_dir, work_dir, model):
         self.file_dir = file_dir
+        print(f'Reading LesHouches from : {file_dir}')
         self._blocks = LesHouches.read_leshouches(file_dir)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir

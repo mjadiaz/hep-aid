@@ -3,3 +3,6 @@ __pycache__
 BLSSM_scan.py
 BLSSM_scan.ipynb
 cTSM_scan.ipynb
+BR*
+*.dat
+SPheno.out

@@ -141,4 +141,4 @@ class Madgraph:
         '''
         Enter input_file as the Script
         '''
-        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.join.path(self.work_dir,self.input_file)])    
+        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,self.input_file)])    

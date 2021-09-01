@@ -51,7 +51,8 @@ class Spheno:
                 models_in_dir.append(m)
         return models_in_dir
 
-    def run(self, in_file_name, out_file_name):
+    def run(self, in_file_name, out_file_name, mode='local'):
+        
         out_dir = os.path.join(self.work_dir, 'SPheno'+self._model+'_output')
         in_file = os.path.join(self.work_dir, 'SPheno'+self._model+'_input',in_file_name)
 
@@ -60,12 +61,14 @@ class Spheno:
         file_dir=os.path.join(out_dir,out_file_name)
 
         print(f'Save {out_file_name} in :{file_dir}')
-        
-        run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
-        if 'Finished' in run.stdout:
-            print(run.stdout)                
-        else:
-            print('Parameer Error, check this!')
+        if mode == 'local':
+            run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
+            if 'Finished' in run.stdout:
+                print(run.stdout)                
+            else:
+                print('Parameer Error, check this!')
+        elif mode == 'cluster':
+            print('Implement cluster mode')
 
 
 
@@ -136,9 +139,13 @@ class Madgraph:
     def __init__(self, madgraph_dir, work_dir):
         self._dir = madgraph_dir
         self.work_dir = work_dir       
-        self.input_file = 'MG5Script.txt'
-    def run(self):
+        
+    def run(self, input_file = 'MG5Script.txt', mode='local'):
         '''
-        Enter input_file as the Script
+        Run madgraph with an script named MG5Script.txt (created by the MG5Script class) in within work_dir. \n
+        Change input_file to change to another script within work_dir.
         '''
-        subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,self.input_file)])    
+        if mode == 'local':
+            subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,input_file)])    
+        elif mode == 'cluster':
+            print('Implement cluster mode.')

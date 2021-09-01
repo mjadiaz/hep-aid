@@ -1,9 +1,13 @@
 LesHouches.in.cTSM
 __pycache__
 BLSSM_scan.py
-BLSSM_scan.ipynb
 cTSM_scan.ipynb
 BR*
 *.dat
 SPheno.out
 Messages.out
+.ipynb_checkpoints/BLSSM_scan-checkpoint.ipynb
+.ipynb_checkpoints/Untitled-checkpoint.ipynb
+.ipynb_checkpoints/cTSM_scan-checkpoint.ipynb
+py.py
+ME5_debug

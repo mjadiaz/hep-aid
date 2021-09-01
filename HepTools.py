@@ -64,7 +64,8 @@ class Spheno:
         if mode == 'local':
             run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
             if 'Finished' in run.stdout:
-                print(run.stdout)                
+                print(run.stdout) 
+                return  out_dir            
             else:
                 print('Parameer Error, check this!')
         elif mode == 'cluster':

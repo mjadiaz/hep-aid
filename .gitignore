@@ -6,7 +6,7 @@ BR*
 *.dat
 SPheno.out
 Messages.out
-.ipynb_checkpoints
+./ipynb_checkpoints
 Untitled.ipynb
 py.py
 ME5_debug

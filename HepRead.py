@@ -1,14 +1,11 @@
 import re 
 import os
-
-
+from shutil import copy
 import awkward as ak
 import numpy as np
 from tabulate import tabulate
 
 
-# Todo:
-# - Explain LesHouches.
 
 #########################################
 # Classes for reading LesHouches files. #
@@ -505,7 +502,5 @@ class HiggsBoundsResults:
     def save(self, output_name,in_spheno_output = True):
         if in_spheno_output:
             copy(os.path.join(self.work_dir, 'HiggsBounds_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsBounds_results_'+str(output_name)+'.dat'))
-        pass
-        
-                
+        pass                
 

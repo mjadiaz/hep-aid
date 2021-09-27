@@ -1,4 +1,3 @@
-
 import os 
 import re
 import subprocess
@@ -67,7 +66,8 @@ class Spheno:
                 print(run.stdout) 
                 return  file_dir            
             else:
-                print('Parameer Error, check this!')
+                print('Parameters point error!')
+                print(run.stdout)
                 return None
         elif mode == 'cluster':
             print('Implement cluster mode')
@@ -151,13 +151,8 @@ class Madgraph:
             subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,input_file)])    
         elif mode == 'cluster':
             print('Implement cluster mode.')
-
+            
 class HiggsBounds:
-    '''
-    Initialize HiggsBounds. \n
-    To-do: \n
-    - find a way to add model and number of neutral/charged scalars automatically.
-    '''
     def __init__(self, higgs_bounds_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None):
         self._dir = higgs_bounds_dir
         self.work_dir = work_dir
@@ -178,3 +173,4 @@ class HiggsBounds:
             print('HiggsBound not finished!')
             print(run.stdout)
             return None
+

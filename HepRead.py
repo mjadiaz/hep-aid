@@ -464,3 +464,48 @@ class MG5Script:
         f.close()
         return 
         
+
+##########################################
+# Class for reading a HiggsBounds output #
+##########################################
+
+
+class HiggsBoundsResults:
+    def __init__(self, work_dir, model=None):
+        self.work_dir = work_dir
+        self.model = model
+    
+    def read(self, direct_path=None):
+        '''
+        Read HiggsBounds_results.dat and outputs a tuple with: \n
+        (HBresult, chan, obsratio, ncomb)
+        '''
+        if direct_path:
+            file_path = direct_path
+        else:
+            file_path = os.path.join(self.work_dir, 'HiggsBounds_results.dat')
+
+        with open(file_path , 'r') as f:
+            for line in f:
+                line = line.strip()
+                if ('HBresult' in line) & ('chan' in line):
+                    line = line.split()[1:]
+                    index_hbresult = line.index('HBresult')
+                    index_chan = line.index('chan')
+                    index_obsratio = line.index('obsratio')
+                    index_ncomb = line.index('ncomb')
+                    #print(line)
+                    _ = f.readline()
+                    for subline in f:
+                        subline = subline.split()
+                        #print(subline[index_hbresult],subline[index_chan],subline[index_obsratio],subline[index_ncomb])
+                        break
+        return (subline[index_hbresult],subline[index_chan],subline[index_obsratio],subline[index_ncomb])
+
+    def save(self, output_name,in_spheno_output = True):
+        if in_spheno_output:
+            copy(os.path.join(self.work_dir, 'HiggsBounds_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsBounds_results_'+str(output_name)+'.dat'))
+        pass
+        
+                
+

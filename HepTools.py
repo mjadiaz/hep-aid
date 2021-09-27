@@ -151,3 +151,30 @@ class Madgraph:
             subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,input_file)])    
         elif mode == 'cluster':
             print('Implement cluster mode.')
+
+class HiggsBounds:
+    '''
+    Initialize HiggsBounds. \n
+    To-do: \n
+    - find a way to add model and number of neutral/charged scalars automatically.
+    '''
+    def __init__(self, higgs_bounds_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None):
+        self._dir = higgs_bounds_dir
+        self.work_dir = work_dir
+        self.model = model
+        self.neutral_higgs = neutral_higgs
+        self.charged_higgs = charged_higgs
+           
+        
+    def run(self):
+        '''
+        Runs HiggsBounds with the last point calculated by SPheno. Returns the path for HiggsBounds_results.dat if SPheno and HiggsBounds succeed. If there is an Error in one them it returns None and prints the error output.
+        '''
+        run = subprocess.run([os.path.join(self._dir, 'HiggsBounds'), 'LandH', 'effC', str(self.neutral_higgs), str(self.charged_higgs), self.work_dir+'/'], capture_output=True,  text=True)        
+        if 'finished' in run.stdout:
+            print(run.stdout) 
+            return  os.path.join(self.work_dir, 'HiggsBounds_results.dat')            
+        else:
+            print('HiggsBound not finished!')
+            print(run.stdout)
+            return None

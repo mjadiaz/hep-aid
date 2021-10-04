@@ -6,11 +6,13 @@ Spheno.md
 pyproject.toml
 setup.cfg
 setup.py
+dist/hepaid-0.1.dev50+g5e9a2bc-py3-none-any.whl
+dist/hepaid-0.1.dev50+g5e9a2bc.tar.gz
 examples/BLSSM_scan.ipynb
-hepaid/HepRead.py
-hepaid/HepTools.py
 hepaid/__init__.py
 hepaid/_version.py
+hepaid/hepread.py
+hepaid/heptools.py
 hepaid.egg-info/PKG-INFO
 hepaid.egg-info/SOURCES.txt
 hepaid.egg-info/dependency_links.txt

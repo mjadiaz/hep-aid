@@ -1,2 +1,2 @@
 import setuptools
-setuptools.setup()
+setuptools.setup(packages=['HepTools', 'HepRead'])

@@ -103,7 +103,8 @@ class LesHouches:
         self.output_mode = output_mode
         if self.output_mode:
             print(f'Reading LesHouches from : {file_dir}')
-        self._blocks = LesHouches.read_leshouches(file_dir)
+
+        self._blocks = LesHouches.read_leshouches(self.file_dir)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model

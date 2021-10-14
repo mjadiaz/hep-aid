@@ -43,11 +43,12 @@ class Block:
     Call .show() to print a block. \n
     Call .set(parameter_number, value) to change the parameter value in the instance.
     '''
-    def __init__(self, block_name, block_comment=None, category=None):
+    def __init__(self, block_name, block_comment=None, category=None, output_mode=False):
         self.block_name = block_name
         self.block_comment = block_comment
         self.block_body = []
         self.category = category
+        self.output_mode = output_mode
 
     def show(self):
         '''
@@ -69,18 +70,22 @@ class Block:
             if (line.line_category == 'matrix_value'):
                 if (option == [int(line.entries[0]),int(line.entries[1])]):
                     line.entries[2] = '{:E}'.format(param_value)
-                    print('{} setted to : {}'.format(line.entries[-1], line.entries[1]))
+                    if self.output_mode:
+                        print('{} setted to : {}'.format(line.entries[-1], line.entries[1]))
                     break
             if (line.line_category == 'value') & (option == int(line.entries[0])):              
                 line.entries[1] = '{:E}'.format(param_value) 
-                print('{} setted to : {}'.format(line.entries[-1], line.entries[1])) 
+                if self.output_mode:
+                    print('{} setted to : {}'.format(line.entries[-1], line.entries[1])) 
                 break                  
             elif (line.line_category == 'on_off') & (option == int(line.entries[0])):
                 if isinstance(param_value, int):
                     line.entries[1] = '{}'.format(param_value)
-                    print('{} setted to : {}'.format(line.entries[-1], line.entries[1]))
+                    if self.output_mode:
+                        print('{} setted to : {}'.format(line.entries[-1], line.entries[1]))
                 else:
-                    print('param_value={} is not integer'.format(param_value))
+                    if self.output_mode:
+                        print('param_value={} is not integer'.format(param_value))
                 break
 
 
@@ -93,9 +98,11 @@ class LesHouches:
     - work_dir is the directory where all the outputs will be saved. \n
     - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
     '''
-    def __init__(self, file_dir, work_dir, model):
+    def __init__(self, file_dir, work_dir, model, output_mode=False):
         self.file_dir = file_dir
-        print(f'Reading LesHouches from : {file_dir}')
+        self.output_mode = output_mode
+        if self.output_mode:
+            print(f'Reading LesHouches from : {file_dir}')
         self._blocks = LesHouches.read_leshouches(file_dir)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
@@ -120,7 +127,7 @@ class LesHouches:
             except:
                 print('block not found')
 
-    def read_leshouches(file_dir):
+    def read_leshouches(self, file_dir):
         block_list = []
         paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
                             on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
@@ -138,13 +145,15 @@ class LesHouches:
                     if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
                         block_list.append(Block(    block_name=m_block.group('block_name'), 
                                                     block_comment=m_block.group('comment'),
-                                                    category= 'spheno_data' ))
+                                                    category= 'spheno_data' ,
+                                                    output_mode=self.output_mode))
                         in_block, block_from = m_block.group('block_name'), 'spheno_data'
 
                     else:
                         block_list.append(Block(        block_name=m_block.group('block_name'), 
                                                         block_comment=m_block.group('comment'),
-                                                        category= 'parameters_data'))
+                                                        category= 'parameters_data',
+                                                        output_mode=self.output_mode))
                         in_block, block_from = m_block.group('block_name'), 'parameters_data'
 
                 m_body =  re.match(paterns['on_off'], line.strip())
@@ -169,7 +178,8 @@ class LesHouches:
         if not(os.path.exists(new_file_dir)):
             os.makedirs(new_file_dir)
         file_dir=os.path.join(new_file_dir,new_file_name)
-        print(f'Writing new LesHouches in :{file_dir}')
+        if self.output_mode:
+            print(f'Writing new LesHouches in :{file_dir}')
         
         with open(file_dir,'w+') as f:
             for block in self._blocks:

@@ -20,11 +20,12 @@ class Spheno:
     Todo:
     - Figure out how to redirect the additional files that spheno creates in a run.
     '''
-    def __init__(self, spheno_dir, work_dir, model=None, input_lhs=None):
+    def __init__(self, spheno_dir, work_dir, model=None, input_lhs=None, output_mode=False):
         self._dir=spheno_dir
         self.model_list = Spheno._models_in_dir(self)
         self._model = Spheno._model_init(self, model)
         self.work_dir = work_dir
+        self.output_mode = output_mode
   
 
     def _model_init(self, model):
@@ -34,7 +35,8 @@ class Spheno:
             else:
                 return print('Define model. \nModels available: {}'.format(self.model_list))
         else:
-            print(f'{model} model activated.')
+            if self.output_mode:
+                print(f'{model} model activated.')
             return model
 
 
@@ -55,16 +57,18 @@ class Spheno:
         if not(os.path.exists(out_dir)):
             os.makedirs(out_dir)
         file_dir=os.path.join(out_dir,out_file_name)
-
-        print(f'Save {out_file_name} in :{file_dir}')
+        if self.output_mode:
+            print(f'Save {out_file_name} in :{file_dir}')
         if mode == 'local':
             run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
             if 'Finished' in run.stdout:
-                print(run.stdout) 
+                if self.output_mode:
+                    print(run.stdout) 
                 return  file_dir            
             else:
-                print('Parameters point error!')
-                print(run.stdout)
+                if self.output_mode:
+                    print('Parameters point error!')
+                    print(run.stdout)
                 return None
         elif mode == 'cluster':
             print('Implement cluster mode')
@@ -150,12 +154,13 @@ class Madgraph:
             print('Implement cluster mode.')
             
 class HiggsBounds:
-    def __init__(self, higgs_bounds_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None):
+    def __init__(self, higgs_bounds_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None, output_mode=False):
         self._dir = higgs_bounds_dir
         self.work_dir = work_dir
         self.model = model
         self.neutral_higgs = neutral_higgs
         self.charged_higgs = charged_higgs
+        self.output_mode = output_mode
            
         
     def run(self):
@@ -164,10 +169,12 @@ class HiggsBounds:
         '''
         run = subprocess.run([os.path.join(self._dir, 'HiggsBounds'), 'LandH', 'effC', str(self.neutral_higgs), str(self.charged_higgs), self.work_dir+'/'], capture_output=True,  text=True)        
         if 'finished' in run.stdout:
-            print(run.stdout) 
+            if self.output_mode:
+                print(run.stdout) 
             return  os.path.join(self.work_dir, 'HiggsBounds_results.dat')            
         else:
-            print('HiggsBound not finished!')
-            print(run.stdout)
+            if self.output_mode:
+                print('HiggsBound not finished!')
+                print(run.stdout)
             return None
 

@@ -23,8 +23,8 @@ class Spheno:
     def __init__(self, spheno_dir, work_dir, model=None, input_lhs=None, output_mode=False):
         self.output_mode = output_mode
         self._dir=spheno_dir
-        self.model_list = self._models_in_dir(self)
-        self._model = self._model_init(self, model)
+        self.model_list = Spheno._models_in_dir(self)
+        self._model = Spheno._model_init(self, model)
         self.work_dir = work_dir
   
 

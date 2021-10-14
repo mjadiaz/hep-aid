@@ -10,6 +10,8 @@ dist/hepaid-0.1.dev50+g5e9a2bc-py3-none-any.whl
 dist/hepaid-0.1.dev50+g5e9a2bc.tar.gz
 dist/hepaid-0.1.dev53+g3a6e749.d20211004-py3-none-any.whl
 dist/hepaid-0.1.dev53+g3a6e749.d20211004.tar.gz
+dist/hepaid-0.1.dev55+g6180d80.d20211014-py3-none-any.whl
+dist/hepaid-0.1.dev55+g6180d80.d20211014.tar.gz
 examples/BLSSM_scan.ipynb
 hepaid/__init__.py
 hepaid/_version.py

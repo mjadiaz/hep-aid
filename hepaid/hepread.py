@@ -104,7 +104,7 @@ class LesHouches:
         if self.output_mode:
             print(f'Reading LesHouches from : {file_dir}')
 
-        self._blocks = LesHouches.read_leshouches(self.file_dir)
+        self._blocks = LesHouches.read_leshouches(file_dir, output_mode)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
@@ -128,7 +128,7 @@ class LesHouches:
             except:
                 print('block not found')
 
-    def read_leshouches(self, file_dir):
+    def read_leshouches(file_dir, output_mode):
         block_list = []
         paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
                             on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
@@ -147,14 +147,14 @@ class LesHouches:
                         block_list.append(Block(    block_name=m_block.group('block_name'), 
                                                     block_comment=m_block.group('comment'),
                                                     category= 'spheno_data' ,
-                                                    output_mode=self.output_mode))
+                                                    output_mode=output_mode))
                         in_block, block_from = m_block.group('block_name'), 'spheno_data'
 
                     else:
                         block_list.append(Block(        block_name=m_block.group('block_name'), 
                                                         block_comment=m_block.group('comment'),
                                                         category= 'parameters_data',
-                                                        output_mode=self.output_mode))
+                                                        output_mode=output_mode))
                         in_block, block_from = m_block.group('block_name'), 'parameters_data'
 
                 m_body =  re.match(paterns['on_off'], line.strip())

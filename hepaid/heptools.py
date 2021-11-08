@@ -50,6 +50,8 @@ class Spheno:
         return models_in_dir
 
     def run(self, in_file_name, out_file_name, mode='local'):
+        CWD = os.getcwd()
+        os.chdir(self.work_dir)
         
         out_dir = os.path.join(self.work_dir, 'SPheno'+self._model+'_output')
         in_file = os.path.join(self.work_dir, 'SPheno'+self._model+'_input',in_file_name)
@@ -60,7 +62,8 @@ class Spheno:
         if self.output_mode:
             print(f'Save {out_file_name} in :{file_dir}')
         if mode == 'local':
-            run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)        
+            run = subprocess.run([self._dir+'/bin'+'/SPheno'+self._model, in_file, file_dir], capture_output=True,  text=True)
+            os.chdir(CWD)        
             if 'Finished' in run.stdout:
                 if self.output_mode:
                     print(run.stdout) 
@@ -178,3 +181,27 @@ class HiggsBounds:
                 print(run.stdout)
             return None
 
+class HiggsSignals:
+    def __init__(self, higgs_signals_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None, output_mode=False):
+        self._dir = higgs_signals_dir
+        self.work_dir = work_dir
+        self.model = model
+        self.neutral_higgs = neutral_higgs
+        self.charged_higgs = charged_higgs
+        self.output_mode = output_mode
+           
+        
+    def run(self):
+        '''
+        Runs HiggsSignals with the last point calculated by SPheno.
+        '''
+        run = subprocess.run([os.path.join(self._dir, 'HiggsSignals'), 'latestresults', '2', 'effC', str(self.neutral_higgs), str(self.charged_higgs), self.work_dir+'/'], capture_output=True,  text=True)        
+        if not('Error') in run.stdout:
+            if self.output_mode:
+                print(run.stdout) 
+            return  os.path.join(self.work_dir, 'HiggsSignals_results.dat')            
+        else:
+            if self.output_mode:
+                print('HiggsSignals Error')
+                print(run.stdout)
+            return None

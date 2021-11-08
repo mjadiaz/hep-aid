@@ -485,33 +485,75 @@ class HiggsBoundsResults:
     
     def read(self, direct_path=None):
         '''
-        Read HiggsBounds_results.dat and outputs a tuple with: \n
-        (HBresult, chan, obsratio, ncomb)
+        Read HiggsBounds_results.dat and outputs a dict with all the final results. For example for the BLSSM: \n
+        [n, Mh(1), Mh(2), Mh(3), Mh(4), Mh(5), Mh(6), Mhplus(1), HBresult, chan, obsratio, ncomb]
         '''
         if direct_path:
             file_path = direct_path
         else:
             file_path = os.path.join(self.work_dir, 'HiggsBounds_results.dat')
-
+        names = []
+        values = []
         with open(file_path , 'r') as f:
             for line in f:
                 line = line.strip()
                 if ('HBresult' in line) & ('chan' in line):
-                    line = line.split()[1:]
-                    index_hbresult = line.index('HBresult')
-                    index_chan = line.index('chan')
-                    index_obsratio = line.index('obsratio')
-                    index_ncomb = line.index('ncomb')
-                    #print(line)
-                    _ = f.readline()
+                    names = line.split()[1:]
+                    
                     for subline in f:
-                        subline = subline.split()
-                        #print(subline[index_hbresult],subline[index_chan],subline[index_obsratio],subline[index_ncomb])
-                        break
-        return (subline[index_hbresult],subline[index_chan],subline[index_obsratio],subline[index_ncomb])
+                        values = subline.split()
+        results = {}
+        for n, v in zip(names,values):
+            results[n] = float(v)
+        
+        return results        
 
     def save(self, output_name,in_spheno_output = True):
+        '''Save the HiggsBounds results from the working directory to the Spheno output directory \n.
+        To save all the higgs bounds results for scans for example.'''
+
         if in_spheno_output:
             copy(os.path.join(self.work_dir, 'HiggsBounds_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsBounds_results_'+str(output_name)+'.dat'))
         pass                
 
+###########################################
+# Class for reading a HiggsSignals output #
+###########################################
+
+
+class HiggsSignalsResults:
+    def __init__(self, work_dir, model=None):
+        self.work_dir = work_dir
+        self.model = model
+    
+    def read(self, direct_path=None):
+        '''
+        Read HiggsSignals_results.dat and outputs a dict all the results. For example for the BLSSM: \n
+        [n, Mh(1), Mh(2), Mh(3), Mh(4), Mh(5), Mh(6), Mhplus(1), csq(mu), csq(mh), csq(tot), nobs(mu), nobs(mh), nobs(tot), Pvalue]
+        '''
+        if direct_path:
+            file_path = direct_path
+        else:
+            file_path = os.path.join(self.work_dir, 'HiggsSignals_results.dat')
+        names = []
+        values = []
+        with open(file_path , 'r') as f:
+            for line in f:
+                line = line.strip()
+                if ('Mh(1)' in line) & ('Pvalue' in line):
+                    names = line.split()[1:]
+                    
+                    for subline in f:
+                        values = subline.split()
+        results = {}
+        for n, v in zip(names,values):
+            results[n] = float(v)
+        
+        return results        
+
+    def save(self, output_name,in_spheno_output = True):
+        '''Save the HiggsSignals results from the working directory to the Spheno output directory \n.
+           To save all the higgs Signals results for scans for example.'''
+        if in_spheno_output:
+            copy(os.path.join(self.work_dir, 'HiggsSignals_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsSignals_results_'+str(output_name)+'.dat'))
+        pass                

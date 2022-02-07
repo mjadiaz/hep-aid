@@ -58,7 +58,6 @@ class Block:
         for b in self.block_body:
             print(b.line_format.format(*b.entries))
     
-        
     
     def set(self,option, param_value):
         '''
@@ -189,7 +188,181 @@ class LesHouches:
                 for b in block.block_body:
                     f.write(b.line_format.format(*b.entries)+'\n')
 
-################################### 
+
+#########################################
+# Classes for reading SLHA files V2     #
+# Focusing on Madraph.                  #
+#########################################
+
+class BlockLine2:
+    '''
+    # BlockLine
+    Line class to store block lines. Each line can be a header or body category
+    '''
+    def __init__(self, entries, value, comment, line_category):
+        '''
+        Initiate the Block Line
+        
+        Args:
+        - entries: the n-entries of a line (pdi, options index, ...)
+        - value: the value of that index
+        - comment: commentary of the line
+        - line_category: Header (line_header) or body (line_body)
+        '''
+        self.entries = entries
+        self.value = value
+        self.comment = comment
+        self._total_entries_list = entries + [value] + [comment] 
+        self.line_category = line_category
+        self.line_format = self._line_format(line_category)
+    
+    def _line_format(self, category):
+        ''' Text format of each line'''
+        if category == 'line_header':
+            line_format = '{:6s} {:20s}  {:13s}'
+        elif category == 'line_body':
+            line_format = '{:4s} ' * (len(self.entries) - 1) + ':{10s} ' + '{:20s} ' + {}
+    return line_format
+
+
+class Block2:
+    '''
+    # Block
+    It holds each line of a block.
+    Call .show() to print a block. \n
+    Call .set(parameter_number, value) to change the parameter value in the instance.
+    
+    Args:
+    - block_name
+    - block_comment
+    - block_category: DECAY or BLOCK
+    - output_mode: Print internal processes
+    '''  
+    def __init__(self, block_name, block_comment=None, block_category=None, output_mode=False):
+        self.block_name = block_name
+        self.block_comment = block_comment
+        self.block_body = []
+        self.block_category = block_category
+        self.output_mode = output_mode
+    def show(self):
+        '''
+        Print block information in the LesHouches format.
+        '''
+        print('{} {}   {:10s}'.format('Block',self.block_name,self.block_comment))
+        for bl in self.block_body:
+            print(bl.line_format.format(*bl._total_entries_list))
+        
+    
+    def set(self, line_number, param_value):
+        for n, line in enumerate(self.block_body, start=1):
+            if n == line_number:
+                line.value = param_value
+
+
+class LesHouches2:
+    '''
+    ## LesHuches
+    Read a LesHouches file and stores each block in block classes. \n
+    - To get all the names of the blocks call .block_list. \n
+    - work_dir is the directory where all the outputs will be saved. \n
+    - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
+    '''
+    def __init__(self, file_path: str, work_dir: str, model: str, output_mode: bool=False) -> None:
+        '''
+        Read a SLHA file.
+        
+        Args:
+        - file_path: Path for the SLHA file to read
+        - work_dir: Working directory
+        - model: Name of the model 
+        - output_mode: Print internal processes
+        '''
+
+        self.output_mode = output_mode
+        if self.output_mode:
+            print(f'Reading LesHouches from : {file_path}')
+        self._blocks = self.read_leshouches(file_path, output_mode)
+        self.block_list = [name.block_name for name in self._blocks]
+        self.work_dir = work_dir
+        self.model = model
+    
+
+    def block(self, name):
+        block = self.find_block(name.upper(), self._blocks)
+        return block  
+
+
+    def find_block(self, name, block_list):
+            try:
+                if isinstance(name, str):
+                    for b in block_list:
+                        if b.block_name == name:
+                            b_found = b
+                            break
+                        else:
+                            None
+                return b_found
+            except:
+                print('block not found')
+
+    def read_leshouches(self, file_dir, output_mode):
+        block_list = []
+        paterns =   dict(   
+                        block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
+                        decay_header= r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
+                        nmatrix_value = r'(?P<entries>.+)(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
+                        decay_body_pattern = r'\s+(?P<value>.\d+\.\d+E.\d+)(?P<entries>.+)\s+(?P<comment>#.*)',
+                        )
+
+
+
+        with open(file_dir, 'r') as f:
+            for line in f:
+                m_block = re.match(paterns['block_header'], line.upper().strip()) 
+                if not(m_block == None):
+
+                    block_list.append(Block(    block_name=m_block.group('block_name'), 
+                                                block_comment=m_block.group('comment'),
+                                                category= 'parameter_data' ,
+                                                output_mode=output_mode))
+                    in_block, block_from = m_block.group('block_name'), 'parameter_data'
+                m_block = re.match(paterns['decay_header'], line.upper().strip()) 
+                if not(m_block == None):
+                    block_name = 'DECAY '+m_block.group('particle') 
+                    block_list.append(Block(    block_name=block_name, 
+                                                block_comment=m_block.group('comment'),
+                                                category= 'decay_data' ,
+                                                output_mode=output_mode))
+                    in_block, block_from = block_name, 'decay_data'
+
+                 m_body =  re.match(paterns['nmatrix_value'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+        return block_list
+
+  
+    def new_file(self, new_file_name):
+        '''
+        Writes a new LesHouches file with the blocks defined in the instance. \n
+        Possibly with new values for the parameters and options.
+        '''
+        new_file_dir = os.path.join(self.work_dir, 'SPheno'+self.model+'_input')
+
+        if not(os.path.exists(new_file_dir)):
+            os.makedirs(new_file_dir)
+        file_dir=os.path.join(new_file_dir,new_file_name)
+        if self.output_mode:
+            print(f'Writing new LesHouches in :{file_dir}')
+        
+        with open(file_dir,'w+') as f:
+            for block in self._blocks:
+                head = '{} {}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
+                f.write(head)
+                for b in block.block_body:
+                    f.write(b.line_format.format(*b.entries)+'\n')
+
+
+################################# 
 # Classes for reading SLHA files. #  
 # Focusing on madgraph.           #
 ###################################
@@ -235,7 +408,7 @@ class Particle():
         print(tabulate(data, headers=headers,tablefmt="fancy_grid"))
 
 
-class Slha:
+class Slha_dep:
     '''
     ## Read SLHA
     Read the given model file in SLHA format. It stores PID of all the particles of the models in .model_particles \n
@@ -511,13 +684,6 @@ class HiggsBoundsResults:
     def save(self, output_name,in_spheno_output = True):
         '''Save the HiggsBounds results from the working directory to the Spheno output directory \n.
         To save all the higgs bounds results for scans for example.'''
-
-        if in_spheno_output:
-            copy(os.path.join(self.work_dir, 'HiggsBounds_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsBounds_results_'+str(output_name)+'.dat'))
-        pass                
-
-###########################################
-# Class for reading a HiggsSignals output #
 ###########################################
 
 

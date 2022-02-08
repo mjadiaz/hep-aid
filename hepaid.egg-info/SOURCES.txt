@@ -1,8 +1,10 @@
 .gitignore
 HiggsBounds.md
+HiggsSignals.md
 LICENSE
 README.md
 Spheno.md
+Updates.md
 pyproject.toml
 setup.cfg
 setup.py
@@ -20,6 +22,8 @@ dist/hepaid-0.1.dev60+g60859be.d20211014-py3-none-any.whl
 dist/hepaid-0.1.dev60+g60859be.d20211014.tar.gz
 dist/hepaid-0.1.dev61+g164eaad.d20211014-py3-none-any.whl
 dist/hepaid-0.1.dev61+g164eaad.d20211014.tar.gz
+dist/hepaid-0.1.dev62+g01b687a.d20211108-py3-none-any.whl
+dist/hepaid-0.1.dev62+g01b687a.d20211108.tar.gz
 examples/BLSSM_scan.ipynb
 hepaid/__init__.py
 hepaid/_version.py

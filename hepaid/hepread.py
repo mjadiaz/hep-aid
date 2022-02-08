@@ -194,22 +194,18 @@ class LesHouches:
 
 class BlockLineSLHA:
     '''
-    # BlockLine
-    Line class to store block lines. Each line can be a header or body category
+    Line contraining the elements of each line in a SLHA file.
+
+    Args:
+    -----
+    entries: List[str, str, ..] = n-entries of a line (pid, option index, ...).
+    value: str (to float internally). The usual value in scientific notation.
+    comment: str
+    line_category: DECAY or BLOCK. Internal parameter.
     '''
     def __init__(self, entries, value, comment, line_category):
-        '''
-        Initiate the Block Line
-        
-        Args:
-        ----
-        entries: the n-entries of a line (pdi, options index, ...)
-        value: the value of that index
-        comment: commentary of the line
-        line_category: DECAY or BLOCK
-        '''
         self.entries = entries.split()
-        self.value = float(value)
+        self.value = float(value) if value != None else None 
         self.comment = comment
         self._total_entries_list = [entries] + [value] + [comment] 
         self.line_category = line_category
@@ -226,11 +222,20 @@ class BlockLineSLHA:
             return line_format.format(self.value, *self.entries, self.comment)
         else:
             # Aligns and Widths for Parameter Blocks
-            entries_f = '{:>11} '
-            value_f  = '{:>19.8E}'
+            n_entries = len(self.entries)
+            max_len = max([len(entry) for entry in self.entries])
+            if (n_entries == 2) & (max_len <= 2):
+                entries_f = '{:>5}'
+            else:    
+                entries_f = '{:>11}'
+            value_f  = '{:>18.8E}'
             comment_f = '    {}'
-            line_format = entries_f*len(self.entries)+value_f+comment_f
-            return line_format.format(*self.entries, self.value, self.comment)
+            if self.value == None:
+                line_format = (entries_f+' ')*len(self.entries) + comment_f
+                return line_format.format(*self.entries, self.comment)
+            else:
+                line_format = entries_f*len(self.entries)+value_f+comment_f
+                return line_format.format(*self.entries, self.value, self.comment)
 
 class BlockSLHA:
     '''
@@ -248,7 +253,7 @@ class BlockSLHA:
     output_mode: Print internal processes
     '''  
     def __init__(   self, block_name, block_comment=None, q_values = None, 
-                    block_category=None, decay_width=None, output_mode=False):
+                    block_category=None, decay_width=None):
         self.block_name = block_name
         self.block_comment = block_comment
         self.q_values = q_values 
@@ -257,7 +262,6 @@ class BlockSLHA:
         if self.block_category == 'DECAY':
             self.pid = int(self.block_name.split()[-1])
             self.decay_width = float(decay_width)
-        self.output_mode = output_mode
  
     def __repr__(self):
         if (self.block_category == 'DECAY'):
@@ -267,12 +271,14 @@ class BlockSLHA:
                 block_format += str(line) + '\n'
             return block_header+block_format
         else:
-            block_header = 'BLOCK {:>10}'
-            block_header_q = ' Q= {:>19.8E}'
-            block_header_comment = '   {}'
+            len_name = len(self.block_name)+4
+            block_header = 'BLOCK {name:>{len_name}}'.format( name=self.block_name, 
+                                                              len_name=len(self.block_name)+4)
+            block_header_comment = '   {comment}'.format(comment=self.block_comment)
             if not(self.q_values == None):
+                block_header_q = ' Q={q_values:>16.8E}'.format(q_values=float(self.q_values))
                 block_header += block_header_q + block_header_comment
-                block_format = block_header.format(self.block_name, float(self.q_values), self.block_comment)+'\n'
+                block_format = block_header+'\n'
             else:
                 block_header += block_header_comment
                 block_format = block_header.format(self.block_name, self.block_comment)+'\n'
@@ -289,25 +295,25 @@ class BlockSLHA:
 
 class SLHA:
     '''
-    ## LesHuches
-    Read a LesHouches file and stores each block in block classes. \n
-    - To get all the names of the blocks call .block_list. \n
-    - work_dir is the directory where all the outputs will be saved. \n
-    - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
+    # SLHA
+    Read a SLHA file (usually the param_card.dat or first section of and LHE file) and
+    stores each block in BlockSLHA classes.
+    
+    Args:
+    ----
+    file_path: str = Path for the SLHA file to read
+    work_dir: str = Working directory
+    model: str = Name of the model 
+    Atributes:
+    ---------
+    .block_list: List with the names of all the blocks in the SLHA file.
+    Methods:
+    -------
+    .block(name): Call a Block object stored in the SLHA instance.  
+    .new_file(new_file_name): Save the instance as a new SLHA file.
     '''
     def __init__(self, file_path: str, work_dir: str, model: str) -> None:
-        '''
-        Read a SLHA file.
-        
-        Args:
-        ----
-        file_path: Path for the SLHA file to read
-        work_dir: Working directory
-        model: Name of the model 
-        output_mode: Print internal processes
-        '''
-
-        self._blocks = self.read_slha(file_path, output_mode)
+        self._blocks = self.read_slha(file_path)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
@@ -338,6 +344,8 @@ class SLHA:
                                 r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
                         nmatrix_value =\
                                 r'(?P<entries>.+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                        model_param_pattern =\
+                                r'(?P<entries>.+)\s+(?P<comment>#.*)',
                         decay_header=\
                                 r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
                         decay_body_pattern=\
@@ -354,7 +362,7 @@ class SLHA:
                                                 block_comment=m_block.group('comment'),
                                                 q_values = m_block.group('q_values'),
                                                 block_category= 'BLOCK' ,
-                                                )
+                                                ))
                     in_block, block_from = m_block.group('block_name'), 'parameter_data'
                     continue
                 m_block = re.match(paterns['decay_header'], line.upper().strip()) 
@@ -364,7 +372,7 @@ class SLHA:
                                                 block_comment=m_block.group('comment'),
                                                 block_category= 'DECAY' ,
                                                 decay_width= m_block.group('value'),
-                                                )
+                                                ))
                     in_block, block_from = block_name, 'decay_data'
                     continue
 
@@ -384,6 +392,14 @@ class SLHA:
                                                                                 comment=m_body.group('comment'),
                                                                                 line_category='DECAY'))
                     continue
+                m_body =  re.match(paterns['model_param_pattern'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
+                                                                                entries=m_body.group('entries'),
+                                                                                value=None,
+                                                                                comment=m_body.group('comment'),
+                                                                                line_category='BLOCK'))
+                    continue
                 
 
         return block_list
@@ -391,24 +407,20 @@ class SLHA:
   
     def new_file(self, new_file_name):
         '''
-        Writes a new LesHouches file with the blocks defined in the instance. \n
-        Possibly with new values for the parameters and options.
+        Write the instance as a new SLHA file in /{work_dir}/SLHA_{model}/{new_file_name}.
+        Args:
+        -----
+        new_file_name: str
         '''
-        new_file_dir = os.path.join(self.work_dir, 'SPheno'+self.model+'_input')
+        new_file_dir = os.path.join(self.work_dir, 'SLHA_'+self.model)
 
         if not(os.path.exists(new_file_dir)):
             os.makedirs(new_file_dir)
         file_dir=os.path.join(new_file_dir,new_file_name)
-        if self.output_mode:
-            print(f'Writing new LesHouches in :{file_dir}')
         
         with open(file_dir,'w+') as f:
             for block in self._blocks:
-                head = '{} {}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
-                f.write(head)
-                for b in block.block_body:
-                    f.write(b.line_format.format(*b.entries)+'\n')
-
+                f.write(str(block))
 
 
 #######################################

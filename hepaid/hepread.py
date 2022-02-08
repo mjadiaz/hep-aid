@@ -1,9 +1,7 @@
 import re 
 import os
 from shutil import copy
-import awkward as ak
 import numpy as np
-from tabulate import tabulate
 
 
 
@@ -194,7 +192,7 @@ class LesHouches:
 # Focusing on Madraph.                  #
 #########################################
 
-class BlockLine2:
+class BlockLineSLHA:
     '''
     # BlockLine
     Line class to store block lines. Each line can be a header or body category
@@ -204,62 +202,92 @@ class BlockLine2:
         Initiate the Block Line
         
         Args:
-        - entries: the n-entries of a line (pdi, options index, ...)
-        - value: the value of that index
-        - comment: commentary of the line
-        - line_category: Header (line_header) or body (line_body)
+        ----
+        entries: the n-entries of a line (pdi, options index, ...)
+        value: the value of that index
+        comment: commentary of the line
+        line_category: DECAY or BLOCK
         '''
-        self.entries = entries
-        self.value = value
+        self.entries = entries.split()
+        self.value = float(value)
         self.comment = comment
-        self._total_entries_list = entries + [value] + [comment] 
+        self._total_entries_list = [entries] + [value] + [comment] 
         self.line_category = line_category
-        self.line_format = self._line_format(line_category)
     
-    def _line_format(self, category):
-        ''' Text format of each line'''
-        if category == 'line_header':
-            line_format = '{:6s} {:20s}  {:13s}'
-        elif category == 'line_body':
-            line_format = '{:4s} ' * (len(self.entries) - 1) + ':{10s} ' + '{:20s} ' + {}
-    return line_format
+    def __repr__(self):
+        if (self.line_category == 'DECAY'):
+            # Aligns and Widths for Decay Blocks
+            br_f  = '{:>19.8E}'
+            nda_f = '{:>5}'
+            id1_f = '{:>13}'
+            idn_f = '{:>11}'
+            comment_f = '    {}'
+            line_format = br_f+nda_f+id1_f+idn_f*(len(self.entries)-2)+comment_f
+            return line_format.format(self.value, *self.entries, self.comment)
+        else:
+            # Aligns and Widths for Parameter Blocks
+            entries_f = '{:>11} '
+            value_f  = '{:>19.8E}'
+            comment_f = '    {}'
+            line_format = entries_f*len(self.entries)+value_f+comment_f
+            return line_format.format(*self.entries, self.value, self.comment)
 
-
-class Block2:
+class BlockSLHA:
     '''
     # Block
     It holds each line of a block.
-    Call .show() to print a block. \n
     Call .set(parameter_number, value) to change the parameter value in the instance.
     
     Args:
-    - block_name
-    - block_comment
-    - block_category: DECAY or BLOCK
-    - output_mode: Print internal processes
+    ----
+    block_name
+    block_comment
+    q_values
+    block_category: DECAY or BLOCK
+    decay_width
+    output_mode: Print internal processes
     '''  
-    def __init__(self, block_name, block_comment=None, block_category=None, output_mode=False):
+    def __init__(   self, block_name, block_comment=None, q_values = None, 
+                    block_category=None, decay_width=None, output_mode=False):
         self.block_name = block_name
         self.block_comment = block_comment
+        self.q_values = q_values 
         self.block_body = []
         self.block_category = block_category
+        if self.block_category == 'DECAY':
+            self.pid = int(self.block_name.split()[-1])
+            self.decay_width = float(decay_width)
         self.output_mode = output_mode
-    def show(self):
-        '''
-        Print block information in the LesHouches format.
-        '''
-        print('{} {}   {:10s}'.format('Block',self.block_name,self.block_comment))
-        for bl in self.block_body:
-            print(bl.line_format.format(*bl._total_entries_list))
+ 
+    def __repr__(self):
+        if (self.block_category == 'DECAY'):
+            block_header = 'DECAY {:>10}{:>19.8E}    {}\n'.format(self.pid, self.decay_width, self.block_comment)
+            block_format = '#    BR                NDA      ID1      ID2   ... \n'
+            for line in self.block_body:
+                block_format += str(line) + '\n'
+            return block_header+block_format
+        else:
+            block_header = 'BLOCK {:>10}'
+            block_header_q = ' Q= {:>19.8E}'
+            block_header_comment = '   {}'
+            if not(self.q_values == None):
+                block_header += block_header_q + block_header_comment
+                block_format = block_header.format(self.block_name, float(self.q_values), self.block_comment)+'\n'
+            else:
+                block_header += block_header_comment
+                block_format = block_header.format(self.block_name, self.block_comment)+'\n'
+            for line in self.block_body:
+                block_format += str(line) + '\n'
+            return block_format
+
         
-    
     def set(self, line_number, param_value):
         for n, line in enumerate(self.block_body, start=1):
             if n == line_number:
                 line.value = param_value
 
 
-class LesHouches2:
+class SLHA:
     '''
     ## LesHuches
     Read a LesHouches file and stores each block in block classes. \n
@@ -267,21 +295,19 @@ class LesHouches2:
     - work_dir is the directory where all the outputs will be saved. \n
     - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
     '''
-    def __init__(self, file_path: str, work_dir: str, model: str, output_mode: bool=False) -> None:
+    def __init__(self, file_path: str, work_dir: str, model: str) -> None:
         '''
         Read a SLHA file.
         
         Args:
-        - file_path: Path for the SLHA file to read
-        - work_dir: Working directory
-        - model: Name of the model 
-        - output_mode: Print internal processes
+        ----
+        file_path: Path for the SLHA file to read
+        work_dir: Working directory
+        model: Name of the model 
+        output_mode: Print internal processes
         '''
 
-        self.output_mode = output_mode
-        if self.output_mode:
-            print(f'Reading LesHouches from : {file_path}')
-        self._blocks = self.read_leshouches(file_path, output_mode)
+        self._blocks = self.read_slha(file_path, output_mode)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
@@ -291,8 +317,8 @@ class LesHouches2:
         block = self.find_block(name.upper(), self._blocks)
         return block  
 
-
-    def find_block(self, name, block_list):
+    @staticmethod
+    def find_block(name, block_list):
             try:
                 if isinstance(name, str):
                     for b in block_list:
@@ -305,13 +331,17 @@ class LesHouches2:
             except:
                 print('block not found')
 
-    def read_leshouches(self, file_dir, output_mode):
+    def read_slha(self, file_dir):
         block_list = []
         paterns =   dict(   
-                        block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
-                        decay_header= r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
-                        nmatrix_value = r'(?P<entries>.+)(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
-                        decay_body_pattern = r'\s+(?P<value>.\d+\.\d+E.\d+)(?P<entries>.+)\s+(?P<comment>#.*)',
+                        block_header=\
+                                r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
+                        nmatrix_value =\
+                                r'(?P<entries>.+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                        decay_header=\
+                                r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                        decay_body_pattern=\
+                                r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
                         )
 
 
@@ -320,24 +350,42 @@ class LesHouches2:
             for line in f:
                 m_block = re.match(paterns['block_header'], line.upper().strip()) 
                 if not(m_block == None):
-
-                    block_list.append(Block(    block_name=m_block.group('block_name'), 
+                    block_list.append(BlockSLHA(   block_name=m_block.group('block_name'), 
                                                 block_comment=m_block.group('comment'),
-                                                category= 'parameter_data' ,
-                                                output_mode=output_mode))
+                                                q_values = m_block.group('q_values'),
+                                                block_category= 'BLOCK' ,
+                                                )
                     in_block, block_from = m_block.group('block_name'), 'parameter_data'
+                    continue
                 m_block = re.match(paterns['decay_header'], line.upper().strip()) 
                 if not(m_block == None):
                     block_name = 'DECAY '+m_block.group('particle') 
-                    block_list.append(Block(    block_name=block_name, 
+                    block_list.append(BlockSLHA(   block_name=block_name, 
                                                 block_comment=m_block.group('comment'),
-                                                category= 'decay_data' ,
-                                                output_mode=output_mode))
+                                                block_category= 'DECAY' ,
+                                                decay_width= m_block.group('value'),
+                                                )
                     in_block, block_from = block_name, 'decay_data'
+                    continue
 
-                 m_body =  re.match(paterns['nmatrix_value'], line.strip())
+                m_body =  re.match(paterns['nmatrix_value'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
+                                                                                entries=m_body.group('entries'),
+                                                                                value=m_body.group('value'),
+                                                                                comment=m_body.group('comment'),
+                                                                                line_category='BLOCK'))
+                    continue
+                m_body =  re.match(paterns['decay_body_pattern'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
+                                                                                entries=m_body.group('entries'),
+                                                                                value=m_body.group('value'),
+                                                                                comment=m_body.group('comment'),
+                                                                                line_category='DECAY'))
+                    continue
+                
+
         return block_list
 
   
@@ -362,149 +410,6 @@ class LesHouches2:
                     f.write(b.line_format.format(*b.entries)+'\n')
 
 
-################################# 
-# Classes for reading SLHA files. #  
-# Focusing on madgraph.           #
-###################################
-
-class Particle():
-    def __init__(self, pid, ufo_name=None, total_width=None, mass=None, comment=None, decays=None):
-        self.pid = pid
-        self._ufo_name = ufo_name  # To link it with madgraph but maybe it is not necessary.
-        self.total_width = total_width
-        self.mass = mass
-        self.comment = comment 
-
-        # How to store the decays
-        self.decays = decays
-    
-    def find_particle(id, particles_list):
-        try:
-            if isinstance(id, int):        
-                for p in particles_list:
-                    if p.pid == id:
-                        p_found = p
-                        break
-                    else:
-                        None
-            elif isinstance(id, str):
-                for p in particles_list:
-                    if p.comment == id:
-                        p_found = p
-                        break
-                    else:
-                        None
-            return p_found
-        except:
-            print('No particle found')
-
-    def show(self):
-        #particle = Particle.find_particle(pid, particles_list)
-        n_data = lambda n: [self.decays[n][i] for i in self.decays.fields]
-        n_decays = ak.num(self.decays,axis=0)
-        data = [n_data(n) for n in range(n_decays)]
-        headers=[field.upper() for field in self.decays.fields]
-        print(tabulate([[self.mass,self.total_width]], headers=['MASS GeV', "TOTAL WIDTH GeV"],tablefmt="fancy_grid"))
-        print(tabulate(data, headers=headers,tablefmt="fancy_grid"))
-
-
-class Slha_dep:
-    '''
-    ## Read SLHA
-    Read the given model file in SLHA format. It stores PID of all the particles of the models in .model_particles \n
-    in a list of tuples (PID, NAME) to have a sense of what particles are in the model. \n
-    The internal list _particles contain each particle saved as a Particle class so that we can use \n
-    all the internal methods and properties of this class, for example: 
-    - .particle('25').show() ---> It display all the information about the particle.
-    - .particle('25').mass    
-    \n
-    This class focuses on extracting information not writing the file because we always can \n
-    change the parameters inside madgraph by the command: set parameter = value.
-
-    '''
-    def __init__(self, model_file):
-        self.model_file = model_file
-        self._particles, self.model_particles = Slha.read_file(model_file)
-    
-    def read_file(model_file):
-        '''
-        Read all the particles of the model saving it in the particles object list. \n
-        It creates a Particle class for each particle of the model reading it \n
-        from the MASS block of the SLHA file.
-        '''
-        with open(model_file, 'r') as f:
-            slha_file = f.read() # Read the whole file
-            slha_blocks = re.split('BLOCK|Block|block|DECAY|Decay|decay', slha_file) #  Separate the text file into parameter blocks and decay blocks
-            
-            particles = []      # Initiate the Partcle objects list.
-            
-
-            for block in slha_blocks:
-                block = re.split('\n',block)    # Split block in lines
-                # Create the particles of the model from the MASS block and populate the
-                # particles list with Particles objects.
-                if "MASS" in block[0].split()[0].upper():
-                    for line in block:
-                        line = re.split('\s+',line.strip()) 
-                        #print(l)
-                        if line[0].isnumeric():                            #  To skip to the first particle information, since the first element is the PID (numeric)
-                            particles.append(Particle(int(line[0])))       #  Append to particles list a Particle object with the PID given by l[0]
-                            particles[-1].mass = float(line[1])            #  Assign the mass for the given Particle object
-                            particles[-1].comment = line[3]                #  Assign the ufo_name wich is the comment (last element of the line).
-                                                                            #  Note: Not always is the ufo_name.
-                            #print(particles[-1].pid, particles[-1].mass, particles[-1].comment) # Just to check
-                    break                
-
-            # Another foor loop because we want to create the particles first            
-            for block in slha_blocks:
-                block = re.split('\n',block)    # Split block in lines again            
-
-                # If the first element on the first line is numeric correspond to decay 
-                # block with that ID value else is a parameter block.
-
-                if block[0].split()[0].isnumeric(): 
-                    tmp_pid = int(block[0].split()[0]) # Temporal particle id for a decay block
-                    decays = ak.ArrayBuilder() #  Initiate the decays as an awkward array builder for the current block
-
-                    for line in block: 
-
-
-                        # Match in 3 groups a pattern like: '1000001     2.00706278E+02   # Sd_1'
-                        match = re.match(r'(?P<pid>\d+)\s+(?P<width>\d+\.\d+E.\d+)\s+#(?P<comment>.*)', line.strip()) 
-                        if not(match == None):
-                            #print('PID: {}, Width: {:E}, Comment: {}'.format(int(match.group('pid')),float(match.group('width')) ,match.group("comment").strip()))
-                            Particle.find_particle(tmp_pid,particles).total_width = float(match.group('width'))
-                            #print(Particle.find_particle(tmp_pid,particles).pid, Particle.find_particle(tmp_pid,particles).total_width)
-                        
-                        # Match in 4 groups a pattern like: '2.36724485E-01    2            2   -1000024   # BR(Sd_1 -> Fu_1 Cha_1 )'
-                        match = re.match(r'(?P<br>\d+\.\d+E.\d+)\s+(?P<nda>\d+)\s+(?P<fps>.*?)\s+#(?P<comment>.*)', line.strip())
-
-                        if not(match == None):
-                            tmp_decay = ak.Array([{ "br": float(match.group('br')),
-                                                    "nda": int(match.group('nda')), 
-                                                    "fps": [int(p) for p in match.group('fps').split()], 
-                                                    "comment": match.group('comment').strip()}])
-                            decays.append(tmp_decay, at=0)
-
-                        #print(tmp_decay)                    
-                    Particle.find_particle(tmp_pid,particles).decays = decays.snapshot()
-
-        def particle_ids(particles_list):
-            ''' Returns a simple list holding all the particle ID of the model'''
-            pid_list=[(p.pid, p.comment) for p in particles_list]
-            #comment_list = [p.comment for p in particles_list]
-            #pid_list.sort()
-            return pid_list
-
-        particles_list = particle_ids(particles) 
-
-        return particles, particles_list
-
-
-
-    def particle(self, pid):
-        particle = Particle.find_particle(pid, self._particles)
-        return particle
 
 #######################################
 # Class for writing a Madgraph script #

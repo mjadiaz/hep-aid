@@ -1,0 +1,119 @@
+Block MODSEL  #         
+1      1                   #  1/0: High/low scale input
+2      1                   # Boundary Condition
+6      1                   # Generation Mixing
+Block SMINPUTS  # STANDARD MODEL INPUTS
+2      1.166370E-05        # G_F,Fermi constant
+3      1.187000E-01        # alpha_s(MZ) SM MSbar
+4      9.118870E+01        # Z-boson pole mass
+5      4.180000E+00        # m_b(mb) SM MSbar
+6      1.735000E+02        # m_top(pole)
+7      1.776690E+00        # m_tau(pole)
+Block MINPAR  # INPUT PARAMETERS
+1      9.719012E+02        # m0         
+2      1.044295E+03        # m12        
+3      1.914145E+01        # TanBeta    
+4      1.0000000E+00       # SignumMu   
+5      3.316880E+03        # Azero      
+6      1.0000000E+00       # SignumMuP  
+7      1.150000E+00        # TBetaP     
+8      2.500000E+03        # MZp        
+Block EXTPAR  # INPUT PARAMETERS
+1      5.500000E-01        # gBLinput   
+2      -1.200000E-01       # g1BLinput  
+3      2.500000E+03        # MZp        
+10     1.150000E+00        # TBetaP     
+11     0.000000E+00        # MuInput    
+12     0.000000E+00        # MuPInput   
+13     0.000000E+00        # BMuInput   
+14     0.000000E+00        # BMuPInput  
+Block SPHENOINPUT  # SPHENO SPECIFIC INPUT
+1      -1                  # error level
+2      0                   # SPA conventions
+7      0                   # Skip 2-loop Higgs corrections
+8      3                   # Method used for two-loop calculation
+9      1                   # Gaugeless limit used at two-loop
+10     0                   # safe-mode used at two-loop
+11     1                   # calculate branching ratios
+13     3                   # 3-Body decays: none (0), fermion (1), scalar (2), both (3)
+14     0                   # Run couplings to scale of decaying particle
+12     1.000E-04           # write only branching ratios larger than this value
+15     1.000E-30           # write only decay if width larger than this value
+16     0                   # One-loop decays
+19     -2                  # Matching order (-2:automatic, -1:pole, 0-2: tree, one- & two-loop)
+31     -1                  # fixed GUT scale (-1: dynamical GUT scale)
+32     0                   # Strict unification
+34     1.000E-04           # Precision of mass calculation
+35     40                  # Maximal number of iterations
+36     5                   # Minimal number of iterations before discarding points
+37     1                   # Set Yukawa scheme
+38     2                   # 1- or 2-Loop RGEs
+50     1                   # Majorana phases: use only positive masses (put 0 to use file with CalcHep/Micromegas!)
+51     0                   # Write Output in CKM basis
+52     0                   # Write spectrum in case of tachyonic states
+55     1                   # Calculate loop corrected masses
+57     1                   # Calculate low energy constraints
+60     1                   # Include possible, kinetic mixing
+65     1                   # Solution tadpole equation
+66     1                   # Two-Scale Matching
+67     1                   # effective Higgs mass calculation
+75     0                   # Write WHIZARD files
+76     2                   # Write HiggsBounds file: 2 for HiggsBounds5, 1 for HiggsBounds4 and below
+77     0                   # Output for MicrOmegas (running masses for light quarks; real mixing matrices)
+78     1                   # Output for MadGraph (writes also vanishing blocks)
+79     0                   # Write WCXF files (exchange format for Wilson coefficients)
+86     0.                  # Maximal width to be counted as invisible in Higgs decays; -1: only LSP
+510    0.                  # Write tree level values for tadpole solutions
+515    0                   # Write parameter values at GUT scale
+520    0                   # Write effective Higgs couplings (HiggsBounds blocks): put 0 to use file with MadGraph!
+521    1.                  # Diphoton/Digluon widths including higher order
+525    0.                  # Write loop contributions to diphoton decay of Higgs
+530    0.                  # Write Blocks for Vevacious
+Block DECAYOPTIONS  # OPTIONS TO TURN ON/OFF SPECIFIC DECAYS
+1      0                   # Calc 3-Body decays of Glu
+2      0                   # Calc 3-Body decays of Cha
+3      0                   # Calc 3-Body decays of Chi
+4      0                   # Calc 3-Body decays of Sd
+5      0                   # Calc 3-Body decays of Su
+6      0                   # Calc 3-Body decays of Se
+7      0                   # Calc 3-Body decays of SvRe
+8      0                   # Calc 3-Body decays of SvIm
+9      0                   # Calc 3-Body decays of Fv
+1001   0                   # Loop Decay of Sd
+1002   0                   # Loop Decay of Su
+1003   0                   # Loop Decay of Se
+1004   0                   # Loop Decay of SvRe
+1005   0                   # Loop Decay of SvIm
+1006   0                   # Loop Decay of hh
+1007   0                   # Loop Decay of Ah
+1008   0                   # Loop Decay of Hpm
+1009   0                   # Loop Decay of Glu
+1010   0                   # Loop Decay of Cha
+1011   0                   # Loop Decay of Chi
+1012   0                   # Loop Decay of Fu
+1013   0                   # Loop Decay of Fv
+1114   1.                  # U-factors (0: off, 1:p2_i=m2_i, 2:p2=0, p3:p2_i=m2_1)
+1115   1.                  # Use loop-corrected masses for external states
+1116   0.                  # OS values for W,Z and fermions (0: off, 1:g1,g2,v 2:g1,g2,v,Y_i)
+1117   0.                  # Use defined counter-terms
+1118   1.                  # Use everywhere loop-corrected masses for loop-induced decays
+Block YXIN  #         
+1  1   3.7000000E-01       # Yx(1,1)    
+1  2   0.000000E+00        # Yx(1,2)    
+1  3   0.000000E+00        # Yx(1,3)    
+2  1   0.000000E+00        # Yx(2,1)    
+2  2   4.0000000E-01       # Yx(2,2)    
+2  3   0.000000E+00        # Yx(2,3)    
+3  1   0.000000E+00        # Yx(3,1)    
+3  2   0.000000E+00        # Yx(3,2)    
+3  3   4.0000000E-01       # Yx(3,3)    
+Block YVIN  #         
+1  1   1.0000000E-04       # Yv(1,1)    
+1  2   0.000000E+00        # Yv(1,2)    
+1  3   0.000000E+00        # Yv(1,3)    
+2  1   0.000000E+00        # Yv(2,1)    
+2  2   1.0000000E-04       # Yv(2,2)    
+2  3   0.000000E+00        # Yv(2,3)    
+3  1   0.000000E+00        # Yv(3,1)    
+3  2   0.000000E+00        # Yv(3,2)    
+3  3   1.0000000E-04       # Yv(3,3)    

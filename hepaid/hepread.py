@@ -10,28 +10,32 @@ import numpy as np
 # Focusing on Spheno.                   #
 #########################################
 
-class BlockLine:
-    '''## Line:
-        Each line can be of a different category:
-        - block_header
-        - on_off
-        - value
-        - matrix_value '''
-    def __init__(self, entries, line_category):
-        self.entries = entries
-        self.line_category = line_category
-        self.line_format = BlockLine.fline(line_category)
-    def fline(cat):
-        ''' Text format of each line'''
-        if cat == 'block_header':
-            line_format = '{:6s} {:20s}  {:13s}'
-        elif cat == 'on_off':
-            line_format = '{:6s} {:18s}  {:13s}'
-        elif cat == 'value':
-            line_format = '{:6s} {:18s}  {:13s}'
-        elif cat == 'matrix_value':
-            line_format = '{:3s}{:3s} {:18s}  {:13s}'
-        return line_format
+
+
+
+class BlockLine: 
+	def __init__(self, entries, line_category):
+		self.entries = entries
+		self.line_category = line_category
+		self.line_format = self.fline(line_category)
+	def fline(self, cat):
+		if cat == 'block_header':
+			return '{:6s} {:20s}  {:13s}'
+		elif cat == 'on_off':
+			return '{:6s} {:18s}  {:13s}'
+		elif cat == 'value':
+			return '{:6s} {:18s}  {:13s}'
+		elif cat == 'matrix_value':
+			return '{:3s}{:3s} {:18}  {:13s}'
+	@property
+	def comment(self):
+		return self.entries[-1]
+	@property
+	def value(self):
+		return self.entries[-2]
+	@property 
+	def options(self):
+		return self.entries[:-2]
 
 
 class Block:
@@ -105,7 +109,17 @@ class LesHouches:
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
-    
+		# Experimental
+        self._spheno_blocks = ['MODSEL', 'SMINPUTS', 'SPHENOINPUT', 'DECAYOPTIONS']
+		
+    def model_param_blocks(self):
+        param_blocks = []
+        for block_name in self.block_list:
+            if not(block_name in self._spheno_blocks):
+                param_blocks.append(block_name)
+        return param_blocks
+	
+
 
     def block(self, name):
         block = LesHouches.find_block(name.upper(), self._blocks)

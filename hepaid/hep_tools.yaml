@@ -1,0 +1,9 @@
+model:
+  name: 'BLSSM'
+work_dir: '/mainfs/scratch/mjad1g20/hepaid/HepAid/hepaid/testdir'
+reference_lhs: '/scratch/mjad1g20/rlhep/runs/ddpg_tests/SPhenoBLSSM_input/LesHouches.in.Step'
+heptools_dirs:  
+  spheno: '/scratch/mjad1g20/HEP/SPHENO/SPheno-3.3.8'
+  higgsbounds: '/scratch/mjad1g20/HEP/higgsbounds-5.10.1/build'
+  madgraph: '/scratch/mjad1g20/HEP/MG5_aMC_v3_1_1'
+  higgssignals: '/scratch/mjad1g20/HEP/higgssignals-2.6.2/build'

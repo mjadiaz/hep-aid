@@ -26,6 +26,8 @@ dist/hepaid-0.1.dev62+g01b687a.d20211108-py3-none-any.whl
 dist/hepaid-0.1.dev62+g01b687a.d20211108.tar.gz
 dist/hepaid-0.1.dev72+g49d8ecc.d20220208-py3-none-any.whl
 dist/hepaid-0.1.dev72+g49d8ecc.d20220208.tar.gz
+dist/hepaid-0.1.dev76+geed75c2.d20220210-py3-none-any.whl
+dist/hepaid-0.1.dev76+geed75c2.d20220210.tar.gz
 examples/BLSSM_scan.ipynb
 hepaid/.test.py.swp
 hepaid/__init__.py

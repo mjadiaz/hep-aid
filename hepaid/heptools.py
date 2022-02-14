@@ -79,9 +79,21 @@ class HiggsBounds:
         
     def run(self):
         '''
-        Runs HiggsBounds with the last point calculated by SPheno. Returns the path for HiggsBounds_results.dat if SPheno and HiggsBounds succeed. If there is an Error in one them it returns None and prints the error output.
+        Runs HiggsBounds with the last point calculated by SPheno. 
+        Returns the path for HiggsBounds_results.dat if SPheno and 
+        HiggsBounds succeed. If there is an Error in one them it 
+        returns None and prints the error output.
         '''
-        run = subprocess.run([os.path.join(self._dir, 'HiggsBounds'), 'LandH', 'effC', str(self.neutral_higgs), str(self.charged_higgs), self.work_dir+'/'], capture_output=True,  text=True)        
+        run = subprocess.run(
+                [os.path.join(self._dir, 'HiggsBounds'), 
+                    'LandH', 
+                    'effC', 
+                    str(self.neutral_higgs), 
+                    str(self.charged_higgs), 
+                    self.work_dir+'/'], 
+                capture_output=True,  
+                text=True,
+                cwd=self.work_dir)        
         if 'finished' in run.stdout:
             if self.output_mode:
                 print(run.stdout) 
@@ -106,7 +118,17 @@ class HiggsSignals:
         '''
         Runs HiggsSignals with the last point calculated by SPheno.
         '''
-        run = subprocess.run([os.path.join(self._dir, 'HiggsSignals'), 'latestresults', '2', 'effC', str(self.neutral_higgs), str(self.charged_higgs), self.work_dir+'/'], capture_output=True,  text=True)        
+        run = subprocess.run(
+                [os.path.join(self._dir, 'HiggsSignals'), 
+                    'latestresults', 
+                    '2', 
+                    'effC', 
+                    str(self.neutral_higgs), 
+                    str(self.charged_higgs), 
+                    self.work_dir+'/'], 
+                capture_output=True,  
+                text=True,
+                cwd=self.work_dir)        
         if not('Error') in run.stdout:
             if self.output_mode:
                 print(run.stdout) 

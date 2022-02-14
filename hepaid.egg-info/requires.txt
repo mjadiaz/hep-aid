@@ -1,5 +1,1 @@
-matplotlib
-scipy
-awkward
 numpy
-tabulate

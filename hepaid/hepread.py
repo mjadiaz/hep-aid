@@ -11,13 +11,12 @@ import numpy as np
 #########################################
 
 
-
-
 class BlockLine: 
 	def __init__(self, entries, line_category):
 		self.entries = entries
 		self.line_category = line_category
 		self.line_format = self.fline(line_category)
+
 	def fline(self, cat):
 		if cat == 'block_header':
 			return '{:6s} {:20s}  {:13s}'
@@ -27,6 +26,7 @@ class BlockLine:
 			return '{:6s} {:18s}  {:13s}'
 		elif cat == 'matrix_value':
 			return '{:3s}{:3s} {:18}  {:13s}'
+
 	@property
 	def comment(self):
 		return self.entries[-1]
@@ -309,22 +309,20 @@ class BlockSLHA:
 
 class SLHA:
     '''
-    # SLHA
-    Read a SLHA file (usually the param_card.dat or first section of and LHE file) and
-    stores each block in BlockSLHA classes.
+    Read a SLHA file (usually the param_card.dat or first section of 
+    and LHE file) and stores each block in BlockSLHA classes.
     
     Args:
-    ----
-    file_path: str = Path for the SLHA file to read
-    work_dir: str = Working directory
-    model: str = Name of the model 
+        file_path: str = Path for the SLHA file to read
+        work_dir: str = Working directory
+        model: str = Name of the model 
+
     Atributes:
-    ---------
-    .block_list: List with the names of all the blocks in the SLHA file.
+        block_list: List with the names of all the blocks in the SLHA file.
+
     Methods:
-    -------
-    .block(name): Call a Block object stored in the SLHA instance.  
-    .new_file(new_file_name): Save the instance as a new SLHA file.
+        block(name): Call a Block object stored in the SLHA instance.  
+        new_file(new_file_name): Save the instance as a new SLHA file.
     '''
     def __init__(self, file_path: str, work_dir: str, model: str) -> None:
         self._blocks = self.read_slha(file_path)

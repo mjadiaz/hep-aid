@@ -3,8 +3,10 @@ import os
 from shutil import copy
 import numpy as np
 
+from collections.abc import MutableMapping, Mapping
+from typing import Dict, List, Tuple
 
-
+from hepaid.utils import slha2dict
 #########################################
 # Classes for reading LesHouches files. #
 # Focusing on Spheno.                   #
@@ -12,33 +14,36 @@ import numpy as np
 
 
 class BlockLine: 
-	def __init__(self, entries, line_category):
-		self.entries = entries
-		self.line_category = line_category
-		self.line_format = self.fline(line_category)
+    def __init__(self, entries, line_category):
+        self.entries = entries
+        self.line_category = line_category
+        self.line_format = self.fline(line_category)
 
-	def fline(self, cat):
-		if cat == 'block_header':
-			return '{:6s} {:20s}  {:13s}'
-		elif cat == 'on_off':
-			return '{:6s} {:18s}  {:13s}'
-		elif cat == 'value':
-			return '{:6s} {:18s}  {:13s}'
-		elif cat == 'matrix_value':
-			return '{:3s}{:3s} {:18}  {:13s}'
+    def fline(self, cat):
+        if cat == 'block_header':
+            return '{:6s} {:20s}  {:13s}'
+        elif cat == 'on_off':
+            return '{:6s} {:18s}  {:13s}'
+        elif cat == 'value':
+            return '{:6s} {:18s}  {:13s}'
+        elif cat == 'matrix_value':
+            return '{:3s}{:3s} {:18}  {:13s}'
 
-	@property
-	def comment(self):
-		return self.entries[-1]
-	@property
-	def value(self):
-		return self.entries[-2]
-	@property 
-	def options(self):
-		return self.entries[:-2]
+    def __repr__(self):
+        return self.fline(self.line_category)
+
+    @property
+    def comment(self):
+        return self.entries[-1]
+    @property
+    def value(self):
+        return self.entries[-2]
+    @property 
+    def options(self):
+        return self.entries[:-2]
 
 
-class Block:
+class Block(MutableMapping):
     '''
     ## Block
     It holds each line of a block.\n
@@ -52,6 +57,32 @@ class Block:
         self.category = category
         self.output_mode = output_mode
 
+    def __repr__(self):
+        block_header ='{} {}   {:10s}\n'.format('Block',self.block_name,self.block_comment) 
+        block_format = ''
+        for line in self.block_body:
+            block_format += str(line).format(*line.entries) + '\n'
+        return block_header+block_format
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def __setitem__(self, key,value):
+        self.set(key,value)
+
+    def __delitem__(self, key):
+        pass
+
+    def __iter__(self):
+        return iter(self.block_body)
+
+    def __len__(self):
+        return len(self.block_body)
+
+    def keys(self):
+        entries = [i.entries for i in self]
+        return entries
+
     def show(self):
         '''
         Print block information in the LesHouches format.
@@ -59,8 +90,27 @@ class Block:
         print('{} {}   {:10s}'.format('Block',self.block_name,self.block_comment))
         for b in self.block_body:
             print(b.line_format.format(*b.entries))
-    
-    
+
+
+    def get(self,option):
+        '''
+        Call set(option, param_value) method to modify the option N with a parameter_value \n.
+        -option = Can be an int or a list [i, j]. \n
+        -param_value = Can be an int (on/off) or a float. \n
+        '''
+        for line in self.block_body:
+            if (line.line_category == 'matrix_value'):
+                if (option == [int(line.entries[0]),int(line.entries[1])]):
+                    item = line.entries[2] 
+                    break
+            if (line.line_category == 'value') & (option == int(line.entries[0])):              
+                item = line.entries[1] 
+                break                  
+            elif (line.line_category == 'on_off') & (option == int(line.entries[0])):
+                item = line.entries[1]
+                break
+        return item
+
     def set(self,option, param_value):
         '''
         Call set(option, param_value) method to modify the option N with a parameter_value \n.
@@ -91,7 +141,7 @@ class Block:
 
 
 
-class LesHouches:
+class LesHouches(Mapping):
     '''
     ## LesHuches
     Read a LesHouches file and stores each block in block classes. \n
@@ -109,42 +159,65 @@ class LesHouches:
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
-		# Experimental
+        # Experimental
         self._spheno_blocks = ['MODSEL', 'SMINPUTS', 'SPHENOINPUT', 'DECAYOPTIONS']
-		
+
     def model_param_blocks(self):
         param_blocks = []
         for block_name in self.block_list:
             if not(block_name in self._spheno_blocks):
                 param_blocks.append(block_name)
         return param_blocks
-	
 
+    def __getitem__(self, key):
+        return self.block(key)
+
+    def keys(self):
+        return self.block_list
+    def __iter__(self):
+        return iter(self._blocks)
+
+    def __len__(self):
+        return len(self.block_list)
 
     def block(self, name):
-        block = LesHouches.find_block(name.upper(), self._blocks)
+        block = self.find_block(name.upper(), self._blocks)
         return block  
 
 
+
+    @staticmethod
     def find_block(name, block_list):
-            try:
-                if isinstance(name, str):
-                    for b in block_list:
-                        if b.block_name == name:
-                            b_found = b
-                            break
-                        else:
-                            None
-                return b_found
-            except:
-                print('block not found')
+       try:
+           if isinstance(name, str):
+               for b in block_list:
+                   if b.block_name == name:
+                       b_found = b
+                       break
+                   else:
+                       None
+           return b_found
+       except:
+           print('block not found')
+    #def find_block(name, block_list):
+    #    try:
+    #        if isinstance(name, str):
+    #            for b in block_list:
+    #                if b.block_name == name:
+    #                    b_found = b
+    #                    break
+    #                else:
+    #                    None
+    #            return b_found
+    #    except:
+    #        print('block not found')
 
     def read_leshouches(file_dir, output_mode):
         block_list = []
         paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
-                            on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
-                            value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                            matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
+                on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
+                value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
 
 
 
@@ -156,16 +229,16 @@ class LesHouches:
 
                     if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
                         block_list.append(Block(    block_name=m_block.group('block_name'), 
-                                                    block_comment=m_block.group('comment'),
-                                                    category= 'spheno_data' ,
-                                                    output_mode=output_mode))
+                            block_comment=m_block.group('comment'),
+                            category= 'spheno_data' ,
+                            output_mode=output_mode))
                         in_block, block_from = m_block.group('block_name'), 'spheno_data'
 
                     else:
                         block_list.append(Block(        block_name=m_block.group('block_name'), 
-                                                        block_comment=m_block.group('comment'),
-                                                        category= 'parameters_data',
-                                                        output_mode=output_mode))
+                            block_comment=m_block.group('comment'),
+                            category= 'parameters_data',
+                            output_mode=output_mode))
                         in_block, block_from = m_block.group('block_name'), 'parameters_data'
 
                 m_body =  re.match(paterns['on_off'], line.strip())
@@ -179,7 +252,7 @@ class LesHouches:
                     LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
         return block_list
 
-  
+
     def new_file(self, new_file_name):
         '''
         Writes a new LesHouches file with the blocks defined in the instance. \n
@@ -192,7 +265,7 @@ class LesHouches:
         file_dir=os.path.join(new_file_dir,new_file_name)
         if self.output_mode:
             print(f'Writing new LesHouches in :{file_dir}')
-        
+
         with open(file_dir,'w+') as f:
             for block in self._blocks:
                 head = '{} {}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
@@ -251,20 +324,16 @@ class BlockLineSLHA:
                 line_format = entries_f*len(self.entries)+value_f+comment_f
                 return line_format.format(*self.entries, self.value, self.comment)
 
-class BlockSLHA:
+class BlockSLHA(MutableMapping):
     '''
-    # Block
-    It holds each line of a block.
-    Call .set(parameter_number, value) to change the parameter value in the instance.
+    Class that holds each line of a block in the block_body attribute.
     
     Args:
-    ----
-    block_name
-    block_comment
-    q_values
-    block_category: DECAY or BLOCK
-    decay_width
-    output_mode: Print internal processes
+        block_name
+        block_comment
+        q_values
+        block_category: DECAY or BLOCK
+        decay_width: if block_categor is Decay
     '''  
     def __init__(   self, block_name, block_comment=None, q_values = None, 
                     block_category=None, decay_width=None):
@@ -276,7 +345,27 @@ class BlockSLHA:
         if self.block_category == 'DECAY':
             self.pid = int(self.block_name.split()[-1])
             self.decay_width = float(decay_width)
- 
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def __setitem__(self, key,value):
+        self.set(key,value)
+
+    def __delitem__(self, key):
+        pass
+
+    def __iter__(self):
+        return iter(self.block_body)
+
+    def __len__(self):
+        return len(self.block_body)
+
+    def keys(self):
+        entries = [i.entries for i in self]
+        return entries
+        
+
     def __repr__(self):
         if (self.block_category == 'DECAY'):
             block_header = 'DECAY {:>10}{:>19.8E}    {}\n'.format(self.pid, self.decay_width, self.block_comment)
@@ -300,14 +389,83 @@ class BlockSLHA:
                 block_format += str(line) + '\n'
             return block_format
 
+
         
-    def set(self, line_number, param_value):
-        for n, line in enumerate(self.block_body, start=1):
-            if n == line_number:
-                line.value = param_value
+    def set(self, find: Tuple[int], value: float, request:str='value') -> None:
+        '''
+        Method to change or set the value for a line in a block with 
+        acording to the given entries or comment (Which usually is the 
+        name or description).
+
+        Args:
+            find: Tuple[int] = Tuple for values of entries. ex. (2,25,25)
+                in a Decay Block.
+            value: float = Value to set.
+            request: str = search according to 'value' or 'comment'.
+        Return:
+            None
+        '''
+        # Define find iterable
+        find = [find] if isinstance(find, int) else find
+        find = [str(i) for i in find]
+
+        # Define search according to value or comment
+        if request == 'value':
+            get_ = lambda line: line.value
+        if request == 'comment':
+            get_ = lambda line: line.comment
+
+        try:
+            for i,b in enumerate(self.block_body):
+                line_entries = b.entries
+                if line_entries == find:
+                    # Save the index
+                    b_found = i
+                    break
+                else:
+                    None
+            self.block_body[i].value = value
+        except:
+            print('Entry not found')
+
+    def get(self, find: Tuple[int], request:str='value') -> float:
+        '''
+        Method to get the value for a line in a block with acording to
+        the given entries or comment (Which usually is the name or 
+        description).
+
+        Args:
+            find: Tuple[int] = Tuple for values of entries. ex. (2,25,25)
+                in a Decay Block.
+            request: str = search according to 'value' or 'comment'.
+        Return:
+            requested value
+        '''
+
+        # Define find iterable
+        find = [find] if isinstance(find, int) else find
+        find = [str(i) for i in find]
+
+        # Define search according to value or comment
+        if request == 'value':
+            get_ = lambda line: line.value
+        if request == 'comment':
+            get_ = lambda line: line.comment
+
+        try:
+            for b in self.block_body:
+                line_entries = b.entries
+                if line_entries == find:
+                    b_found = b
+                    break
+                else:
+                    None
+            return get_(b_found)
+        except:
+            print('Entry not found')
 
 
-class SLHA:
+class SLHA(Mapping):
     '''
     Read a SLHA file (usually the param_card.dat or first section of 
     and LHE file) and stores each block in BlockSLHA classes.
@@ -329,7 +487,22 @@ class SLHA:
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
-    
+
+    def __getitem__(self, key):
+        return self.block(key)
+
+    #def __setitem__(self, key,value):
+    #    pass
+
+    #def __delitem__(self, key):
+    #    pass
+    def keys(self):
+        return self.block_list
+    def __iter__(self):
+        return iter(self._blocks)
+
+    def __len__(self):
+        return len(self.block_list)
 
     def block(self, name):
         block = self.find_block(name.upper(), self._blocks)
@@ -415,8 +588,11 @@ class SLHA:
                 
 
         return block_list
+    
+    def as_dict(self):
+        '''Return SLHA data as a dictionary'''
+        return  slha2dict(self)
 
-  
     def new_file(self, new_file_name):
         '''
         Write the instance as a new SLHA file in /{work_dir}/SLHA_{model}/{new_file_name}.
@@ -433,6 +609,9 @@ class SLHA:
         with open(file_dir,'w+') as f:
             for block in self._blocks:
                 f.write(str(block))
+
+
+
 
 
 #######################################

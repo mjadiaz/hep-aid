@@ -11,3 +11,6 @@ py.py
 ME5_debug
 /hepaid/test.py
 /hepaid/testdir
+/hepaid.egg-info
+/dist
+

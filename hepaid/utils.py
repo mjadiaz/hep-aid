@@ -1,7 +1,7 @@
-from hepaid.hepread import SLHA, BlockSLHA, BlockLineSLHA
+#from hepaid.hepread import SLHA, BlockSLHA, BlockLineSLHA
 from typing import Dict, List
 
-def br_2dict(block_body: List[BlockLineSLHA]) -> Dict:
+def br_2dict(block_body: List) -> Dict:
     '''Turn branching ratios into a dict'''
     br_dict = {'value':[], 'nda':[], 'pids':[],'comment':[]}
     for line in block_body:
@@ -11,7 +11,7 @@ def br_2dict(block_body: List[BlockLineSLHA]) -> Dict:
         br_dict['comment'] += [str(line.comment)]
     return br_dict
 
-def decay_block_2dict(block: BlockSLHA) -> Dict:
+def decay_block_2dict(block) -> Dict:
     '''Turn Decay Block info into a dict'''
     body_dict = {
         'block': block.block_name,
@@ -24,7 +24,7 @@ def decay_block_2dict(block: BlockSLHA) -> Dict:
         }
     return body_dict 
 
-def body_values_2dict(block_body: List[BlockLineSLHA]) -> Dict:
+def body_values_2dict(block_body: List) -> Dict:
     '''Turn the value for every non Decay block body in to a dict'''
     values_dict = {'value':[], 'entries':[],'comment':[]}
     for line in block_body:
@@ -37,7 +37,7 @@ def body_values_2dict(block_body: List[BlockLineSLHA]) -> Dict:
         values_dict['comment'] += [str(line.comment)]
     return values_dict 
 
-def generic_block_2dict(block: BlockSLHA) -> Dict:
+def generic_block_2dict(block) -> Dict:
     '''Turn every Non-Decay block into a dict'''
     body_dict = {
         'block_name': block.block_name,
@@ -48,14 +48,14 @@ def generic_block_2dict(block: BlockSLHA) -> Dict:
         }
     return body_dict 
 
-def block2dict(block: BlockSLHA) -> Dict:
+def block2dict(block) -> Dict:
     '''Turn any block into dict'''
     if block.block_category == 'DECAY':
         return decay_block_2dict(block)
     else:
         return generic_block_2dict(block)
 
-def slha2dict(slha: SLHA) -> Dict:
+def slha2dict(slha) -> Dict:
     '''Convert a SLHA object into dict'''
     slha_dict = {b: block2dict(slha.block(b)) for b in slha.block_list}
     return slha_dict
@@ -79,7 +79,7 @@ def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
     hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
     return hepstack_list_dict
 
-def merge_slha_files(slha_list: List[SLHA], idx: int=0) -> Dict:
+def merge_slha_files(slha_list: List, idx: int=0) -> Dict:
     '''
     Takes a list of SLHA files and merge them in a single
     indexed dictionary. The index starts from idx. 

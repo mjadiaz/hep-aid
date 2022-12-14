@@ -1,0 +1,19 @@
+ # generated with HiggsBounds version 5.10.2 on 12.12.2022 at 17:03
+ # settings: LandH, effC
+ #
+ # column abbreviations
+ #   n          : line id of input
+ #   Mh(i)      : Neutral Higgs boson masses in GeV
+ #   Mhplus(i)  : Charged Higgs boson masses in GeV
+ #   HBresult   : scenario allowed flag (1: allowed, 0: excluded, -1: unphysical)
+ #   chan       : most sensitive channel (see below). chan=0 if no channel applies
+ #   obsratio   : ratio [sig x BR]_model/[sig x BR]_limit (<1: allowed, >1: excluded)
+ #   ncomb      : number of Higgs bosons combined in most sensitive channel
+ #
+ # channel numbers used in this file
+ #         911 :(p p)->h+..., h=1 where h is SM-like (CMS-PAS-HIG-12-045)
+ # (for full list of processes, see Key.dat)
+ #
+ #cols:  n           Mh(1)           Mh(2)           Mh(3)           Mh(4)           Mh(5)           Mh(6)       Mhplus(1)  HBresult  chan    obsratio     ncomb
+ #
+             1     120.131         170.914         3531.67         3853.74         2964.61         3531.66         3529.18         0   911     1.21552         1

@@ -3,7 +3,6 @@ __pycache__
 BLSSM_scan.py
 cTSM_scan.ipynb
 BR*
-*.dat
 SPheno.out
 Messages.out
 ./ipynb_checkpoints

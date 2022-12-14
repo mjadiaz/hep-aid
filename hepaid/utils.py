@@ -1,4 +1,3 @@
-#from hepaid.hepread import SLHA, BlockSLHA, BlockLineSLHA
 from typing import Dict, List
 
 def br_2dict(block_body: List) -> Dict:

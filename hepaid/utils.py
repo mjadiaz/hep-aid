@@ -60,6 +60,25 @@ def slha2dict(slha: SLHA) -> Dict:
     slha_dict = {b: block2dict(slha.block(b)) for b in slha.block_list}
     return slha_dict
 
+def hepstack_dict(
+        slha: Dict, 
+        hb_result: Dict, 
+        hs_result: Dict) -> Dict:
+    '''
+    Merge SLHA dict to HiggsBounds and HiggsSignals results 
+    into Dict. This is HEPStack Data Structure
+    '''
+    stack = {'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
+    return stack
+
+def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
+    '''
+    Takes a list of HEPStack Structures and merge them in a single
+    indexed dictionary. The index starts from idx. 
+    '''
+    hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
+    return hepstack_list_dict
+
 def merge_slha_files(slha_list: List[SLHA], idx: int=0) -> Dict:
     '''
     Takes a list of SLHA files and merge them in a single
@@ -85,10 +104,10 @@ def json2dict(path: str) -> Dict:
         my_dict = json.loads(json_string)
         return my_dict 
 
-def merge_slha_datasets(ds_1: Dict, ds_2: Dict) -> Dict:
+def merge_datasets(ds_1: Dict, ds_2: Dict) -> Dict:
     '''
-    Merge two SLHADataSet into one. 
-    To-do: Implement SLHADataSet type.
+    Merge two DataSets structures into one. 
+    To-do: Implement SLHADataSet/HEPStack type.
     '''
     import numpy as np
     max_1 = np.fromiter(ds_1.keys(),dtype=int).max()

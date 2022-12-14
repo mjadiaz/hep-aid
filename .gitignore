@@ -13,4 +13,7 @@ ME5_debug
 /hepaid/testdir
 /hepaid.egg-info
 /dist
+/examples/.ipynb_checkpoints
+/hepaid/.test.py.swp
+/hepaid/_version.py
 

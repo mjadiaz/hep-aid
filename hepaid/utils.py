@@ -57,7 +57,45 @@ def block2dict(block: BlockSLHA) -> Dict:
 
 def slha2dict(slha: SLHA) -> Dict:
     '''Convert a SLHA object into dict'''
-    slha_dict = [block2dict(slha.block(b)) for b in slha.block_list]
+    slha_dict = {b: block2dict(slha.block(b)) for b in slha.block_list}
     return slha_dict
 
+def merge_slha_files(slha_list: List[SLHA], idx: int=0) -> Dict:
+    '''
+    Takes a list of SLHA files and merge them in a single
+    indexed dictionary. The index starts from idx. 
+    '''
+    slha_list_dict = {str(i): file for i,file in enumerate(slha_list, idx)}
+    return slha_list_dict
+
+def dict2json(my_dict: Dict, path: str) -> None:
+    '''Takes dictionaries and save it in path as a compressed JSON file'''
+    import json
+    import gzip
+    json_string = json.dumps(my_dict)
+    with gzip.GzipFile("{}.json.gz".format(path), "w") as f:
+        f.write(json_string.encode())
+
+def json2dict(path: str) -> Dict:
+    '''Loads a copressed JSON file from path and returns a dict'''
+    import json
+    import gzip
+    with gzip.open("{}.json.gz".format(path), "r") as f:
+        json_string = f.read()
+        my_dict = json.loads(json_string)
+        return my_dict 
+
+def merge_slha_datasets(ds_1: Dict, ds_2: Dict) -> Dict:
+    '''
+    Merge two SLHADataSet into one. 
+    To-do: Implement SLHADataSet type.
+    '''
+    import numpy as np
+    max_1 = np.fromiter(ds_1.keys(),dtype=int).max()
+    max_2 = np.fromiter(ds_2.keys(),dtype=int).max()
+    if max_2 > max_1:
+        new_dataset = {**ds_1, **ds_2}
+    else:
+        new_dataset = {**ds_2, **ds_1}
+    return new_dataset
 

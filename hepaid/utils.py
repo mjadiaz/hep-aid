@@ -36,6 +36,19 @@ def body_values_2dict(block_body: List) -> Dict:
         values_dict['comment'] += [str(line.comment)]
     return values_dict 
 
+def body_values_2dict_lhs(block_body: List) -> Dict:
+    '''Turn the value for every non Decay block body in to a dict in LesHouches Files'''
+    values_dict = {'value':[], 'entries':[],'comment':[]}
+    for line in block_body:
+        values_dict['value'] += [float(line.value) if line.value != None else None]
+        try:
+        # Some blocks like 'SPINFO' have string entries
+            values_dict['entries'] += [int(i) for i in line.options], 
+        except ValueError:
+            values_dict['entries'] += [i for i in line.options], 
+        values_dict['comment'] += [str(line.comment)]
+    return values_dict 
+
 def generic_block_2dict(block) -> Dict:
     '''Turn every Non-Decay block into a dict'''
     body_dict = {
@@ -47,6 +60,14 @@ def generic_block_2dict(block) -> Dict:
         }
     return body_dict 
 
+def generic_block_2dict_lhs(block) -> Dict:
+    '''Turn every Non-Decay block into a dict in LesHouches Files'''
+    body_dict = {
+        'block_name': block.block_name,
+        'comment': block.block_comment,
+        'values': body_values_2dict_lhs(block.block_body)
+        }
+    return body_dict 
 def block2dict(block) -> Dict:
     '''Turn any block into dict'''
     if block.block_category == 'DECAY':
@@ -59,7 +80,13 @@ def slha2dict(slha) -> Dict:
     slha_dict = {b: block2dict(slha.block(b)) for b in slha.block_list}
     return slha_dict
 
+def lhs2dict(lhs) -> Dict:
+    '''Convert a LesHouches object into dict'''
+    lhs_dict = {b: generic_block_2dict_lhs(lhs[b]) for b in lhs.block_list}
+    return lhs_dict
+
 def hepstack_dict(
+        lhs: Dict,
         slha: Dict, 
         hb_result: Dict, 
         hs_result: Dict) -> Dict:
@@ -67,7 +94,7 @@ def hepstack_dict(
     Merge SLHA dict to HiggsBounds and HiggsSignals results 
     into Dict. This is HEPStack Data Structure
     '''
-    stack = {'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
+    stack = {'LesHouches': lhs, 'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
     return stack
 
 def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:

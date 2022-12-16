@@ -7,6 +7,7 @@ from collections.abc import MutableMapping, Mapping
 from typing import Dict, List, Tuple
 
 from hepaid.utils import slha2dict
+from hepaid.utils import lhs2dict 
 #########################################
 # Classes for reading LesHouches files. #
 # Focusing on Spheno.                   #
@@ -252,6 +253,10 @@ class LesHouches(Mapping):
                     LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
         return block_list
 
+
+    def as_dict(self):
+        '''Return LHS data as a dictionary'''
+        return  lhs2dict(self)
 
     def new_file(self, new_file_name):
         '''

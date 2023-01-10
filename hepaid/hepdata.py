@@ -54,7 +54,7 @@ class HEPDataSet:
             f.write(json_string.encode())
 
     def load(self, path):
-        with gzip.open('{}.json.gz'.format(path),"r") as f:
+        with gzip.open('{}'.format(path),"r") as f:
             json_string = f.read()
             my_list = json.loads(json_string)
             len_new_data = len(my_list)

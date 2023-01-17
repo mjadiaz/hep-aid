@@ -17,7 +17,7 @@ def decay_block_2dict(block) -> Dict:
         'comment': block.block_comment,
         'q_values': block.q_values,
         'pid': block.pid,
-        'decay_with': block.decay_width,
+        'decay_width': block.decay_width,
         'block_category': block.block_category,
         'branching_ratios': br_2dict(block.block_body)
         }

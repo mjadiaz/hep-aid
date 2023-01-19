@@ -2,6 +2,9 @@ from json import JSONEncoder
 from collections import deque
 import gzip
 import json
+from pathlib import Path
+from rich.progress import track
+import pickle 
 
 class DequeEncoder(JSONEncoder):
     def default(self, obj):
@@ -24,9 +27,14 @@ class HEPDataSet:
     def __init__(self):
         self._data = deque()
         self.counter = 0
+        self.complete_stack_ids = []
+        self.save_mode = 'pickle' 
+
     
     def __repr__(self):
-        return 'HEPDataSet. Size = {}'.format(self.counter)
+        return 'HEPDataSet. Size = {}. Complete Stack Points = {}'.format(
+                    self.counter, len(self.complete_stack_ids)
+                    )
 
     def __getitem__(self, key):
         return self._data[key]
@@ -41,24 +49,80 @@ class HEPDataSet:
         return self.counter
 
     def add(self, data):
-        self.counter += 1
         self._data.append(data)
+        if not self.is_none(idx=self.counter):
+            self.complete_stack_ids.append(self.counter)
+        self.counter += 1
 
     def reset(self):
         self.counter = 0
         self._data.clear()
 
-    def save(self, path):
+    def save_json(self, path):
         json_string = json.dumps(self._data, cls=DequeEncoder)
         with gzip.GzipFile('{}.json.gz'.format(path),"w") as f:
             f.write(json_string.encode())
 
-    def load(self, path):
+    def save_pickle(self, path):
+        pickled_data = pickle.dumps(self._data)
+        with gzip.GzipFile('{}.p.gz'.format(path),"wb") as f:
+            f.write(pickled_data)
+
+    def save(self, path):
+        self.save_pickle(path)
+
+
+    def load_json(self, path):
         with gzip.open('{}'.format(path),"r") as f:
             json_string = f.read()
             my_list = json.loads(json_string)
             len_new_data = len(my_list)
             self._data.extend(my_list)
+        for idx in range(self.counter, self.counter + len_new_data):
+            if not self.is_none(idx=idx):
+                self.complete_stack_ids.append(idx)
         self.counter += len_new_data
+
+    def load_pickle(self, path):
+        with gzip.open('{}'.format(path),"r") as f:
+            depickled_data = f.read()
+        try:
+            data = pickle.loads(depickled_data)
+            len_new_data = len(data)
+            self._data += data
+            for idx in range(self.counter, self.counter + len_new_data):
+                if not self.is_none(idx=idx):
+                    self.complete_stack_ids.append(idx)
+            self.counter += len_new_data
+            return True
+        except EOFError:
+            return False
+
+    def load(self, path):
+        self.load_pickle(path)
+
+    def find_hepdata_files(self, directory: str):
+        ''' Identify HEPData files in a directory '''
+        directory = Path(directory)
+        dataset_files = []
+        data_name = 'HEPDataSet'
+        for file in directory.iterdir():
+            if data_name in file.name:
+                dataset_files.append(directory.joinpath(file.name))
+        return dataset_files
+
+    def load_from_directory(self, directory: str, percentage: float =1.0):
+        dataset_files = self.find_hepdata_files(directory)
+        percentage_slice = dataset_files[:int(len(dataset_files)*percentage)]
+        corrupted_files = 0
+        for file in track(percentage_slice, description=f'Loading HEPDataSets. {percentage*100}%'):
+            loaded = self.load(file)
+            corrupted_files += 1 if not loaded else 0
+        print('EOFError: corrupted files: ', corrupted_files)
+            
+
+    def is_none(self, idx, stack: str='SLHA'):
+        return True if self._data[idx][stack] is None else False
+
 
 

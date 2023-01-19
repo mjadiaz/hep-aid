@@ -170,6 +170,11 @@ class LesHouches(Mapping):
                 param_blocks.append(block_name)
         return param_blocks
 
+    def __repr__(self):
+        return 'LesHouches: {} model: {} blocks'.format(
+                        self.model, len(self.block_list)
+                        )
+
     def __getitem__(self, key):
         return self.block(key)
 
@@ -501,6 +506,10 @@ class SLHA(Mapping):
 
     #def __delitem__(self, key):
     #    pass
+    def __repr__(self):
+        return 'SLHA: {} model: {} blocks'.format(
+                        self.model, len(self.block_list)
+                        )
     def keys(self):
         return self.block_list
     def __iter__(self):

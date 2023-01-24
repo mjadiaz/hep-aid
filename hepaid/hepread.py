@@ -308,7 +308,7 @@ class BlockLineSLHA:
         self.line_category = line_category
     
     def __repr__(self):
-        if (self.line_category == 'DECAY'):
+        if (self.line_category == 'DECAY') or (self.line_category == 'DECAY1L'):
             # Aligns and Widths for Decay Blocks
             br_f  = '{:>19.8E}'
             nda_f = '{:>5}'
@@ -352,7 +352,7 @@ class BlockSLHA(MutableMapping):
         self.q_values = q_values 
         self.block_body = []
         self.block_category = block_category
-        if self.block_category == 'DECAY':
+        if (self.block_category == 'DECAY') or (self.block_category == 'DECAY1L'):
             self.pid = int(self.block_name.split()[-1])
             self.decay_width = float(decay_width)
 
@@ -377,8 +377,13 @@ class BlockSLHA(MutableMapping):
         
 
     def __repr__(self):
-        if (self.block_category == 'DECAY'):
-            block_header = 'DECAY {:>10}{:>19.8E}    {}\n'.format(self.pid, self.decay_width, self.block_comment)
+        if (self.block_category == 'DECAY') or (self.block_category == 'DECAY1L'):
+            block_header = '{} {:>10}{:>19.8E}    {}\n'.format(
+                    self.block_category,
+                    self.pid, 
+                    self.decay_width, 
+                    self.block_comment
+                    )
             block_format = '#    BR                NDA      ID1      ID2   ... \n'
             for line in self.block_body:
                 block_format += str(line) + '\n'
@@ -547,6 +552,8 @@ class SLHA(Mapping):
                                 r'(?P<entries>.+)\s+(?P<comment>#.*)',
                         decay_header=\
                                 r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                        decay1l_header=\
+                                r'DECAY1L\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
                         decay_body_pattern=\
                                 r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
                         )
@@ -564,12 +571,24 @@ class SLHA(Mapping):
                                                 ))
                     in_block, block_from = m_block.group('block_name'), 'parameter_data'
                     continue
+
                 m_block = re.match(paterns['decay_header'], line.upper().strip()) 
                 if not(m_block == None):
                     block_name = 'DECAY '+m_block.group('particle') 
                     block_list.append(BlockSLHA(   block_name=block_name, 
                                                 block_comment=m_block.group('comment'),
                                                 block_category= 'DECAY' ,
+                                                decay_width= m_block.group('value'),
+                                                ))
+                    in_block, block_from = block_name, 'decay_data'
+                    continue
+
+                m_block = re.match(paterns['decay1l_header'], line.upper().strip()) 
+                if not(m_block == None):
+                    block_name = 'DECAY1L '+m_block.group('particle') 
+                    block_list.append(BlockSLHA(   block_name=block_name, 
+                                                block_comment=m_block.group('comment'),
+                                                block_category= 'DECAY1L' ,
                                                 decay_width= m_block.group('value'),
                                                 ))
                     in_block, block_from = block_name, 'decay_data'
@@ -583,6 +602,7 @@ class SLHA(Mapping):
                                                                                 comment=m_body.group('comment'),
                                                                                 line_category='BLOCK'))
                     continue
+
                 m_body =  re.match(paterns['decay_body_pattern'], line.strip())
                 if not(m_body == None):            
                     self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
@@ -591,6 +611,7 @@ class SLHA(Mapping):
                                                                                 comment=m_body.group('comment'),
                                                                                 line_category='DECAY'))
                     continue
+
                 m_body =  re.match(paterns['model_param_pattern'], line.strip())
                 if not(m_body == None):            
                     self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(

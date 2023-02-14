@@ -4,10 +4,69 @@ from shutil import copy
 import numpy as np
 
 from collections.abc import MutableMapping, Mapping
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
-from hepaid.utils import slha2dict
-from hepaid.utils import lhs2dict 
+#from hepaid.utils import lhs2dict 
+
+
+
+PATTERNS =  dict(   
+    block_header=\
+            r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
+    nmatrix_value =\
+            r'(?P<entries>.+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+    model_param_pattern =\
+            r'(?P<entries>.+)\s+(?P<comment>#.*)',
+    decay_header=\
+            r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+    decay1l_header=\
+            r'DECAY1L\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+    decay_body_pattern=\
+            r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
+    )
+
+def extract_line_elements(line: str)-> dict:
+    #import warnings
+    patterns = dict(
+        comment = r'(?P<comment>#.*)',
+        values = r'(?P<value>.?\d+\.\d+E.\d+)',
+        entries = r'(?P<entries>[+-]?\d+)',
+        )
+    line_elements = {}
+    _line = line
+    for p in patterns:
+        line_elements[p] = re.findall(patterns[p], _line)
+        _line = re.sub(patterns[p], '' , _line)
+    #if len(_line.strip()) != 0:
+    #     warnings.warn(f"Line is not fully read: {_line}")
+    return line_elements
+
+def block2dict(block):
+    block_dict = {}
+    entries_dict = {}
+    for i, entries in enumerate(block.entries()):
+        entries_dict[','.join(entries)] = {
+            'value': block.values()[i], 
+            'comment': block.comments()[i],
+            'line': block.lines()[i],
+        }
+    block_dict['entries'] = entries_dict
+    block_dict['block_name'] = block.block_name
+    block_dict['block_comment'] = block.block_comment
+    block_dict['q_values'] = block.q_values
+    block_dict['block_category'] = block.block_category
+    block_dict['header_line'] = block.header_line
+    if (block.block_category == 'DECAY') or (block.block_category == 'DECAY1L'):
+        block_dict['pid'] = block.pid
+        block_dict['decay_width'] = block.decay_width
+    return block_dict
+
+def slha2dict(slha):
+    slha_dict = {}
+    for i, block in enumerate(slha.block_list):
+        slha_dict[block] = block2dict(slha[block])
+    return slha_dict
+
 #########################################
 # Classes for reading LesHouches files. #
 # Focusing on Spheno.                   #
@@ -31,7 +90,7 @@ class BlockLine:
             return '{:3s}{:3s} {:18}  {:13s}'
 
     def __repr__(self):
-        return self.fline(self.line_category)
+        return self.fline(self.line_category).format(*self.entries)
 
     @property
     def comment(self):
@@ -156,7 +215,7 @@ class LesHouches(Mapping):
         if self.output_mode:
             print(f'Reading LesHouches from : {file_dir}')
 
-        self._blocks = LesHouches.read_leshouches(file_dir, output_mode)
+        self._blocks = self.read_leshouches(file_dir, output_mode)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
@@ -190,8 +249,6 @@ class LesHouches(Mapping):
         block = self.find_block(name.upper(), self._blocks)
         return block  
 
-
-
     @staticmethod
     def find_block(name, block_list):
        try:
@@ -205,28 +262,27 @@ class LesHouches(Mapping):
            return b_found
        except:
            print('block not found')
-    #def find_block(name, block_list):
-    #    try:
-    #        if isinstance(name, str):
-    #            for b in block_list:
-    #                if b.block_name == name:
-    #                    b_found = b
-    #                    break
-    #                else:
-    #                    None
-    #            return b_found
-    #    except:
-    #        print('block not found')
 
-    def read_leshouches(file_dir, output_mode):
+    def read_leshouches(self, file_dir, output_mode):
+        assert isinstance(file_dir, str) or isinstance(file_dir, dict)
+        if isinstance(file_dir, dict):
+            lhs = self.read_leshouches_from_dict(
+                file=file_dir, 
+                output_mode=output_mode
+                )
+        else:
+            lhs = self.read_leshouches_from_dir(
+                file_dir=file_dir,
+                output_mode=output_mode
+            )
+        return lhs
+
+    def read_leshouches_from_dir(self, file_dir, output_mode):
         block_list = []
         paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
                 on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
                 value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
                 matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
-
-
-
         with open(file_dir, 'r') as f:
             for line in f:
                 # Match in 3 groups a pattern like: '1000001     2.00706278E+02   # Sd_1'
@@ -249,19 +305,61 @@ class LesHouches(Mapping):
 
                 m_body =  re.match(paterns['on_off'], line.strip())
                 if not(m_body == None):            
-                    LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'on_off'))
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'on_off'))
                 m_body =  re.match(paterns['value'], line.strip())
                 if not(m_body == None):            
-                    LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'value'))
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'value'))
                 m_body =  re.match(paterns['matrix_value'], line.strip())
                 if not(m_body == None):            
-                    LesHouches.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
         return block_list
 
+    def read_leshouches_from_dict(self, file, output_mode):
+        block_list = []
+        paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
+                on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
+                value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+                matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
+
+        for b in file:
+            m_block = re.match(paterns['block_header'], file[b]['header_line'].upper().strip()) 
+            if not(m_block == None):
+
+                if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
+                    block_list.append(Block(    block_name=m_block.group('block_name'), 
+                        block_comment=m_block.group('comment'),
+                        category= 'spheno_data' ,
+                        output_mode=output_mode))
+                    in_block, block_from = m_block.group('block_name'), 'spheno_data'
+
+                else:
+                    block_list.append(Block(        block_name=m_block.group('block_name'), 
+                        block_comment=m_block.group('comment'),
+                        category= 'parameters_data',
+                        output_mode=output_mode))
+                    in_block, block_from = m_block.group('block_name'), 'parameters_data'
+            for  k in file[b]['entries']:
+                line = file[b]['entries'][k]['line']
+                m_body =  re.match(paterns['on_off'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'on_off'))
+                m_body =  re.match(paterns['value'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'value'))
+                m_body =  re.match(paterns['matrix_value'], line.strip())
+                if not(m_body == None):            
+                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+        return block_list
 
     def as_dict(self):
-        '''Return LHS data as a dictionary'''
-        return  lhs2dict(self)
+        '''
+        Return LHS data as a dictionary. 
+        Temporary solution: Read as SLHA -> .asdict()'''
+        return SLHA(
+            self.file_dir, 
+            work_dir=self.work_dir, 
+            model=self.model
+            ).as_dict()
 
     def new_file(self, new_file_name):
         '''
@@ -300,39 +398,17 @@ class BlockLineSLHA:
     comment: str
     line_category: DECAY or BLOCK. Internal parameter.
     '''
-    def __init__(self, entries, value, comment, line_category):
-        self.entries = entries.split()
-        self.value = float(value) if value != None else None 
-        self.comment = comment
+    def __init__(self, entries, value, comment, line_category, line=None):
+        self.entries = entries
+        self.value = [float(v) if v != None else None for v in value] 
+        self.comment = comment[0] if len(comment) != 0 else None
         self._total_entries_list = [entries] + [value] + [comment] 
         self.line_category = line_category
-    
+        self.line = line
+
     def __repr__(self):
-        if (self.line_category == 'DECAY') or (self.line_category == 'DECAY1L'):
-            # Aligns and Widths for Decay Blocks
-            br_f  = '{:>19.8E}'
-            nda_f = '{:>5}'
-            id1_f = '{:>13}'
-            idn_f = '{:>11}'
-            comment_f = '    {}'
-            line_format = br_f+nda_f+id1_f+idn_f*(len(self.entries)-2)+comment_f
-            return line_format.format(self.value, *self.entries, self.comment)
-        else:
-            # Aligns and Widths for Parameter Blocks
-            n_entries = len(self.entries)
-            max_len = max([len(entry) for entry in self.entries])
-            if (n_entries == 2) & (max_len <= 2):
-                entries_f = '{:>5}'
-            else:    
-                entries_f = '{:>11}'
-            value_f  = '{:>18.8E}'
-            comment_f = '    {}'
-            if self.value == None:
-                line_format = (entries_f+' ')*len(self.entries) + comment_f
-                return line_format.format(*self.entries, self.comment)
-            else:
-                line_format = entries_f*len(self.entries)+value_f+comment_f
-                return line_format.format(*self.entries, self.value, self.comment)
+        return self.line
+    
 
 class BlockSLHA(MutableMapping):
     '''
@@ -346,12 +422,13 @@ class BlockSLHA(MutableMapping):
         decay_width: if block_categor is Decay
     '''  
     def __init__(   self, block_name, block_comment=None, q_values = None, 
-                    block_category=None, decay_width=None):
+                    block_category=None, decay_width=None, header_line=None):
         self.block_name = block_name
         self.block_comment = block_comment
         self.q_values = q_values 
         self.block_body = []
         self.block_category = block_category
+        self.header_line = header_line
         if (self.block_category == 'DECAY') or (self.block_category == 'DECAY1L'):
             self.pid = int(self.block_name.split()[-1])
             self.decay_width = float(decay_width)
@@ -374,35 +451,28 @@ class BlockSLHA(MutableMapping):
     def keys(self):
         entries = [i.entries for i in self]
         return entries
+    
+    def entries(self):
+        return self.keys()
+
+    def values(self):
+        values = [i.value for i in self]
+        return values 
+
+    def comments(self):
+        comments = [i.comment for i in self]
+        return comments
+
+    def lines(self):
+        lines = [i.line for i in self]
+        return lines
         
 
     def __repr__(self):
-        if (self.block_category == 'DECAY') or (self.block_category == 'DECAY1L'):
-            block_header = '{} {:>10}{:>19.8E}    {}\n'.format(
-                    self.block_category,
-                    self.pid, 
-                    self.decay_width, 
-                    self.block_comment
-                    )
-            block_format = '#    BR                NDA      ID1      ID2   ... \n'
-            for line in self.block_body:
-                block_format += str(line) + '\n'
-            return block_header+block_format
-        else:
-            len_name = len(self.block_name)+4
-            block_header = 'BLOCK {name:>{len_name}}'.format( name=self.block_name, 
-                                                              len_name=len(self.block_name)+4)
-            block_header_comment = '   {comment}'.format(comment=self.block_comment)
-            if not(self.q_values == None):
-                block_header_q = ' Q={q_values:>16.8E}'.format(q_values=float(self.q_values))
-                block_header += block_header_q + block_header_comment
-                block_format = block_header+'\n'
-            else:
-                block_header += block_header_comment
-                block_format = block_header.format(self.block_name, self.block_comment)+'\n'
-            for line in self.block_body:
-                block_format += str(line) + '\n'
-            return block_format
+        block_format = self.header_line
+        for l in self.lines():
+            block_format += l
+        return block_format
 
 
         
@@ -443,7 +513,7 @@ class BlockSLHA(MutableMapping):
         except:
             print('Entry not found')
 
-    def get(self, find: Tuple[int], request:str='value') -> float:
+    def get(self, find: Tuple[Union[int,str]], request:str='value') -> float:
         '''
         Method to get the value for a line in a block with acording to
         the given entries or comment (Which usually is the name or 
@@ -458,7 +528,7 @@ class BlockSLHA(MutableMapping):
         '''
 
         # Define find iterable
-        find = [find] if isinstance(find, int) else find
+        find = [find] if not isinstance(find, Tuple) else find
         find = [str(i) for i in find]
 
         # Define search according to value or comment
@@ -486,7 +556,7 @@ class SLHA(Mapping):
     and LHE file) and stores each block in BlockSLHA classes.
     
     Args:
-        file_path: str = Path for the SLHA file to read
+        file: Union[str, dict] = Path/dict for the SLHA file to read
         work_dir: str = Working directory
         model: str = Name of the model 
 
@@ -497,8 +567,17 @@ class SLHA(Mapping):
         block(name): Call a Block object stored in the SLHA instance.  
         new_file(new_file_name): Save the instance as a new SLHA file.
     '''
-    def __init__(self, file_path: str, work_dir: str, model: str) -> None:
-        self._blocks = self.read_slha(file_path)
+    def __init__(self, 
+            file:Union[str,dict], 
+            work_dir:str=None, 
+            model:str=None,
+            ) -> None:
+
+        # Initialize 
+        if isinstance(file, dict):
+            self._blocks = self.read_from_dict(file)
+        else:
+            self._blocks = self.read_slha_from_file(file)
         self.block_list = [name.block_name for name in self._blocks]
         self.work_dir = work_dir
         self.model = model
@@ -506,11 +585,6 @@ class SLHA(Mapping):
     def __getitem__(self, key):
         return self.block(key)
 
-    #def __setitem__(self, key,value):
-    #    pass
-
-    #def __delitem__(self, key):
-    #    pass
     def __repr__(self):
         return 'SLHA: {} model: {} blocks'.format(
                         self.model, len(self.block_list)
@@ -540,102 +614,117 @@ class SLHA(Mapping):
                 return b_found
             except:
                 print('block not found')
-
-    def read_slha(self, file_dir):
+    
+    def read_from_dict(self, slha_dict):
         block_list = []
-        paterns =   dict(   
-                        block_header=\
-                                r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
-                        nmatrix_value =\
-                                r'(?P<entries>.+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                        model_param_pattern =\
-                                r'(?P<entries>.+)\s+(?P<comment>#.*)',
-                        decay_header=\
-                                r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                        decay1l_header=\
-                                r'DECAY1L\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                        decay_body_pattern=\
-                                r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
+        for i, block in enumerate(slha_dict.keys()):
+            if slha_dict[block]['block_category'] == 'BLOCK':
+                block_list.append(BlockSLHA(
+                    block_name=slha_dict[block]['block_name'],
+                    block_comment=slha_dict[block]['block_comment'],
+                    q_values=slha_dict[block]['q_values'],
+                    block_category=slha_dict[block]['block_category'],
+                    header_line=slha_dict[block]['header_line']
+                    ))
+            else:
+                block_list.append(BlockSLHA(
+                    block_name=slha_dict[block]['block_name'],
+                    block_comment=slha_dict[block]['block_comment'],
+                    q_values=slha_dict[block]['q_values'],
+                    block_category=slha_dict[block]['block_category'],
+                    header_line=slha_dict[block]['header_line'],
+                    decay_width=slha_dict[block]['decay_width']
+                    ))
+            for entry in slha_dict[block]['entries'].keys():
+                block_list[-1].block_body.append(
+                    BlockLineSLHA(
+                        entries=entry.split(','),
+                        value=slha_dict[block]['entries'][entry]['value'],
+                        comment=slha_dict[block]['entries'][entry]['comment'],
+                        line_category=slha_dict[block]['block_name'].split()[0],
+                        line=slha_dict[block]['entries'][entry]['line']
                         )
-
-
-
-        with open(file_dir, 'r') as f:
-            for line in f:
-                m_block = re.match(paterns['block_header'], line.upper().strip()) 
-                if not(m_block == None):
-                    block_list.append(BlockSLHA(   block_name=m_block.group('block_name'), 
-                                                block_comment=m_block.group('comment'),
-                                                q_values = m_block.group('q_values'),
-                                                block_category= 'BLOCK' ,
-                                                ))
-                    in_block, block_from = m_block.group('block_name'), 'parameter_data'
-                    continue
-
-                m_block = re.match(paterns['decay_header'], line.upper().strip()) 
-                if not(m_block == None):
-                    block_name = 'DECAY '+m_block.group('particle') 
-                    block_list.append(BlockSLHA(   block_name=block_name, 
-                                                block_comment=m_block.group('comment'),
-                                                block_category= 'DECAY' ,
-                                                decay_width= m_block.group('value'),
-                                                ))
-                    in_block, block_from = block_name, 'decay_data'
-                    continue
-
-                m_block = re.match(paterns['decay1l_header'], line.upper().strip()) 
-                if not(m_block == None):
-                    block_name = 'DECAY1L '+m_block.group('particle') 
-                    block_list.append(BlockSLHA(   block_name=block_name, 
-                                                block_comment=m_block.group('comment'),
-                                                block_category= 'DECAY1L' ,
-                                                decay_width= m_block.group('value'),
-                                                ))
-                    in_block, block_from = block_name, 'decay_data'
-                    continue
-
-                m_body =  re.match(paterns['nmatrix_value'], line.strip())
-                if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
-                                                                                entries=m_body.group('entries'),
-                                                                                value=m_body.group('value'),
-                                                                                comment=m_body.group('comment'),
-                                                                                line_category='BLOCK'))
-                    continue
-
-                m_body =  re.match(paterns['decay_body_pattern'], line.strip())
-                if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
-                                                                                entries=m_body.group('entries'),
-                                                                                value=m_body.group('value'),
-                                                                                comment=m_body.group('comment'),
-                                                                                line_category='DECAY'))
-                    continue
-
-                m_body =  re.match(paterns['model_param_pattern'], line.strip())
-                if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLineSLHA(
-                                                                                entries=m_body.group('entries'),
-                                                                                value=None,
-                                                                                comment=m_body.group('comment'),
-                                                                                line_category='BLOCK'))
-                    continue
-                
-
+                    )
         return block_list
+    
+    def read_blocks(self, file)->list:
+        block_list = []
+        in_block = None
+        for line in file:
+            m_block = re.match(PATTERNS['block_header'], line.upper().strip()) 
+            if not(m_block == None):
+                block_list.append(BlockSLHA(   block_name=m_block.group('block_name'), 
+                                            block_comment=m_block.group('comment'),
+                                            q_values = m_block.group('q_values'),
+                                            block_category= 'BLOCK' ,
+                                            header_line=line
+                                            ))
+                in_block, block_from = m_block.group('block_name'), 'parameter_data'
+                continue
+
+            m_block = re.match(PATTERNS['decay_header'], line.upper().strip()) 
+            if not(m_block == None):
+                block_name = 'DECAY {}'.format(m_block.group('particle')) 
+                block_list.append(BlockSLHA(   block_name=block_name, 
+                                            block_comment=m_block.group('comment'),
+                                            block_category= 'DECAY' ,
+                                            decay_width= m_block.group('value'),
+                                            header_line=line
+                                            ))
+                in_block, block_from = block_name, 'decay_data'
+                continue
+
+            m_block = re.match(PATTERNS['decay1l_header'], line.upper().strip()) 
+            if not(m_block == None):
+                block_name = 'DECAY1L {}'.format(m_block.group('particle')) 
+                block_list.append(BlockSLHA(   
+                                            block_name=block_name, 
+                                            block_comment=m_block.group('comment'),
+                                            block_category= 'DECAY1L' ,
+                                            decay_width= m_block.group('value'),
+                                            header_line=line
+                                            ))
+                in_block, block_from = block_name, 'decay_data'
+                continue
+
+            if in_block is not None:
+                line_elements = extract_line_elements(line)
+                self.find_block(in_block, block_list).block_body.append(
+                        BlockLineSLHA(
+                            entries=line_elements['entries'],
+                            value=line_elements['values'],
+                            comment=line_elements['comment'],
+                            line_category=in_block.split()[0],
+                            line=line
+                            )
+                        )
+        return block_list
+
+    def read_slha_from_file(self, file_dir):
+        with open(file_dir, 'r') as f:
+            block_list = self.read_blocks(f)
+        return block_list
+
+    def as_txt(self):
+        txt = ''
+        for b in self._blocks:
+            txt += b.__repr__()
+        return txt
     
     def as_dict(self):
         '''Return SLHA data as a dictionary'''
         return  slha2dict(self)
 
-    def new_file(self, new_file_name):
+    def new_file(self, new_file_name, work_dir=None):
         '''
         Write the instance as a new SLHA file in /{work_dir}/SLHA_{model}/{new_file_name}.
         Args:
         -----
         new_file_name: str
         '''
-        new_file_dir = os.path.join(self.work_dir, 'SLHA_'+self.model)
+        if work_dir is None:
+            work_dir = self.work_dir
+        new_file_dir = os.path.join(work_dir, 'SLHA_'+self.model)
 
         if not(os.path.exists(new_file_dir)):
             os.makedirs(new_file_dir)

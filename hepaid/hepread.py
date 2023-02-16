@@ -61,6 +61,28 @@ def block2dict(block):
         block_dict['decay_width'] = block.decay_width
     return block_dict
 
+def lheblock2dict(block):
+    block_dict = {}
+    entries_dict = {}
+    for i, entries in enumerate(block.keys()):
+        entries_dict[','.join(entries)] = {
+            'value': block.values()[i], 
+            'comment': block.comments()[i],
+            'line': block.lines()[i],
+        }
+    block_dict['entries'] = entries_dict
+    block_dict['block_name'] = block.block_name
+    block_dict['block_comment'] = block.block_comment
+    block_dict['block_category'] = block.category
+    block_dict['header_line'] = block.header_line
+    return block_dict
+
+def lhe2dict(lhe):
+    lhe_dict = {}
+    for i, block in enumerate(lhe.block_list):
+        lhe_dict[block] = lheblock2dict(lhe[block])
+    return lhe_dict 
+
 def slha2dict(slha):
     slha_dict = {}
     for i, block in enumerate(slha.block_list):
@@ -74,10 +96,16 @@ def slha2dict(slha):
 
 
 class BlockLine: 
-    def __init__(self, entries, line_category):
+    def __init__(
+        self, 
+        entries,
+        line_category, 
+        line=None
+        ):
         self.entries = entries
         self.line_category = line_category
         self.line_format = self.fline(line_category)
+        self.line = line
 
     def fline(self, cat):
         if cat == 'block_header':
@@ -105,17 +133,23 @@ class BlockLine:
 
 class Block(MutableMapping):
     '''
-    ## Block
     It holds each line of a block.\n
-    Call .show() to print a block. \n
     Call .set(parameter_number, value) to change the parameter value in the instance.
     '''
-    def __init__(self, block_name, block_comment=None, category=None, output_mode=False):
+    def __init__(
+        self, 
+        block_name: str, 
+        block_comment: str = None, 
+        category: str = None, 
+        output_mode: bool = False,
+        header_line: str = None
+        ):
         self.block_name = block_name
         self.block_comment = block_comment
         self.block_body = []
         self.category = category
         self.output_mode = output_mode
+        self.header_line = header_line
 
     def __repr__(self):
         block_header ='{} {}   {:10s}\n'.format('Block',self.block_name,self.block_comment) 
@@ -143,14 +177,17 @@ class Block(MutableMapping):
         entries = [i.entries for i in self]
         return entries
 
-    def show(self):
-        '''
-        Print block information in the LesHouches format.
-        '''
-        print('{} {}   {:10s}'.format('Block',self.block_name,self.block_comment))
-        for b in self.block_body:
-            print(b.line_format.format(*b.entries))
+    def values(self):
+        values = [i.value for i in self]
+        return values 
 
+    def comments(self):
+        comments = [i.comment for i in self]
+        return comments
+
+    def lines(self):
+        lines = [i.line for i in self]
+        return lines
 
     def get(self,option):
         '''
@@ -203,11 +240,7 @@ class Block(MutableMapping):
 
 class LesHouches(Mapping):
     '''
-    ## LesHuches
-    Read a LesHouches file and stores each block in block classes. \n
-    - To get all the names of the blocks call .block_list. \n
-    - work_dir is the directory where all the outputs will be saved. \n
-    - The new LesHouches files will be saved in a folder called SPhenoMODEL_input since is the input for spheno.
+    Reading LesHouces files. Format used for input for SPheno.
     '''
     def __init__(self, file_dir, work_dir, model, output_mode=False):
         self.file_dir = file_dir
@@ -279,10 +312,12 @@ class LesHouches(Mapping):
 
     def read_leshouches_from_dir(self, file_dir, output_mode):
         block_list = []
-        paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
-                on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
-                value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
+        paterns = dict(
+            block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
+            on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
+            value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+            matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
+            )
         with open(file_dir, 'r') as f:
             for line in f:
                 # Match in 3 groups a pattern like: '1000001     2.00706278E+02   # Sd_1'
@@ -290,28 +325,67 @@ class LesHouches(Mapping):
                 if not(m_block == None):
 
                     if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
-                        block_list.append(Block(    block_name=m_block.group('block_name'), 
-                            block_comment=m_block.group('comment'),
-                            category= 'spheno_data' ,
-                            output_mode=output_mode))
-                        in_block, block_from = m_block.group('block_name'), 'spheno_data'
+                        block_list.append(
+                            Block(
+                                block_name=m_block.group('block_name'), 
+                                block_comment=m_block.group('comment'),
+                                category= 'spheno_data' ,
+                                output_mode=output_mode,
+                                header_line=line
+                                )
+                        )
+                        in_block = m_block.group('block_name')
+                        block_from = 'spheno_data'
 
                     else:
-                        block_list.append(Block(        block_name=m_block.group('block_name'), 
-                            block_comment=m_block.group('comment'),
-                            category= 'parameters_data',
-                            output_mode=output_mode))
-                        in_block, block_from = m_block.group('block_name'), 'parameters_data'
+                        block_list.append(
+                            Block(
+                                block_name=m_block.group('block_name'), 
+                                block_comment=m_block.group('comment'),
+                                category= 'parameters_data',
+                                output_mode=output_mode,
+                                header_line=line
+                                )
+                            )
+                        in_block = m_block.group('block_name')
+                        block_from = 'parameters_data'
 
                 m_body =  re.match(paterns['on_off'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'on_off'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()),
+                                line_category='on_off', 
+                                line=line
+                                )
+                            )
                 m_body =  re.match(paterns['value'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'value'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()),
+                                line_category='value',
+                                line=line
+                                )
+                            )
                 m_body =  re.match(paterns['matrix_value'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()), 
+                                line_category='matrix_value',
+                                line=line
+                                )
+                            )
         return block_list
 
     def read_leshouches_from_dict(self, file, output_mode):
@@ -326,40 +400,70 @@ class LesHouches(Mapping):
             if not(m_block == None):
 
                 if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
-                    block_list.append(Block(    block_name=m_block.group('block_name'), 
-                        block_comment=m_block.group('comment'),
-                        category= 'spheno_data' ,
-                        output_mode=output_mode))
-                    in_block, block_from = m_block.group('block_name'), 'spheno_data'
-
+                    block_list.append(
+                        Block(
+                            block_name=m_block.group('block_name'), 
+                            block_comment=m_block.group('comment'),
+                            category= 'spheno_data' ,
+                            output_mode=output_mode,
+                            header_line=file[b]['header_line']
+                            )
+                        )
+                    in_block = m_block.group('block_name')
+                    block_from = 'spheno_data'
                 else:
-                    block_list.append(Block(        block_name=m_block.group('block_name'), 
-                        block_comment=m_block.group('comment'),
-                        category= 'parameters_data',
-                        output_mode=output_mode))
-                    in_block, block_from = m_block.group('block_name'), 'parameters_data'
+                    block_list.append(
+                        Block(
+                            block_name=m_block.group('block_name'), 
+                            block_comment=m_block.group('comment'),
+                            category= 'parameters_data',
+                            output_mode=output_mode
+                            )
+                        )
+                    in_block = m_block.group('block_name')
+                    block_from = 'parameters_data'
             for  k in file[b]['entries']:
                 line = file[b]['entries'][k]['line']
                 m_body =  re.match(paterns['on_off'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'on_off'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()),
+                                line_category='on_off',
+                                line=line
+                                )
+                            )
                 m_body =  re.match(paterns['value'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()),'value'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()),
+                                line_category='value',
+                                line=line
+                                )
+                            )
                 m_body =  re.match(paterns['matrix_value'], line.strip())
                 if not(m_body == None):            
-                    self.find_block(in_block,block_list).block_body.append(BlockLine(list(m_body.groups()), 'matrix_value'))
+                    self.find_block(
+                        in_block,
+                        block_list
+                        ).block_body.append(
+                            BlockLine(
+                                entries=list(m_body.groups()),
+                                line_category='matrix_value',
+                                line=line
+                                )
+                            )
         return block_list
 
     def as_dict(self):
-        '''
-        Return LHS data as a dictionary. 
-        Temporary solution: Read as SLHA -> .asdict()'''
-        return SLHA(
-            self.file_dir, 
-            work_dir=self.work_dir, 
-            model=self.model
-            ).as_dict()
+        return lhe2dict(self)
 
     def new_file(self, new_file_name):
         '''
@@ -380,6 +484,7 @@ class LesHouches(Mapping):
                 f.write(head)
                 for b in block.block_body:
                     f.write(b.line_format.format(*b.entries)+'\n')
+
 
 
 #########################################
@@ -449,10 +554,16 @@ class BlockSLHA(MutableMapping):
         return len(self.block_body)
 
     def keys(self):
+        '''
+        A list for all the entries in each line to behave as dict
+        '''
         entries = [i.entries for i in self]
         return entries
     
     def entries(self):
+        '''
+        Note: I don't know why I don't just use .keys()
+        '''
         return self.keys()
 
     def values(self):

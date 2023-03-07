@@ -85,25 +85,6 @@ def lhs2dict(lhs) -> Dict:
     lhs_dict = {b: generic_block_2dict_lhs(lhs[b]) for b in lhs.block_list}
     return lhs_dict
 
-def hepstack_dict(
-        lhs: Dict,
-        slha: Dict, 
-        hb_result: Dict, 
-        hs_result: Dict) -> Dict:
-    '''
-    Merge SLHA dict to HiggsBounds and HiggsSignals results 
-    into Dict. This is HEPStack Data Structure
-    '''
-    stack = {'LesHouches': lhs, 'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
-    return stack
-
-def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
-    '''
-    Takes a list of HEPStack Structures and merge them in a single
-    indexed dictionary. The index starts from idx. 
-    '''
-    hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
-    return hepstack_list_dict
 
 def merge_slha_files(slha_list: List, idx: int=0) -> Dict:
     '''

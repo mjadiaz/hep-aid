@@ -6,11 +6,33 @@ from pathlib import Path
 from rich.progress import track
 import pickle 
 
+from typing import Dict, List, Union
+
 class DequeEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, deque):
             return list(obj)
         return JSONEncoder.default(self, obj)
+
+def hepstack(
+        lhs: Dict,
+        slha: Dict, 
+        hb_result: Dict, 
+        hs_result: Dict) -> Dict:
+    '''
+    Merge SLHA dict to HiggsBounds and HiggsSignals results 
+    into Dict. This is HEPStack Data Structure
+    '''
+    stack = {'LesHouches': lhs, 'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
+    return stack
+
+def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
+    '''
+    Takes a list of HEPStack Structures and merge them in a single
+    indexed dictionary. The index starts from idx. 
+    '''
+    hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
+    return hepstack_list_dict
 
 class HEPDataSet:
     '''
@@ -48,11 +70,18 @@ class HEPDataSet:
     def __len__(self):
         return self.counter
 
-    def add(self, data):
-        self._data.append(data)
-        if not self.is_none(idx=self.counter):
-            self.complete_stack_ids.append(self.counter)
-        self.counter += 1
+    def add(self, data: Union[List, Dict]):
+        if isinstance(data, list):
+            self._data.extend(data)
+            for idx in range(self.counter, self.counter + len(data)):
+                if not self.is_none(idx=idx):
+                    self.complete_stack_ids.append(idx)
+            self.counter += len(data)
+        elif isinstance(data, dict):
+            self._data.append(data)
+            if not self.is_none(idx=self.counter):
+                self.complete_stack_ids.append(self.counter)
+            self.counter += 1
 
     def reset(self):
         self.counter = 0

@@ -10,7 +10,7 @@ from typing import Dict, List, Tuple, Union
 
 
 
-PATTERNS =  dict(   
+PATTERNS_SLHA =  dict(   
     block_header=\
             r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
     nmatrix_value =\
@@ -25,6 +25,16 @@ PATTERNS =  dict(
             r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
     )
 
+PATTERNS_LHE =   dict(   
+        block_header=\
+            r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
+        on_off=\
+            r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
+        value=\
+            r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+        matrix_value=\
+            r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
+            )
 def extract_line_elements(line: str)-> dict:
     #import warnings
     patterns = dict(
@@ -65,7 +75,7 @@ def lheblock2dict(block):
     block_dict = {}
     entries_dict = {}
     for i, entries in enumerate(block.keys()):
-        entries_dict[','.join(entries)] = {
+        entries_dict[entries] = {
             'value': block.values()[i], 
             'comment': block.comments()[i],
             'line': block.lines()[i],
@@ -99,36 +109,48 @@ class BlockLine:
     def __init__(
         self, 
         entries,
+        value,
+        comment,
         line_category, 
         line=None
         ):
         self.entries = entries
+        self.value = value
+        self.comment = comment
         self.line_category = line_category
-        self.line_format = self.fline(line_category)
+        self.line_format = self.fline()
         self.line = line
 
-    def fline(self, cat):
+    def fline(self):
+        cat = self.line_category
         if cat == 'block_header':
             return '{:6s} {:20s}  {:13s}'
         elif cat == 'on_off':
-            return '{:6s} {:18s}  {:13s}'
+            return '{:6s} {:18s}  {:13s}'.format(
+                self.entries, self.value, self.comment
+                )
         elif cat == 'value':
-            return '{:6s} {:18s}  {:13s}'
+            return '{:6s} {:18s}  {:13s}'.format(
+                self.entries, self.value, self.comment
+                )
         elif cat == 'matrix_value':
-            return '{:3s}{:3s} {:18}  {:13s}'
+            entries = self.entries.split(',')
+            return '{:3s}{:3s} {:18}  {:13s}'.format(
+                *entries, self.value, self.comment
+                )
 
     def __repr__(self):
-        return self.fline(self.line_category).format(*self.entries)
+        return self.fline()
 
-    @property
-    def comment(self):
-        return self.entries[-1]
-    @property
-    def value(self):
-        return self.entries[-2]
-    @property 
-    def options(self):
-        return self.entries[:-2]
+    #@property
+    #def comment(self):
+    #    return self.entries[-1]
+    #@property
+    #def value(self):
+    #    return self.entries[-2]
+    #@property 
+    #def options(self):
+    #    return self.entries[:-2]
 
 
 class Block(MutableMapping):
@@ -189,7 +211,7 @@ class Block(MutableMapping):
         lines = [i.line for i in self]
         return lines
 
-    def get(self,option):
+    def get_(self,option):
         '''
         Call set(option, param_value) method to modify the option N with a parameter_value \n.
         -option = Can be an int or a list [i, j]. \n
@@ -208,7 +230,30 @@ class Block(MutableMapping):
                 break
         return item
 
-    def set(self,option, param_value):
+    def get(self, entry):
+        for line in self.block_body:
+            if entry == line.entries:
+                item = line.value
+                break
+        return item
+
+    def set(self, entry, param_value):
+        for line in self.block_body:
+            if line.line_category == 'matrix_value':
+                line.value = '{:E}'.format(param_value)
+                break
+            if line.line_category == 'value':
+                line.value = '{:E}'.format(param_value) 
+                break
+            if line.line_category == 'on_off':
+                line.value = '{}'.format(param_value)
+                break
+
+            
+            
+            
+
+    def set_(self,option, param_value):
         '''
         Call set(option, param_value) method to modify the option N with a parameter_value \n.
         -option = Can be an int or a list [i, j]. \n
@@ -312,16 +357,10 @@ class LesHouches(Mapping):
 
     def read_leshouches_from_dir(self, file_dir, output_mode):
         block_list = []
-        paterns = dict(
-            block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
-            on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
-            value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-            matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
-            )
         with open(file_dir, 'r') as f:
             for line in f:
                 # Match in 3 groups a pattern like: '1000001     2.00706278E+02   # Sd_1'
-                m_block = re.match(paterns['block_header'], line.upper().strip()) 
+                m_block = re.match(PATTERNS_LHE['block_header'], line.upper().strip()) 
                 if not(m_block == None):
 
                     if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
@@ -350,39 +389,50 @@ class LesHouches(Mapping):
                         in_block = m_block.group('block_name')
                         block_from = 'parameters_data'
 
-                m_body =  re.match(paterns['on_off'], line.strip())
+                m_body =  re.match(PATTERNS_LHE['on_off'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()),
+                                #entries=list(m_body.groups()),
                                 line_category='on_off', 
+                                value=m_body.group('on_off'),
+                                comment=m_body.group('comment'),
+                                entries=m_body.group('index'),
                                 line=line
                                 )
                             )
-                m_body =  re.match(paterns['value'], line.strip())
+                m_body =  re.match(PATTERNS_LHE['value'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()),
+                                #entries=list(m_body.groups()),
                                 line_category='value',
+                                value=m_body.group('value'),
+                                comment=m_body.group('comment'),
+                                entries=m_body.group('index'),
                                 line=line
                                 )
                             )
-                m_body =  re.match(paterns['matrix_value'], line.strip())
+                m_body =  re.match(PATTERNS_LHE['matrix_value'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()), 
+                                #entries=list(m_body.groups()), 
                                 line_category='matrix_value',
+                                value=m_body.group('value'),
+                                comment=m_body.group('comment'),
+                                entries=','.join(
+                                [m_body.group('i')[0],m_body.group('j')[0]],
+                                ),
                                 line=line
                                 )
                             )
@@ -390,15 +440,12 @@ class LesHouches(Mapping):
 
     def read_leshouches_from_dict(self, file, output_mode):
         block_list = []
-        paterns =   dict(   block_header= r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)',
-                on_off= r'(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)',
-                value= r'(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
-                matrix_value= r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)')
-
         for b in file:
-            m_block = re.match(paterns['block_header'], file[b]['header_line'].upper().strip()) 
+            m_block = re.match(
+                PATTERNS_LHE['block_header'], 
+                file[b]['header_line'].upper().strip()
+                ) 
             if not(m_block == None):
-
                 if m_block.group('block_name') in ['MODSEL','SPHENOINPUT','DECAYOPTIONS']:
                     block_list.append(
                         Block(
@@ -422,41 +469,49 @@ class LesHouches(Mapping):
                         )
                     in_block = m_block.group('block_name')
                     block_from = 'parameters_data'
+
             for  k in file[b]['entries']:
                 line = file[b]['entries'][k]['line']
-                m_body =  re.match(paterns['on_off'], line.strip())
+                line_obj = file[b]['entries'][k]
+                m_body =  re.match(PATTERNS_LHE['on_off'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()),
-                                line_category='on_off',
+                                line_category='on_off', 
+                                value= line_obj['value'],
+                                comment=line_obj['comment'],
+                                entries=k,
                                 line=line
                                 )
                             )
-                m_body =  re.match(paterns['value'], line.strip())
+                m_body =  re.match(PATTERNS_LHE['value'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()),
                                 line_category='value',
+                                value= line_obj['value'],
+                                comment=line_obj['comment'],
+                                entries=k,
                                 line=line
                                 )
                             )
-                m_body =  re.match(paterns['matrix_value'], line.strip())
+                m_body =  re.match(PATTERNS_LHE['matrix_value'], line.strip())
                 if not(m_body == None):            
                     self.find_block(
                         in_block,
                         block_list
                         ).block_body.append(
                             BlockLine(
-                                entries=list(m_body.groups()),
                                 line_category='matrix_value',
+                                value= line_obj['value'],
+                                comment=line_obj['comment'],
+                                entries=k,
                                 line=line
                                 )
                             )
@@ -483,7 +538,7 @@ class LesHouches(Mapping):
                 head = '{} {}  {:10s}'.format('Block',block.block_name,block.block_comment)+'\n'
                 f.write(head)
                 for b in block.block_body:
-                    f.write(b.line_format.format(*b.entries)+'\n')
+                    f.write(b.fline()+'\n')
 
 
 
@@ -762,7 +817,7 @@ class SLHA(Mapping):
         block_list = []
         in_block = None
         for line in file:
-            m_block = re.match(PATTERNS['block_header'], line.upper().strip()) 
+            m_block = re.match(PATTERNS_SLHA['block_header'], line.upper().strip()) 
             if not(m_block == None):
                 block_list.append(BlockSLHA(   block_name=m_block.group('block_name'), 
                                             block_comment=m_block.group('comment'),
@@ -773,7 +828,7 @@ class SLHA(Mapping):
                 in_block, block_from = m_block.group('block_name'), 'parameter_data'
                 continue
 
-            m_block = re.match(PATTERNS['decay_header'], line.upper().strip()) 
+            m_block = re.match(PATTERNS_SLHA['decay_header'], line.upper().strip()) 
             if not(m_block == None):
                 block_name = 'DECAY {}'.format(m_block.group('particle')) 
                 block_list.append(BlockSLHA(   block_name=block_name, 
@@ -785,7 +840,7 @@ class SLHA(Mapping):
                 in_block, block_from = block_name, 'decay_data'
                 continue
 
-            m_block = re.match(PATTERNS['decay1l_header'], line.upper().strip()) 
+            m_block = re.match(PATTERNS_SLHA['decay1l_header'], line.upper().strip()) 
             if not(m_block == None):
                 block_name = 'DECAY1L {}'.format(m_block.group('particle')) 
                 block_list.append(BlockSLHA(   

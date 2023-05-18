@@ -5,6 +5,7 @@ import numpy as np
 
 from collections.abc import MutableMapping, Mapping
 from typing import Dict, List, Tuple, Union
+import warnings
 
 #from hepaid.utils import lhs2dict 
 
@@ -231,23 +232,45 @@ class Block(MutableMapping):
         return item
 
     def get(self, entry):
-        for line in self.block_body:
-            if entry == line.entries:
-                item = line.value
-                break
-        return item
+        try:
+            if isinstance(entry, Tuple):
+                entry = [str(i) for i in entry]
+                entry = ','.join(entry)
+            else:
+                entry = str(entry)
+
+            for line in self.block_body:
+                if entry == line.entries:
+                    item = line.value
+                    break
+            return item
+        except UnboundLocalError:
+            assert False, 'Entry not found'
 
     def set(self, entry, param_value):
-        for line in self.block_body:
-            if line.line_category == 'matrix_value':
-                line.value = '{:E}'.format(param_value)
-                break
-            if line.line_category == 'value':
-                line.value = '{:E}'.format(param_value) 
-                break
-            if line.line_category == 'on_off':
-                line.value = '{}'.format(param_value)
-                break
+        try:
+            if isinstance(entry, Tuple):
+                entry = [str(i) for i in entry]
+                entry = ','.join(entry)
+            else:
+                entry = str(entry)
+
+            for line in self.block_body:
+                if entry == line.entries:
+                    item = line.value
+                    if line.line_category == 'matrix_value':
+                        line.value = '{:E}'.format(param_value)
+                    if line.line_category == 'value':
+                        line.value = '{:E}'.format(param_value) 
+                    if line.line_category == 'on_off':
+                        line.value = '{}'.format(param_value)
+                    new_item = line.value
+                    break
+            if item == new_item:
+                warnings.warn('Parameter value not changed')
+        except UnboundLocalError:
+            assert False, 'Entry not found'
+
 
             
             

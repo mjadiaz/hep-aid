@@ -23,7 +23,7 @@ def hepstack(
     Merge SLHA dict to HiggsBounds and HiggsSignals results 
     into Dict. This is HEPStack Data Structure
     '''
-    stack = {'LesHouches': lhs, 'SLHA': slha, 'HiggsBounds': hb_result, 'HiggsSignals': hs_result}
+    stack = {'LHE': lhs, 'SLHA': slha, 'HB': hb_result, 'HS': hs_result}
     return stack
 
 def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
@@ -33,6 +33,28 @@ def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
     '''
     hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
     return hepstack_list_dict
+
+def _get_recursive(obj, args, default=None):
+    """Apply successive requests to an obj that implements __getitem__ and
+    return result if something is found, else return default"""
+    for a in args:
+        try:
+            obj = obj.__getitem__(a)
+        except:
+            obj = None
+            break
+    return obj
+
+def feature_vector(database, keys):
+    '''
+    Creates a list with the values obtained from querying 
+    a HEPDataSet object with a chain of keys. Example:
+    m0 = feature_vector(blssm, ['LHE', 'MINPAR', 'entries', '1', 'value'])
+    '''
+    feature_array = []
+    for i in range(len(database)):
+        feature_array.append(_get_recursive(database[i], keys))
+    return feature_array
 
 class HEPDataSet:
     '''
@@ -140,18 +162,29 @@ class HEPDataSet:
                 dataset_files.append(directory.joinpath(file.name))
         return dataset_files
 
-    def load_from_directory(self, directory: str, percentage: float =1.0):
+    def load_from_directory(self, 
+            directory: str, 
+            percentage: float =1.0, 
+            file_format: str ='JSON'
+            ):
         dataset_files = self.find_hepdata_files(directory)
         percentage_slice = dataset_files[:int(len(dataset_files)*percentage)]
         corrupted_files = 0
         for file in track(percentage_slice, description=f'Loading HEPDataSets. {percentage*100}%'):
-            loaded = self.load(file)
+            if file_format == 'JSON':
+                loaded = self.load_json(file)
+            else:
+                loaded = self.load(file)
             corrupted_files += 1 if not loaded else 0
         print('EOFError: corrupted files: ', corrupted_files)
             
 
     def is_none(self, idx, stack: str='SLHA'):
         return True if self._data[idx][stack] is None else False
+
+    def feature_vector(self, keys):
+        return feature_vector(self, keys)
+        
 
 
 

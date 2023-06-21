@@ -1065,7 +1065,45 @@ class MG5Script:
                     [f.write(i+'\n') for i in w]
         f.close()
         return 
-        
+
+def read_mg_generation_info(file_path: str) -> dict:
+    '''
+    Reads the MGGenerationInfo block in run tag banner (Saved by default with
+    the name run_01_tag_1_banner.txt).
+
+    Args:
+        file_path: str
+    Returns:
+        mg5_gen_info: dict['number_of_events': int, 'cross_section_pb': float]
+    '''
+    start_tag = '<MGGenerationInfo>'
+    end_tag = '</MGGenerationInfo>'
+    events_pattern = r"#\s*Number of Events\s*:\s*(\d+)"
+    integrated_pattern = r"#\s*Integrated weight \(pb\)\s*:\s*(\d+\.\d+)"
+
+    mg5_gen_info = {}
+
+    with open(file_path, 'r') as file:
+        reading = False
+        for line in file:
+            line = line.strip()
+
+            if line == start_tag:
+                reading = True
+            elif line == end_tag:
+                break
+
+            if reading:
+                match = re.search(events_pattern, line)
+                if match:
+                    mg5_gen_info['number_of_events'] = int(match.group(1))
+                match = re.search(integrated_pattern, line)
+                if match:
+                    mg5_gen_info['cross_section_pb'] = float(match.group(1))
+            else:
+                mg5_gen_info['number_of_events'] = None 
+                mg5_gen_info['cross_section_pb'] = None
+    return mg5_gen_info
 
 ##########################################
 # Class for reading a HiggsBounds output #

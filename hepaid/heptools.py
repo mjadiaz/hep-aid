@@ -6,43 +6,43 @@ import numpy as np
 
 
 class Spheno:
-	def __init__(self, spheno_dir, work_dir, model_name):
-		self._spheno_dir = spheno_dir
-		self._work_dir = work_dir
-		self._model_name = model_name
-	
-	def run(self,in_file_name,out_file_name):
-		'''
-		Run SPhenoMODEL with the input_file_name in work_dir. 
+    def __init__(self, spheno_dir, work_dir, model_name):
+        self._spheno_dir = spheno_dir
+        self._work_dir = work_dir
+        self._model_name = model_name
 
-		Args:
-		-----
-		in_file_name: str = input file's name located in work_dir/SPhenoMODEL_input/in_file_name
-		out_file_name: str = output file's name located in work_dir/SPhenoMODEL_output/out_file_name
+    def run(self,in_file_name,out_file_name):
+        '''
+        Run SPhenoMODEL with the input_file_name in work_dir. 
 
-		Return:
-		------
-		out_file: str = Global path to the output file name if SPheno runs successfully. None if SPheno gets an Error.
-		spheno_stdout = stdout of the subprocess that runs SPheno.
-		'''
-		# Reads the input file created with LesHouches.new_file in work_dir
-		in_file = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_input',in_file_name)
-		# Create and output directory in work_dir/SPhenoMODEL_output
-		out_dir = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_output')		
-		if not(os.path.exists(out_dir)):
-			os.makedirs(out_dir)
-		out_file=os.path.join(out_dir, out_file_name)
-		
-		run = subprocess.run(
-				[self._spheno_dir+'/bin'+'/SPheno'+self._model_name, in_file, out_file],
-				capture_output=True,
-				text=True,
-				cwd=self._work_dir
-				)
-		if 'Finished' in run.stdout:
-			return out_file, run.stdout
-		else:
-			return None, run.stdout
+        Args:
+        -----
+        in_file_name: str = input file's name located in work_dir/SPhenoMODEL_input/in_file_name
+        out_file_name: str = output file's name located in work_dir/SPhenoMODEL_output/out_file_name
+
+        Return:
+        ------
+        out_file: str = Global path to the output file name if SPheno runs successfully. None if SPheno gets an Error.
+        spheno_stdout = stdout of the subprocess that runs SPheno.
+        '''
+        # Reads the input file created with LesHouches.new_file in work_dir
+        in_file = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_input',in_file_name)
+        # Create and output directory in work_dir/SPhenoMODEL_output
+        out_dir = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_output')		
+        if not(os.path.exists(out_dir)):
+            os.makedirs(out_dir)
+        out_file=os.path.join(out_dir, out_file_name)
+
+        run = subprocess.run(
+                [self._spheno_dir+'/bin'+'/SPheno'+self._model_name, in_file, out_file],
+                capture_output=True,
+                text=True,
+                cwd=self._work_dir
+                )
+        if 'Finished' in run.stdout:
+            return out_file, run.stdout
+        else:
+            return None, run.stdout
 
 
 
@@ -55,18 +55,22 @@ class Madgraph:
     '''
     def __init__(self, madgraph_dir, work_dir):
         self._dir = madgraph_dir
-        self.work_dir = work_dir       
-        
+        self._work_dir = work_dir       
+
     def run(self, input_file = 'MG5Script.txt', mode='local'):
         '''
         Run madgraph with an script named MG5Script.txt (created by the MG5Script class) in within work_dir. \n
         Change input_file to change to another script within work_dir.
         '''
         if mode == 'local':
-            subprocess.run([os.path.join(self._dir,'bin/mg5_aMC'), os.path.join(self.work_dir,input_file)])    
+            subprocess.run(
+                    [os.path.join(self._dir,'bin/mg5_aMC'), input_file],
+                    text=True,
+                    cwd=self._work_dir
+                    )
         elif mode == 'cluster':
             print('Implement cluster mode.')
-            
+
 class HiggsBounds:
     def __init__(self, higgs_bounds_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None, output_mode=False):
         self._dir = higgs_bounds_dir
@@ -75,8 +79,8 @@ class HiggsBounds:
         self.neutral_higgs = neutral_higgs
         self.charged_higgs = charged_higgs
         self.output_mode = output_mode
-           
-        
+
+
     def run(self):
         '''
         Runs HiggsBounds with the last point calculated by SPheno. 
@@ -86,11 +90,11 @@ class HiggsBounds:
         '''
         run = subprocess.run(
                 [os.path.join(self._dir, 'HiggsBounds'), 
-                    'LandH', 
-                    'effC', 
-                    str(self.neutral_higgs), 
-                    str(self.charged_higgs), 
-                    self.work_dir+'/'], 
+                 'LandH', 
+                 'effC', 
+                 str(self.neutral_higgs), 
+                 str(self.charged_higgs), 
+                 self.work_dir+'/'], 
                 capture_output=True,  
                 text=True,
                 cwd=self.work_dir)        
@@ -105,27 +109,33 @@ class HiggsBounds:
             return None
 
 class HiggsSignals:
-    def __init__(self, higgs_signals_dir, work_dir, model=None, neutral_higgs=None, charged_higgs=None, output_mode=False):
+    def __init__(
+            self, 
+            higgs_signals_dir, 
+            work_dir, model=None, 
+            neutral_higgs=None, 
+            charged_higgs=None, 
+            output_mode=False):
         self._dir = higgs_signals_dir
         self.work_dir = work_dir
         self.model = model
         self.neutral_higgs = neutral_higgs
         self.charged_higgs = charged_higgs
         self.output_mode = output_mode
-           
-        
+
+
     def run(self):
         '''
         Runs HiggsSignals with the last point calculated by SPheno.
         '''
         run = subprocess.run(
                 [os.path.join(self._dir, 'HiggsSignals'), 
-                    'latestresults', 
-                    '2', 
-                    'effC', 
-                    str(self.neutral_higgs), 
-                    str(self.charged_higgs), 
-                    self.work_dir+'/'], 
+                 'latestresults', 
+                 '2', 
+                 'effC', 
+                 str(self.neutral_higgs), 
+                 str(self.charged_higgs), 
+                 self.work_dir+'/'], 
                 capture_output=True,  
                 text=True,
                 cwd=self.work_dir)        

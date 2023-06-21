@@ -183,7 +183,7 @@ class HEPDataSet:
         return True if self._data[idx][stack] is None else False
 
     def feature_vector(self, keys):
-        return feature_vector(self, keys)
+        return feature_vector(self._data, keys)
         
 
 

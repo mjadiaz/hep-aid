@@ -69,7 +69,8 @@ class HEPDataSet:
 
     '''
     def __init__(self):
-        self._data = deque()
+        #self._data = deque()
+        self._data = []
         self.counter = 0
         self.complete_stack_ids = []
         self.save_mode = 'pickle' 
@@ -110,9 +111,12 @@ class HEPDataSet:
         self._data.clear()
 
     def save_json(self, path):
-        json_string = json.dumps(self._data, cls=DequeEncoder)
-        with gzip.GzipFile('{}.json.gz'.format(path),"w") as f:
-            f.write(json_string.encode())
+        #json_string = json.dumps(self._data, cls=DequeEncoder)
+        #with gzip.GzipFile('{}.json.gz'.format(path),"w") as f:
+        #    f.write(json_string.encode())
+        # Open the file in write mode and use gzip.open() to create a gzip file
+        with gzip.open('{}.json.gz'.format(path), "w") as file:
+            file.write(json.dumps(self._data).encode('utf-8'))
 
     def save_pickle(self, path):
         pickled_data = pickle.dumps(self._data)
@@ -124,11 +128,15 @@ class HEPDataSet:
 
 
     def load_json(self, path):
-        with gzip.open('{}'.format(path),"r") as f:
-            json_string = f.read()
-            my_list = json.loads(json_string)
-            len_new_data = len(my_list)
-            self._data.extend(my_list)
+        with gzip.open('{}'.format(path), 'r') as fin:
+            data = json.loads(fin.read().decode('utf-8'))
+            len_new_data = len(data)
+            self._data.extend(data)
+        #with gzip.open('{}'.format(path),"r") as f:
+        #    json_string = f.read()
+        #    my_list = json.loads(json_string)
+        #    len_new_data = len(my_list)
+        #    self._data.extend(my_list)
         for idx in range(self.counter, self.counter + len_new_data):
             if not self.is_none(idx=idx):
                 self.complete_stack_ids.append(idx)

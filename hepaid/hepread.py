@@ -13,15 +13,15 @@ import warnings
 
 PATTERNS_SLHA =  dict(   
     block_header=\
-            r'(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)',
+            r'(?P<block>BLOCK)\s+(?P<block_name>\w+)(\s+)?((Q=.*)?(?P<q_values>-?\d+\.\d+E.\d+))?(\s+)?(?P<comment>#.*)?',
     nmatrix_value =\
             r'(?P<entries>.+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
     model_param_pattern =\
             r'(?P<entries>.+)\s+(?P<comment>#.*)',
     decay_header=\
-            r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+            r'DECAY\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)(\s+)?(?P<comment>#.*)?',
     decay1l_header=\
-            r'DECAY1L\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)',
+            r'DECAY1L\s+(?P<particle>\w+)\s+(?P<value>-?\d+\.\d+E.\d+)(\s+)?(?P<comment>#.*)',
     decay_body_pattern=\
             r'(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)',
     )
@@ -44,7 +44,7 @@ def extract_line_elements(line: str)-> dict:
         entries = r'(?P<entries>[+-]?\d+)',
         )
     line_elements = {}
-    _line = line
+    _line = line.upper()
     for p in patterns:
         line_elements[p] = re.findall(patterns[p], _line)
         _line = re.sub(patterns[p], '' , _line)
@@ -1182,3 +1182,5 @@ class HiggsSignalsResults:
         if in_spheno_output:
             copy(os.path.join(self.work_dir, 'HiggsSignals_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsSignals_results_'+str(output_name)+'.dat'))
         pass                
+
+    

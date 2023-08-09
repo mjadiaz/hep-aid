@@ -4,6 +4,7 @@ import subprocess
 
 import numpy as np
 
+from hepaid.hepread import SLHA
 
 class Spheno:
     def __init__(self, spheno_dir, work_dir, model_name):
@@ -148,3 +149,70 @@ class HiggsSignals:
                 print('HiggsSignals Error')
                 print(run.stdout)
             return None
+
+class THDMC:
+    '''
+    Utility class to run 2HDMC programs. 
+    '''
+    def __init__(
+        self,
+        tool_dir: str,
+        work_dir: str,
+        program_name: str,
+    ):
+        self.tool_dir = tool_dir 
+        self.work_dir = work_dir
+        self.program_name = program_name
+        self.program = os.path.join(tool_dir,program_name)
+        self.thdm_dir = os.path.join(self.work_dir, '2HDMC')
+    
+    def run(
+        self,
+        parameters: np.ndarray,
+        ) -> bool:
+        '''
+        Parameters are in the standard basis:
+        lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,\
+            m12_2, tan_beta = parameters
+        '''
+
+        if not(os.path.exists(self.thdm_dir)):
+            os.makedirs(self.thdm_dir)
+
+        parameters = [str(val) for val in parameters]
+
+        #lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,\
+        #    m12_2, tan_beta = parameters
+        try: 
+            run = subprocess.run([
+                self.program, 
+                *parameters,
+                #lambda1,
+                #lambda2,
+                #lambda3,
+                #lambda4,
+                #lambda5,
+                #lambda6,
+                #lambda7,
+                #m12_2,
+                #tan_beta
+                ],
+                capture_output=True,
+                text=True,
+                cwd=self.thdm_dir ,
+                )
+            return True
+        except:
+            return False
+    
+    def result(self) -> SLHA:
+        '''Returns the SLHA file saved in working directory, after .run()'''
+        file=os.path.join(self.thdm_dir, 'Demo_out.lha')
+        if os.path.exists(file):
+            slha = SLHA(
+                file=file
+                )
+            return slha
+        else:
+            return None
+        

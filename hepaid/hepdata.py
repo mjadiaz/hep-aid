@@ -50,10 +50,17 @@ def feature_vector(database, keys):
     Creates a list with the values obtained from querying 
     a HEPDataSet object with a chain of keys. Example:
     m0 = feature_vector(blssm, ['LHE', 'MINPAR', 'entries', '1', 'value'])
+
+    Added assertion since sometimes the value is in a list of len 1.
     '''
     feature_array = []
     for i in range(len(database)):
-        feature_array.append(_get_recursive(database[i], keys))
+        value = _get_recursive(database[i], keys) 
+        if isinstance(value, list):
+            assert len(value) == 1, \
+                'Value for key chain has more than one value'
+            value = value[0]
+        feature_array.append(value)
     return feature_array
 
 class HEPDataSet:
@@ -115,9 +122,16 @@ class HEPDataSet:
         #with gzip.GzipFile('{}.json.gz'.format(path),"w") as f:
         #    f.write(json_string.encode())
         # Open the file in write mode and use gzip.open() to create a gzip file
-        with gzip.open('{}.json.gz'.format(path), "w") as file:
+        #with gzip.open('{}.json.gz'.format(path), "w") as file:
+        #    file.write(json.dumps(self._data).encode('utf-8'))
+        dataset_path = Path(path)
+        name = dataset_path.name
+        directory = dataset_path.parent
+        directory.mkdir(parents=True, exist_ok=True)
+        file_path = directory.joinpath('{}.json.gz'.format(name))
+        with gzip.open(file_path, "w") as file:
             file.write(json.dumps(self._data).encode('utf-8'))
-
+        return True
     def save_pickle(self, path):
         pickled_data = pickle.dumps(self._data)
         with gzip.GzipFile('{}.p.gz'.format(path),"wb") as f:

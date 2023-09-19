@@ -57,9 +57,10 @@ def feature_vector(database, keys):
     for i in range(len(database)):
         value = _get_recursive(database[i], keys) 
         if isinstance(value, list):
-            assert len(value) == 1, \
-                'Value for key chain has more than one value'
-            value = value[0]
+            #assert len(value) == 1, \
+            #    'Value for key chain has more than one value'
+            if len(value) == 1:
+                value = value[0]
         feature_array.append(value)
     return feature_array
 

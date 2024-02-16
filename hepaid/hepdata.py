@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from rich.progress import track
 import pickle 
+import numpy as np
+import pandas as pd 
 
 from typing import Dict, List, Union
 
@@ -205,8 +207,29 @@ class HEPDataSet:
     def is_none(self, idx, stack: str='SLHA'):
         return True if self._data[idx][stack] is None else False
 
-    def feature_vector(self, keys):
-        return feature_vector(self._data, keys)
+    def feature_vector(self, keys: list, as_numpy: bool=False):
+        '''
+        Create an array from a list of `keys`: [key, ..., key]. If `as_numpy` is
+        True returns a float np.array. 
+        '''
+        if as_numpy: 
+            return np.array(feature_vector(self._data, keys)).astype(float)
+        else:
+            return feature_vector(self._data, keys)
+    
+    def as_dataframe(self, keys_dict: dict , as_numpy: bool = True):
+        '''
+        Create a pandas DataFrame from a dictionary of the form: 
+        {'variable' : [key, ..., key], ...}
+        '''
+        df =  pd.DataFrame()
+        for k in keys_dict.keys():
+            df[k] = self.feature_vector(
+                keys=keys_dict[k], 
+                as_numpy=as_numpy
+                )
+            
+        return df
         
 
 

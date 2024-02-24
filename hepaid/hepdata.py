@@ -120,13 +120,14 @@ class HEPDataSet:
         self.counter = 0
         self._data.clear()
 
-    def save_json(self, path):
-        #json_string = json.dumps(self._data, cls=DequeEncoder)
-        #with gzip.GzipFile('{}.json.gz'.format(path),"w") as f:
-        #    f.write(json_string.encode())
-        # Open the file in write mode and use gzip.open() to create a gzip file
-        #with gzip.open('{}.json.gz'.format(path), "w") as file:
-        #    file.write(json.dumps(self._data).encode('utf-8'))
+    def save_json(self, path: str):
+        '''
+        Don't include the format. And don't ask why.
+
+        Args:
+        -----
+        path: str = "path/to/data/set"  
+        '''
         dataset_path = Path(path)
         name = dataset_path.name
         directory = dataset_path.parent
@@ -135,31 +136,38 @@ class HEPDataSet:
         with gzip.open(file_path, "w") as file:
             file.write(json.dumps(self._data).encode('utf-8'))
         return True
-    def save_pickle(self, path):
+
+    def _save_pickle(self, path):
+        '''Legacy save pickle'''
         pickled_data = pickle.dumps(self._data)
         with gzip.GzipFile('{}.p.gz'.format(path),"wb") as f:
             f.write(pickled_data)
 
-    def save(self, path):
+    def _save(self, path):
+        '''Legacy save pickle'''
         self.save_pickle(path)
 
 
-    def load_json(self, path):
+    def load_json(self, path: str):
+        '''
+        The path must include the format.
+        Args:
+        ----
+        path: str = "path/to/data/set.json.gz" 
+        '''
         with gzip.open('{}'.format(path), 'r') as fin:
             data = json.loads(fin.read().decode('utf-8'))
             len_new_data = len(data)
             self._data.extend(data)
-        #with gzip.open('{}'.format(path),"r") as f:
-        #    json_string = f.read()
-        #    my_list = json.loads(json_string)
-        #    len_new_data = len(my_list)
-        #    self._data.extend(my_list)
         for idx in range(self.counter, self.counter + len_new_data):
             if not self.is_none(idx=idx):
                 self.complete_stack_ids.append(idx)
         self.counter += len_new_data
 
-    def load_pickle(self, path):
+    def _load_pickle(self, path):
+        '''
+        Legacy load for pickle
+        '''
         with gzip.open('{}'.format(path),"r") as f:
             depickled_data = f.read()
         try:
@@ -174,14 +182,18 @@ class HEPDataSet:
         except EOFError:
             return False
 
-    def load(self, path):
+    def _load(self, path):
+        '''Legacy load for pickle'''
         self.load_pickle(path)
 
-    def find_hepdata_files(self, directory: str):
-        ''' Identify HEPData files in a directory '''
+    def find_hepdata_files(
+        self, directory: str, data_name: str = 'HEPDataSet'
+        ):
+        ''' 
+        Identify HEPDataSet files in a directory. Default name is HEPDataSet
+        '''
         directory = Path(directory)
         dataset_files = []
-        data_name = 'HEPDataSet'
         for file in directory.iterdir():
             if data_name in file.name:
                 dataset_files.append(directory.joinpath(file.name))

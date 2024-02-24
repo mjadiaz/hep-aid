@@ -36,6 +36,7 @@ PATTERNS_LHE =   dict(
         matrix_value=\
             r'(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)'
             )
+
 def extract_line_elements(line: str)-> dict:
     #import warnings
     patterns = dict(
@@ -1177,10 +1178,20 @@ class HiggsSignalsResults:
         return results        
 
     def save(self, output_name,in_spheno_output = True):
-        '''Save the HiggsSignals results from the working directory to the Spheno output directory \n.
-           To save all the higgs Signals results for scans for example.'''
+        '''
+        Save the HiggsSignals results from the working directory to the 
+        Spheno output directory. To save all the higgs Signals results for 
+        scans for example.
+        '''
         if in_spheno_output:
-            copy(os.path.join(self.work_dir, 'HiggsSignals_results.dat'), os.path.join(self.work_dir,'SPheno'+self.model+'_output' ,'HiggsSignals_results_'+str(output_name)+'.dat'))
+            copy(
+                os.path.join(self.work_dir, 'HiggsSignals_results.dat'), 
+                os.path.join(
+                    self.work_dir,
+                    'SPheno'+self.model+'_output' ,
+                    'HiggsSignals_results_'+str(output_name)+'.dat'
+                    )
+                )
         pass                
 
     

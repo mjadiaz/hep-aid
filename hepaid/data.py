@@ -1,13 +1,13 @@
-from json import JSONEncoder
-from collections import deque
 import gzip
 import json
+import pickle
+import numpy as np
+import pandas as pd
+
 from pathlib import Path
 from rich.progress import track
-import pickle 
-import numpy as np
-import pandas as pd 
-
+from json import JSONEncoder
+from collections import deque
 from typing import Dict, List, Union
 
 class DequeEncoder(JSONEncoder):
@@ -18,11 +18,11 @@ class DequeEncoder(JSONEncoder):
 
 def hepstack(
         lhs: Dict,
-        slha: Dict, 
-        hb_result: Dict, 
+        slha: Dict,
+        hb_result: Dict,
         hs_result: Dict) -> Dict:
     '''
-    Merge SLHA dict to HiggsBounds and HiggsSignals results 
+    Merge SLHA dict to HiggsBounds and HiggsSignals results
     into Dict. This is HEPStack Data Structure
     '''
     stack = {'LHE': lhs, 'SLHA': slha, 'HB': hb_result, 'HS': hs_result}
@@ -31,7 +31,7 @@ def hepstack(
 def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
     '''
     Takes a list of HEPStack Structures and merge them in a single
-    indexed dictionary. The index starts from idx. 
+    indexed dictionary. The index starts from idx.
     '''
     hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
     return hepstack_list_dict
@@ -49,7 +49,7 @@ def _get_recursive(obj, args, default=None):
 
 def feature_vector(database, keys):
     '''
-    Creates a list with the values obtained from querying 
+    Creates a list with the values obtained from querying
     a HEPDataSet object with a chain of keys. Example:
     m0 = feature_vector(blssm, ['LHE', 'MINPAR', 'entries', '1', 'value'])
 
@@ -57,7 +57,7 @@ def feature_vector(database, keys):
     '''
     feature_array = []
     for i in range(len(database)):
-        value = _get_recursive(database[i], keys) 
+        value = _get_recursive(database[i], keys)
         if isinstance(value, list):
             #assert len(value) == 1, \
             #    'Value for key chain has more than one value'
@@ -83,9 +83,9 @@ class HEPDataSet:
         self._data = []
         self.counter = 0
         self.complete_stack_ids = []
-        self.save_mode = 'pickle' 
+        self.save_mode = 'pickle'
 
-    
+
     def __repr__(self):
         return 'HEPDataSet. Size = {}. Complete Stack Points = {}'.format(
                     self.counter, len(self.complete_stack_ids)
@@ -126,7 +126,7 @@ class HEPDataSet:
 
         Args:
         -----
-        path: str = "path/to/data/set"  
+        path: str = "path/to/data/set"
         '''
         dataset_path = Path(path)
         name = dataset_path.name
@@ -153,7 +153,7 @@ class HEPDataSet:
         The path must include the format.
         Args:
         ----
-        path: str = "path/to/data/set.json.gz" 
+        path: str = "path/to/data/set.json.gz"
         '''
         with gzip.open('{}'.format(path), 'r') as fin:
             data = json.loads(fin.read().decode('utf-8'))
@@ -189,7 +189,7 @@ class HEPDataSet:
     def find_hepdata_files(
         self, directory: str, data_name: str = 'HEPDataSet'
         ):
-        ''' 
+        '''
         Identify HEPDataSet files in a directory. Default name is HEPDataSet
         '''
         directory = Path(directory)
@@ -199,9 +199,9 @@ class HEPDataSet:
                 dataset_files.append(directory.joinpath(file.name))
         return dataset_files
 
-    def load_from_directory(self, 
-            directory: str, 
-            percentage: float =1.0, 
+    def load_from_directory(self,
+            directory: str,
+            percentage: float =1.0,
             file_format: str ='JSON'
             ):
         dataset_files = self.find_hepdata_files(directory)
@@ -214,7 +214,7 @@ class HEPDataSet:
                 loaded = self.load(file)
             corrupted_files += 1 if not loaded else 0
         print('EOFError: corrupted files: ', corrupted_files)
-            
+
 
     def is_none(self, idx, stack: str='SLHA'):
         return True if self._data[idx][stack] is None else False
@@ -222,27 +222,23 @@ class HEPDataSet:
     def feature_vector(self, keys: list, as_numpy: bool=False):
         '''
         Create an array from a list of `keys`: [key, ..., key]. If `as_numpy` is
-        True returns a float np.array. 
+        True returns a float np.array.
         '''
-        if as_numpy: 
+        if as_numpy:
             return np.array(feature_vector(self._data, keys)).astype(float)
         else:
             return feature_vector(self._data, keys)
-    
+
     def as_dataframe(self, keys_dict: dict , as_numpy: bool = True):
         '''
-        Create a pandas DataFrame from a dictionary of the form: 
+        Create a pandas DataFrame from a dictionary of the form:
         {'variable' : [key, ..., key], ...}
         '''
         df =  pd.DataFrame()
         for k in keys_dict.keys():
             df[k] = self.feature_vector(
-                keys=keys_dict[k], 
+                keys=keys_dict[k],
                 as_numpy=as_numpy
                 )
-            
+
         return df
-        
-
-
-

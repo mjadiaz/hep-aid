@@ -1,10 +1,10 @@
-import os 
+import os
 import re
 import subprocess
 
 import numpy as np
 
-from hepaid.hepread import SLHA
+from hepaid.read import SLHA
 
 class Spheno:
     def __init__(self, spheno_dir, work_dir, model_name):
@@ -14,7 +14,7 @@ class Spheno:
 
     def run(self,in_file_name,out_file_name):
         '''
-        Run SPhenoMODEL with the input_file_name in work_dir. 
+        Run SPhenoMODEL with the input_file_name in work_dir.
 
         Args:
         -----
@@ -29,7 +29,7 @@ class Spheno:
         # Reads the input file created with LesHouches.new_file in work_dir
         in_file = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_input',in_file_name)
         # Create and output directory in work_dir/SPhenoMODEL_output
-        out_dir = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_output')		
+        out_dir = os.path.join(self._work_dir, 'SPheno'+self._model_name+'_output')
         if not(os.path.exists(out_dir)):
             os.makedirs(out_dir)
         out_file=os.path.join(out_dir, out_file_name)
@@ -56,7 +56,7 @@ class Madgraph:
     '''
     def __init__(self, madgraph_dir, work_dir):
         self._dir = madgraph_dir
-        self._work_dir = work_dir       
+        self._work_dir = work_dir
 
     def run(self, input_file = 'MG5Script.txt', mode='local'):
         '''
@@ -84,25 +84,25 @@ class HiggsBounds:
 
     def run(self):
         '''
-        Runs HiggsBounds with the last point calculated by SPheno. 
-        Returns the path for HiggsBounds_results.dat if SPheno and 
-        HiggsBounds succeed. If there is an Error in one them it 
+        Runs HiggsBounds with the last point calculated by SPheno.
+        Returns the path for HiggsBounds_results.dat if SPheno and
+        HiggsBounds succeed. If there is an Error in one them it
         returns None and prints the error output.
         '''
         run = subprocess.run(
-                [os.path.join(self._dir, 'HiggsBounds'), 
-                 'LandH', 
-                 'effC', 
-                 str(self.neutral_higgs), 
-                 str(self.charged_higgs), 
-                 self.work_dir+'/'], 
-                capture_output=True,  
+                [os.path.join(self._dir, 'HiggsBounds'),
+                 'LandH',
+                 'effC',
+                 str(self.neutral_higgs),
+                 str(self.charged_higgs),
+                 self.work_dir+'/'],
+                capture_output=True,
                 text=True,
-                cwd=self.work_dir)        
+                cwd=self.work_dir)
         if 'finished' in run.stdout:
             if self.output_mode:
-                print(run.stdout) 
-            return  os.path.join(self.work_dir, 'HiggsBounds_results.dat')            
+                print(run.stdout)
+            return  os.path.join(self.work_dir, 'HiggsBounds_results.dat')
         else:
             if self.output_mode:
                 print('HiggsBound not finished!')
@@ -111,11 +111,11 @@ class HiggsBounds:
 
 class HiggsSignals:
     def __init__(
-            self, 
-            higgs_signals_dir, 
-            work_dir, model=None, 
-            neutral_higgs=None, 
-            charged_higgs=None, 
+            self,
+            higgs_signals_dir,
+            work_dir, model=None,
+            neutral_higgs=None,
+            charged_higgs=None,
             output_mode=False):
         self._dir = higgs_signals_dir
         self.work_dir = work_dir
@@ -130,20 +130,20 @@ class HiggsSignals:
         Runs HiggsSignals with the last point calculated by SPheno.
         '''
         run = subprocess.run(
-                [os.path.join(self._dir, 'HiggsSignals'), 
-                 'latestresults', 
-                 '2', 
-                 'effC', 
-                 str(self.neutral_higgs), 
-                 str(self.charged_higgs), 
-                 self.work_dir+'/'], 
-                capture_output=True,  
+                [os.path.join(self._dir, 'HiggsSignals'),
+                 'latestresults',
+                 '2',
+                 'effC',
+                 str(self.neutral_higgs),
+                 str(self.charged_higgs),
+                 self.work_dir+'/'],
+                capture_output=True,
                 text=True,
-                cwd=self.work_dir)        
+                cwd=self.work_dir)
         if not('Error') in run.stdout:
             if self.output_mode:
-                print(run.stdout) 
-            return  os.path.join(self.work_dir, 'HiggsSignals_results.dat')            
+                print(run.stdout)
+            return  os.path.join(self.work_dir, 'HiggsSignals_results.dat')
         else:
             if self.output_mode:
                 print('HiggsSignals Error')
@@ -152,7 +152,7 @@ class HiggsSignals:
 
 class THDMC:
     '''
-    Utility class to run 2HDMC programs. 
+    Utility class to run 2HDMC programs.
     '''
     def __init__(
         self,
@@ -160,12 +160,12 @@ class THDMC:
         work_dir: str,
         program_name: str,
     ):
-        self.tool_dir = tool_dir 
+        self.tool_dir = tool_dir
         self.work_dir = work_dir
         self.program_name = program_name
         self.program = os.path.join(tool_dir,program_name)
         self.thdm_dir = os.path.join(self.work_dir, '2HDMC')
-    
+
     def run(
         self,
         parameters: np.ndarray,
@@ -183,9 +183,9 @@ class THDMC:
 
         #lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,\
         #    m12_2, tan_beta = parameters
-        try: 
+        try:
             run = subprocess.run([
-                self.program, 
+                self.program,
                 *parameters,
                 #lambda1,
                 #lambda2,
@@ -204,7 +204,7 @@ class THDMC:
             return True
         except:
             return False
-    
+
     def result(self) -> SLHA:
         '''Returns the SLHA file saved in working directory, after .run()'''
         file=os.path.join(self.thdm_dir, 'Demo_out.lha')
@@ -215,4 +215,3 @@ class THDMC:
             return slha
         else:
             return None
-        

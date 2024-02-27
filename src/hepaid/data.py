@@ -16,17 +16,6 @@ class DequeEncoder(JSONEncoder):
             return list(obj)
         return JSONEncoder.default(self, obj)
 
-def hepstack(
-        lhs: Dict,
-        slha: Dict,
-        hb_result: Dict,
-        hs_result: Dict) -> Dict:
-    '''
-    Merge SLHA dict to HiggsBounds and HiggsSignals results
-    into Dict. This is HEPStack Data Structure
-    '''
-    stack = {'LHE': lhs, 'SLHA': slha, 'HB': hb_result, 'HS': hs_result}
-    return stack
 
 def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
     '''

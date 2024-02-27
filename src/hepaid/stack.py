@@ -11,7 +11,6 @@ from hepaid.read import read_mg_generation_info
 from hepaid.tools import Spheno, HiggsBounds, HiggsSignals
 from hepaid.tools import Madgraph
 from hepaid.tools import THDMC
-from hepaid.data import hepstack
 
 
 
@@ -42,6 +41,101 @@ def input_vector_to_lhs(
         lhs[block_name][index] = value
     return lhs
 
+@register
+class SPheno:
+    def __init__(self,
+            sampler_id: int,
+            hep_config: DictConfig,
+            ):
+        '''Initialize the HEP tools'''
+        self.hp = hep_config
+        self.hp_input = hep_config.model.input
+        self.scan_dir = self.hp.directories.scan_dir
+        self.sampler_id_dir = os.path.join(
+    	    self.scan_dir, str(sampler_id)
+            )
+
+        # Parameter information
+        self.block = [self.hp_input[p].block_name for p in self.hp_input.keys()]
+        self.index = [self.hp_input[p].block_index for p in self.hp_input.keys()]
+
+        self.current_lhs = 'LesHouches.in.Step'
+        #self.current_spc = 'Spheno.spc.Step'
+        self.current_spc = 'SPheno.spc.Step'
+
+        #self.space = Space(self.hp)
+
+
+        self.spheno = Spheno(
+            spheno_dir = self.hp.directories.spheno,
+            work_dir = self.sampler_id_dir,
+            model_name = self.hp.model.name,
+            )
+
+        self.lhs = LesHouches(
+           	file_dir = self.hp.directories.reference_lhs,
+           	work_dir = self.sampler_id_dir,
+           	model =  self.hp.model.name,
+           	)
+
+    def create_dir(self, run_name: str):
+        if not(os.path.exists(self.sampler_id_dir)):
+            os.makedirs(self.sampler_id_dir)
+
+    def get_lhs(self):
+        return self.lhs
+
+    def run_stack_from_lhs(self):
+        '''
+        Run the hep_stack with the LHS file saved in the
+        self.lhs property.
+        '''
+        param_card = None
+        # Create new lhs file with the parameter values
+        self.lhs.new_file(self.current_lhs)
+        # Run spheno with the new lhs file
+        param_card, spheno_stdout = self.spheno.run(
+            self.current_lhs,
+            self.current_spc
+            )
+        if param_card is not None:
+            slha = SLHA(
+                param_card,
+                self.sampler_id_dir,
+                model = self.hp.model.name
+                )
+
+            hep_stack_data = {
+                'LHE': self.lhs.as_dict(),
+                'SLHA': slha.as_dict(),
+            }
+        else:
+            hep_stack_data = {
+                    'LHE': self.lhs.as_dict(),
+                    'SLHA': None,
+            }
+            return hep_stack_data
+
+    def sample(
+        self,
+        parameter_point: np.ndarray
+        ) -> Dict[str, float] | None:
+
+        _ = input_vector_to_lhs(
+            parameter_point,
+            self.lhs,
+            self.hp_input
+        )
+
+        hep_stack_data = self.run_stack_from_lhs()
+
+        return hep_stack_data
+
+    def __call__(self, parameter_point: np.ndarray) -> np.ndarray:
+        return self.sample(parameter_point)
+
+    def close(self):
+        shutil.rmtree(self.sampler_id_dir)
 
 @register
 class SPhenoHbHs:
@@ -128,25 +222,25 @@ class SPhenoHbHs:
                 model = self.hp.model.name
                 )
 
-            hep_stack_data = hepstack(
-                    self.lhs.as_dict(),
-                    slha.as_dict(),
-                    higgs_bounds_results,
-                    higgs_signals_results
-                    )
+            hep_stack_data = {
+                'LHE': self.lhs.as_dict(),
+                'SLHA': slha.as_dict(),
+                'HB': higgs_bounds_results,
+                'HS': higgs_signals_results,
+            }
         else:
-            hep_stack_data = hepstack(
-                    self.lhs.as_dict(),
-                    None,
-                    None,
-                    None,
-                    )
-        return hep_stack_data
+            hep_stack_data = {
+                    'LHE': self.lhs.as_dict(),
+                    'SLHA': None,
+                    'HB': None,
+                    'HS': None,
+            }
+            return hep_stack_data
 
-    def _sample(
+    def sample(
         self,
         parameter_point: np.ndarray
-        ) -> Dict[str, float]:
+        ) -> Dict[str, float] | None:
 
         _ = input_vector_to_lhs(
             parameter_point,
@@ -158,12 +252,6 @@ class SPhenoHbHs:
 
         return hep_stack_data
 
-    def sample(
-        self,
-        parameter_point: np.ndarray
-        ) -> Dict[str, float]:
-        return self._sample(parameter_point)
-
     def __call__(self, parameter_point: np.ndarray) -> np.ndarray:
         return self.sample(parameter_point)
 
@@ -174,7 +262,7 @@ class SPhenoHbHs:
 @register
 class SPhenoMg5(SPhenoHbHs):
     '''
-    Class to run from (LHS, MG5Script) -> SPHENO -> MG5 -> Output Dir.
+    Class to run from (LHS, MG5Script) -> SPHENO, HB, HS -> MG5 -> Output Dir.
     '''
     def __init__(
         self,

@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 
 from pathlib import Path
-from rich.progress import track
 from json import JSONEncoder
 from collections import deque
 from typing import Dict, List, Union
@@ -196,7 +195,7 @@ class HEPDataSet:
         dataset_files = self.find_hepdata_files(directory)
         percentage_slice = dataset_files[:int(len(dataset_files)*percentage)]
         corrupted_files = 0
-        for file in track(percentage_slice, description=f'Loading HEPDataSets. {percentage*100}%'):
+        for file in percentage_slice:
             if file_format == 'JSON':
                 loaded = self.load_json(file)
             else:

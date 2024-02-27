@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: hepaid
+Version: 2.0
+Summary: Modules for pythonic interaction with hep tools
+Author: Mauricio A. Diaz
+License-File: LICENSE

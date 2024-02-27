@@ -54,6 +54,19 @@ def feature_vector(database, keys):
         feature_array.append(value)
     return feature_array
 
+def find_hepdata_files(
+    directory: str, data_name: str = 'HEPDataSet'
+    ):
+    '''
+    Identify `data_name = HEPDataSet` files in a directory. Default name is HEPDataSet
+    '''
+    directory = Path(directory)
+    dataset_files = []
+    for file in directory.iterdir():
+        if data_name in file.name:
+            dataset_files.append(directory.joinpath(file.name))
+    return dataset_files
+
 class HEPDataSet:
     '''
     Creates a data set structure to store objects in a deque, export
@@ -73,7 +86,6 @@ class HEPDataSet:
         self.complete_stack_ids = []
         self.save_mode = 'pickle'
 
-
     def __repr__(self):
         return 'HEPDataSet. Size = {}. Complete Stack Points = {}'.format(
                     self.counter, len(self.complete_stack_ids)
@@ -91,7 +103,12 @@ class HEPDataSet:
     def __len__(self):
         return self.counter
 
+    @property
+    def data(self):
+        return self._data
+
     def add(self, data: Union[List, Dict]):
+        '''Add a data point or a list of data points'''
         if isinstance(data, list):
             self._data.extend(data)
             for idx in range(self.counter, self.counter + len(data)):
@@ -125,16 +142,6 @@ class HEPDataSet:
             file.write(json.dumps(self._data).encode('utf-8'))
         return True
 
-    def _save_pickle(self, path):
-        '''Legacy save pickle'''
-        pickled_data = pickle.dumps(self._data)
-        with gzip.GzipFile('{}.p.gz'.format(path),"wb") as f:
-            f.write(pickled_data)
-
-    def _save(self, path):
-        '''Legacy save pickle'''
-        self.save_pickle(path)
-
 
     def load_json(self, path: str):
         '''
@@ -152,54 +159,18 @@ class HEPDataSet:
                 self.complete_stack_ids.append(idx)
         self.counter += len_new_data
 
-    def _load_pickle(self, path):
-        '''
-        Legacy load for pickle
-        '''
-        with gzip.open('{}'.format(path),"r") as f:
-            depickled_data = f.read()
-        try:
-            data = pickle.loads(depickled_data)
-            len_new_data = len(data)
-            self._data += data
-            for idx in range(self.counter, self.counter + len_new_data):
-                if not self.is_none(idx=idx):
-                    self.complete_stack_ids.append(idx)
-            self.counter += len_new_data
-            return True
-        except EOFError:
-            return False
 
-    def _load(self, path):
-        '''Legacy load for pickle'''
-        self.load_pickle(path)
-
-    def find_hepdata_files(
-        self, directory: str, data_name: str = 'HEPDataSet'
-        ):
-        '''
-        Identify HEPDataSet files in a directory. Default name is HEPDataSet
-        '''
-        directory = Path(directory)
-        dataset_files = []
-        for file in directory.iterdir():
-            if data_name in file.name:
-                dataset_files.append(directory.joinpath(file.name))
-        return dataset_files
 
     def load_from_directory(self,
             directory: str,
             percentage: float =1.0,
-            file_format: str ='JSON'
-            ):
-        dataset_files = self.find_hepdata_files(directory)
+            data_name : str = 'HEPDataSet'
+        ):
+        dataset_files = find_hepdata_files(directory, data_name=data_name)
         percentage_slice = dataset_files[:int(len(dataset_files)*percentage)]
         corrupted_files = 0
         for file in percentage_slice:
-            if file_format == 'JSON':
-                loaded = self.load_json(file)
-            else:
-                loaded = self.load(file)
+            loaded = self.load_json(file)
             corrupted_files += 1 if not loaded else 0
         print('EOFError: corrupted files: ', corrupted_files)
 

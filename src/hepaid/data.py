@@ -24,7 +24,7 @@ def merge_hepstacks(hepstack_list: List, idx: int=0) -> Dict:
     hepstack_list_dict = {str(i): file for i,file in enumerate(hepstack_list, idx)}
     return hepstack_list_dict
 
-def _get_recursive(obj, args, default=None):
+def _get_key_chain(obj, args):
     """Apply successive requests to an obj that implements __getitem__ and
     return result if something is found, else return default"""
     for a in args:
@@ -45,7 +45,7 @@ def feature_vector(database, keys):
     '''
     feature_array = []
     for i in range(len(database)):
-        value = _get_recursive(database[i], keys)
+        value = _get_key_chain(database[i], keys)
         if isinstance(value, list):
             #assert len(value) == 1, \
             #    'Value for key chain has more than one value'

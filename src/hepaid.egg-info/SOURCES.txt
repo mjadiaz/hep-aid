@@ -2,6 +2,7 @@ LICENSE
 README.md
 pyproject.toml
 setup.cfg
+src/__init__.py
 src/hepaid/__init__.py
 src/hepaid/data.py
 src/hepaid/read.py

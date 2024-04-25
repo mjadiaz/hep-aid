@@ -21,6 +21,7 @@ def register(hep_stack: Callable[..., Any]) -> Callable[..., Any]:
     HEPSTACK[hep_stack.__name__] = hep_stack
     return hep_stack
 
+
 def input_vector_to_lhs(
     sample: np.ndarray,
     lhs: LesHouches,

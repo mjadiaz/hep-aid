@@ -38,7 +38,22 @@ PATTERNS_LHE =   dict(
             )
 
 def extract_line_elements(line: str)-> dict:
-    #import warnings
+    '''
+    Extracts various elements from a given line of text based on predefined patterns.
+    
+    Parameters:
+    line (str): A string line from which elements are to be extracted.
+
+    Returns:
+    dict: A dictionary containing extracted elements categorized by their type:
+          - 'comment': A string containing the comment portion of the line.
+          - 'value': A list of floating-point numbers in scientific notation found in the line.
+          - 'entries': A list of integer values found in the line.
+
+    Example:
+    Input: "123 1.23E10 # Example" 
+    Output: {'comment': ['# Example'], 'value': ['1.23E10'], 'entries': ['123']}
+    '''
     patterns = dict(
         comment = r'(?P<comment>#.*)',
         values = r'(?P<value>.?\d+\.\d+E.\d+)',
@@ -49,11 +64,30 @@ def extract_line_elements(line: str)-> dict:
     for p in patterns:
         line_elements[p] = re.findall(patterns[p], _line)
         _line = re.sub(patterns[p], '' , _line)
-    #if len(_line.strip()) != 0:
-    #     warnings.warn(f"Line is not fully read: {_line}")
     return line_elements
 
 def block2dict(block):
+    '''
+    Converts a given data block into a dictionary format, capturing detailed elements and
+    properties of the block.
+    
+    Parameters:
+    block (Block): An Block object with methods to access its elements
+                   and properties such as entries, values, comments, and other metadata.
+
+    Returns:
+    dict: A dictionary containing all relevant data extracted from the block, structured as follows:
+        - 'entries': A dictionary of entries where each key is a comma-joined string of entries,
+                     and each value is another dictionary with 'value', 'comment', and 'line'.
+        - 'block_name': The name of the block.
+        - 'block_comment': The comment associated with the block.
+        - 'q_values': The Q values associated with the block, if any.
+        - 'block_category': The category of the block.
+        - 'header_line': The header line of the block.
+        - 'pid': (optional) The PID, if the block category is related to decay processes.
+        - 'decay_width': (optional) The decay width, if applicable.
+
+    '''
     block_dict = {}
     entries_dict = {}
     for i, entries in enumerate(block.entries()):
@@ -74,6 +108,9 @@ def block2dict(block):
     return block_dict
 
 def lheblock2dict(block):
+    '''
+    Converts a block from LesHouches object into a dictionary for easier manipulation and access.
+    '''
     block_dict = {}
     entries_dict = {}
     for i, entries in enumerate(block.keys()):
@@ -90,12 +127,18 @@ def lheblock2dict(block):
     return block_dict
 
 def lhe2dict(lhe):
+    '''
+    Converts the whole LesHouches object into a dictionary.
+    '''
     lhe_dict = {}
     for i, block in enumerate(lhe.block_list):
         lhe_dict[block] = lheblock2dict(lhe[block])
     return lhe_dict 
 
 def slha2dict(slha):
+    '''
+    Converts the whole SLHA object into a dictionary.
+    '''
     slha_dict = {}
     for i, block in enumerate(slha.block_list):
         slha_dict[block] = block2dict(slha[block])
@@ -144,15 +187,6 @@ class BlockLine:
     def __repr__(self):
         return self.fline()
 
-    #@property
-    #def comment(self):
-    #    return self.entries[-1]
-    #@property
-    #def value(self):
-    #    return self.entries[-2]
-    #@property 
-    #def options(self):
-    #    return self.entries[:-2]
 
 
 class Block(MutableMapping):
@@ -311,7 +345,12 @@ class LesHouches(Mapping):
     '''
     Reading LesHouces files. Format used for input for SPheno.
     '''
-    def __init__(self, file_dir, work_dir, model, output_mode=False):
+    def __init__(self, 
+                 file_dir: str, 
+                 work_dir: str = '.', 
+                 model: str = 'Model', 
+                 output_mode: bool = False
+                 ):
         self.file_dir = file_dir
         self.output_mode = output_mode
         if self.output_mode:

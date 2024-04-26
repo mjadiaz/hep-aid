@@ -28,8 +28,21 @@ def input_vector_to_lhs(
     model_input: dict
     ) -> LesHouches:
     '''
-    Iterate on each block name, parameter index and
-    the sampled value respectively
+    Updates a LesHouches's parameter blocks with new values from the sample input vector.
+
+    This function is designed to integrate the parameter values (sample) into an LesHouches object,
+    updating specific block parameters with values provided in the `sample` array. Each parameter
+    is associated with a block name and an index within that block, as defined in `model_input`.
+
+    Parameters:
+    sample (np.ndarray): A numpy array of sampled values to be updated in the LesHouches object.
+    lhs (LesHouches): An instance of a LesHouches class representing the LHS file to be modified.
+    model_input (dict): A dictionary mapping parameter names to their respective 'block_name'
+                        and 'block_index' within the LHS structure.
+
+    Returns:
+    LesHouches: The modified instance of the LesHouches class with updated parameter values.
+
     '''
     params_iterate_ = zip(
         model_input.keys(),
@@ -44,6 +57,32 @@ def input_vector_to_lhs(
 
 @register
 class SPheno:
+    """
+    SPheno class handles the manipulation and execution of the SPheno
+    tool, managing input operations for Les Houches files, and
+    output operations of SLHA/Spc files.
+
+    Attributes:
+        hp (DictConfig): Saves the `hep_config` configuration object.  
+        hp_input (dict): Stores `hep_config.model.input` for easier manipulation.
+        scan_dir (str): Stores `hep_config.directories.scan_dir` for easier manipulation.
+        sampler_id_dir (str): Directory path specific to the sampler ID.
+        block (list): List of block names from model input configuration.
+        index (list): List of parameter indices corresponding to each block in 'block'.
+        current_lhs (str): Filename for the current Les Houches input file.
+        current_spc (str): Filename for the current SPheno spectrum output file.
+        spheno (Spheno): SPheno execution object initialized with paths and model details.
+        lhs (LesHouches): Initialises a LesHouches object from a reference lhs 
+                            in `hep_config.directories.reference_lhs`.
+
+    Methods:
+        create_dir(run_name: str): Creates directory for the specified run.
+        get_lhs(): Returns the Les Houches file handler.
+        run_stack_from_lhs(): Executes the SPheno tool with the current LHS file and gathers outputs.
+        sample(parameter_point: np.ndarray): Updates LHS with new parameters, runs simulations, and returns outputs.
+        __call__(parameter_point: np.ndarray): Callable method to simplify sampling operations.
+        close(): Cleans up by removing the sampler ID directory.
+    """
     def __init__(self,
             sampler_id: int,
             hep_config: DictConfig,

@@ -1,0 +1,1257 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI._thresholds">_thresholds (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.accepted">accepted (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.adapt_frequency">adapt_frequency (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.add">add() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.add_process">add_process() (hepaid.hep.read.MG5Script method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.as_dataframe">as_dataframe() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.as_dict">as_dict() (hepaid.hep.read.LesHouches method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.as_dict">(hepaid.hep.read.SLHA method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.as_txt">as_txt() (hepaid.hep.read.SLHA method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.auto_likelihood">auto_likelihood() (in module hepaid.search.policy.mcmc)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.ball_of_points">ball_of_points (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.base_points">base_points (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR">bCASTOR (class in hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bcastor_step">bcastor_step() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block">Block (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.block">block (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.block">block() (hepaid.hep.read.LesHouches method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.block">(hepaid.hep.read.SLHA method)</a>, <a href="hepaid.hep.html#id0">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.block2dict">block2dict() (in module hepaid.hep.read)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.utils.block2dict">(in module hepaid.hep.utils)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.BlockLine">BlockLine (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.BlockLineSLHA">BlockLineSLHA (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA">BlockSLHA (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.body_values_2dict">body_values_2dict() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.body_values_2dict_lhs">body_values_2dict_lhs() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.bounds">bounds (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.br_2dict">br_2dict() (in module hepaid.hep.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS">CAS (class in hepaid.search.policy.cas)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.close">close() (hepaid.hep.stack.SPheno method)</a>, <a href="hepaid.hep.html#id2">[1]</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.close">(hepaid.hep.stack.SPhenoHbHs method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.close">(hepaid.hep.stack.THDMCExt method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.comments">comments() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.comments">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.constraints">constraints (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.covar_dist">covar_dist() (in module hepaid.search.policy.eci)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.create_dir">create_dir() (hepaid.hep.stack.SPheno method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.create_dir">(hepaid.hep.stack.SPhenoHbHs method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.create_dir">(hepaid.hep.stack.THDMCExt method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.create_optuna_objective">create_optuna_objective() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.curr_likeli">curr_likeli (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.curr_state">curr_state (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.current_lhs">current_lhs (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.current_spc">current_spc (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.data">data (hepaid.hep.data.HEPDataSet property)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.decay_block_2dict">decay_block_2dict() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.DequeEncoder.default">default() (hepaid.hep.data.DequeEncoder method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.define_multiparticles">define_multiparticles() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.delphes_card">delphes_card() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.delta_r">delta_r (hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.delta_r">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.DequeEncoder">DequeEncoder (class in hepaid.hep.data)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.detector">detector() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.dict2json">dict2json() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.dim">dim (hepaid.search.policy.eci.ECI property)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.dist">dist() (in module hepaid.search.policy.eci)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI">ECI (class in hepaid.search.policy.eci)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.eci">eci (hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.eci">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.eci_step">eci_step() (in module hepaid.search.policy.cas)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.entries">entries() (hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.extract_line_elements">extract_line_elements() (in module hepaid.hep.read)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.feature_vector">feature_vector() (hepaid.hep.data.HEPDataSet method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.data.feature_vector">(in module hepaid.hep.data)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.find_block">find_block() (hepaid.hep.read.LesHouches static method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.find_block">(hepaid.hep.read.SLHA static method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.find_hepdata_files">find_hepdata_files() (in module hepaid.hep.data)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.BlockLine.fline">fline() (hepaid.hep.read.BlockLine method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.generic_block_2dict">generic_block_2dict() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.generic_block_2dict_lhs">generic_block_2dict_lhs() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.get">get() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.get">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.get_">get_() (hepaid.hep.read.Block method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.models.html#hepaid.search.models.model_list.get_and_fit_gp">get_and_fit_gp() (in module hepaid.search.models.model_list)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.get_lhs">get_lhs() (hepaid.hep.stack.SPheno method)</a>, <a href="hepaid.hep.html#id3">[1]</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.get_lhs">(hepaid.hep.stack.SPhenoHbHs method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.models.html#hepaid.search.models.model_list.get_model_and_likelihood">get_model_and_likelihood() (in module hepaid.search.models.model_list)</a>
+</li>
+      <li><a href="hepaid.search.models.html#hepaid.search.models.model_list.get_model_list_gp">get_model_list_gp() (in module hepaid.search.models.model_list)</a>
+</li>
+      <li><a href="hepaid.search.models.html#hepaid.search.models.model_list.get_posterior">get_posterior() (in module hepaid.search.models.model_list)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    hepaid
+
+      <ul>
+        <li><a href="hepaid.html#module-hepaid">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep.data
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.data">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep.read
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.read">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep.stack
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.stack">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep.tools
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.tools">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.hep.utils
+
+      <ul>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search
+
+      <ul>
+        <li><a href="hepaid.search.html#module-hepaid.search">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.models
+
+      <ul>
+        <li><a href="hepaid.search.models.html#module-hepaid.search.models">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.models.model_list
+
+      <ul>
+        <li><a href="hepaid.search.models.html#module-hepaid.search.models.model_list">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.parallel
+
+      <ul>
+        <li><a href="hepaid.search.parallel.html#module-hepaid.search.parallel">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    hepaid.search.parallel.modules
+
+      <ul>
+        <li><a href="hepaid.search.parallel.html#module-hepaid.search.parallel.modules">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy.base
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.base">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy.bcastor
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.bcastor">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy.cas
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.cas">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy.eci
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.eci">module</a>
+</li>
+      </ul></li>
+      <li>
+    hepaid.search.policy.mcmc
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.mcmc">module</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet">HEPDataSet (class in hepaid.hep.data)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.HiggsBounds">HiggsBounds (class in hepaid.hep.tools)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults">HiggsBoundsResults (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.HiggsSignals">HiggsSignals (class in hepaid.hep.tools)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults">HiggsSignalsResults (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.hp">hp (hepaid.hep.stack.SPheno attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.hp">(hepaid.search.policy.base.Policy attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.hp_input">hp_input (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.hp_name">hp_name (hepaid.search.policy.base.Policy attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.idx_burnin">idx_burnin (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.import_model">import_model() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.index">index (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.input_vector_to_lhs">input_vector_to_lhs() (in module hepaid.hep.stack)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.is_none">is_none() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.iteration">iteration (hepaid.search.policy.base.Policy attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.iteration">(hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.iteration">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.iteration">(hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.json2dict">json2dict() (in module hepaid.hep.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.keys">keys() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.keys">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.keys">(hepaid.hep.read.LesHouches method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.keys">(hepaid.hep.read.SLHA method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.launch">launch() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches">LesHouches (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.lhe2dict">lhe2dict() (in module hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.lheblock2dict">lheblock2dict() (in module hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.lhs">lhs (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.lhs2dict">lhs2dict() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.likelihood">likelihood (hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.likelihood">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.likelihood">(hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.lines">lines() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.lines">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.load_checkpoint">load_checkpoint() (hepaid.search.policy.base.Policy method)</a>, <a href="hepaid.search.policy.html#id0">[1]</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.load_from_directory">load_from_directory() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.load_json">load_json() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.Madgraph">Madgraph (class in hepaid.hep.tools)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.mcmc_updater">mcmc_updater() (in module hepaid.search.policy.mcmc)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH">MCMCMH (class in hepaid.search.policy.mcmc)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.merge_datasets">merge_datasets() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.merge_hepstacks">merge_hepstacks() (in module hepaid.hep.data)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.utils.merge_slha_files">merge_slha_files() (in module hepaid.hep.utils)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.metrics">metrics (hepaid.search.policy.base.Policy attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.metrics">(hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.metrics">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script">MG5Script (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.model">model (hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.model">(hepaid.search.policy.cas.CAS attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.model_param_blocks">model_param_blocks() (hepaid.hep.read.LesHouches method)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="hepaid.html#module-hepaid">hepaid</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep">hepaid.hep</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.data">hepaid.hep.data</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.read">hepaid.hep.read</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.stack">hepaid.hep.stack</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.tools">hepaid.hep.tools</a>
+</li>
+        <li><a href="hepaid.hep.html#module-hepaid.hep.utils">hepaid.hep.utils</a>
+</li>
+        <li><a href="hepaid.search.html#module-hepaid.search">hepaid.search</a>
+</li>
+        <li><a href="hepaid.search.models.html#module-hepaid.search.models">hepaid.search.models</a>
+</li>
+        <li><a href="hepaid.search.models.html#module-hepaid.search.models.model_list">hepaid.search.models.model_list</a>
+</li>
+        <li><a href="hepaid.search.parallel.html#module-hepaid.search.parallel">hepaid.search.parallel</a>
+</li>
+        <li><a href="hepaid.search.parallel.html#module-hepaid.search.parallel.modules">hepaid.search.parallel.modules</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy">hepaid.search.policy</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.base">hepaid.search.policy.base</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.bcastor">hepaid.search.policy.bcastor</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.cas">hepaid.search.policy.cas</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.eci">hepaid.search.policy.eci</a>
+</li>
+        <li><a href="hepaid.search.policy.html#module-hepaid.search.policy.mcmc">hepaid.search.policy.mcmc</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.new_file">new_file() (hepaid.hep.read.LesHouches method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.new_file">(hepaid.hep.read.SLHA method)</a>, <a href="hepaid.hep.html#id1">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.num_outputs">num_outputs (hepaid.search.policy.eci.ECI property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.objective_function">objective_function (hepaid.search.policy.base.Policy attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.optuna_study_cmaes">optuna_study_cmaes() (in module hepaid.search.policy.bcastor)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.optuna_study_nsgaii">optuna_study_nsgaii() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.optuna_study_tpe">optuna_study_tpe() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.output">output() (hepaid.hep.read.MG5Script method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.param_card">param_card() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy">Policy (class in hepaid.search.policy.base)</a>
+</li>
+      <li><a href="hepaid.search.models.html#hepaid.search.models.model_list.predict">predict() (in module hepaid.search.models.model_list)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.process">process() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.proposal_distribution">proposal_distribution() (in module hepaid.search.policy.mcmc)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.punchout_radius">punchout_radius (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.rank_based_sampling">rank_based_sampling() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults.read">read() (hepaid.hep.read.HiggsBoundsResults method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults.read">(hepaid.hep.read.HiggsSignalsResults method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.read_blocks">read_blocks() (hepaid.hep.read.SLHA method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.read_from_dict">read_from_dict() (hepaid.hep.read.SLHA method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches">read_leshouches() (hepaid.hep.read.LesHouches method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches_from_dict">read_leshouches_from_dict() (hepaid.hep.read.LesHouches method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches_from_dir">read_leshouches_from_dir() (hepaid.hep.read.LesHouches method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.read_mg_generation_info">read_mg_generation_info() (in module hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA.read_slha_from_file">read_slha_from_file() (hepaid.hep.read.SLHA method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.register">register() (in module hepaid.hep.stack)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.reset">reset() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.THDMC.result">result() (hepaid.hep.tools.THDMC method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.HiggsBounds.run">run() (hepaid.hep.tools.HiggsBounds method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.tools.HiggsSignals.run">(hepaid.hep.tools.HiggsSignals method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.tools.Madgraph.run">(hepaid.hep.tools.Madgraph method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.tools.Spheno.run">(hepaid.hep.tools.Spheno method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.tools.THDMC.run">(hepaid.hep.tools.THDMC method)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.run">(hepaid.search.policy.bcastor.bCASTOR method)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.cas.CAS.run">(hepaid.search.policy.cas.CAS method)</a>
+</li>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.run">(hepaid.search.policy.mcmc.MCMCMH method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.run_stack_from_lhs">run_stack_from_lhs() (hepaid.hep.stack.SPheno method)</a>, <a href="hepaid.hep.html#id4">[1]</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.run_stack_from_lhs">(hepaid.hep.stack.SPhenoHbHs method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5.run_stack_from_lhs">(hepaid.hep.stack.SPhenoMg5 method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.parallel.html#hepaid.search.parallel.modules.run_x_with_pool">run_x_with_pool() (in module hepaid.search.parallel.modules)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.sample">sample() (hepaid.hep.stack.SPheno method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.sample">(hepaid.hep.stack.SPhenoHbHs method)</a>
+</li>
+        <li><a href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.sample">(hepaid.hep.stack.THDMCExt method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.sampler_id_dir">sampler_id_dir (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults.save">save() (hepaid.hep.read.HiggsBoundsResults method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults.save">(hepaid.hep.read.HiggsSignalsResults method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.save_checkpoint">save_checkpoint() (hepaid.search.policy.base.Policy method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.save_json">save_json() (hepaid.hep.data.HEPDataSet method)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.base.Policy.save_path">save_path (hepaid.search.policy.base.Policy attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.MCMCMH.scale">scale (hepaid.search.policy.mcmc.MCMCMH attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.scan_dir">scan_dir (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.set">set() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.set">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.set_">set_() (hepaid.hep.read.Block method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.set_parameters">set_parameters() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.show">show() (hepaid.hep.read.MG5Script method)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.shower">shower() (hepaid.hep.read.MG5Script method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.sigmoid">sigmoid() (in module hepaid.search.policy.mcmc)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.SLHA">SLHA (class in hepaid.hep.read)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.slha2dict">slha2dict() (in module hepaid.hep.read)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.utils.slha2dict">(in module hepaid.hep.utils)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.smooth_box_mask">smooth_box_mask() (in module hepaid.search.policy.eci)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.smooth_box_mask">(in module hepaid.search.policy.mcmc)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.smooth_mask">smooth_mask() (in module hepaid.search.policy.eci)</a>
+
+      <ul>
+        <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.smooth_mask">(in module hepaid.search.policy.mcmc)</a>
+</li>
+      </ul></li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.sort_and_get_n_maximum">sort_and_get_n_maximum() (in module hepaid.search.policy.bcastor)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno">SPheno (class in hepaid.hep.stack)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.Spheno">Spheno (class in hepaid.hep.tools)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPheno.spheno">spheno (hepaid.hep.stack.SPheno attribute)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs">SPhenoHbHs (class in hepaid.hep.stack)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5">SPhenoMg5 (class in hepaid.hep.stack)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.sq_dist">sq_dist() (in module hepaid.search.policy.eci)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.bCASTOR.study">study (hepaid.search.policy.bcastor.bCASTOR attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.bcastor.study_to_array">study_to_array() (in module hepaid.search.policy.bcastor)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.tools.THDMC">THDMC (class in hepaid.hep.tools)</a>
+</li>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.THDMCExt">THDMCExt (class in hepaid.hep.stack)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.train_inputs">train_inputs (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.train_x">train_x (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.eci.ECI.train_y">train_y (hepaid.search.policy.eci.ECI attribute)</a>
+</li>
+      <li><a href="hepaid.search.policy.html#hepaid.search.policy.mcmc.tune">tune() (in module hepaid.search.policy.mcmc)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5.update_mg5_script">update_mg5_script() (hepaid.hep.stack.SPhenoMg5 method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.Block.values">values() (hepaid.hep.read.Block method)</a>
+
+      <ul>
+        <li><a href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.values">(hepaid.hep.read.BlockSLHA method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hepaid.hep.html#hepaid.hep.read.MG5Script.write">write() (hepaid.hep.read.MG5Script method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

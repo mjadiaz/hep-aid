@@ -1,23 +1,168 @@
 import os
 import re
 import subprocess
+from pathlib import Path
+
 
 import numpy as np
 
 from hepaid.hep.read import SLHA
 
 
+class SPheno:
+
+    """Manages the execution of SPheno (Supersymmetric Phenomenology) calculations.
+
+    This class facilitates the setup, execution, and output handling of SPheno.
+
+    Attributes:
+        spheno_dir (str): The directory containing the SPheno executable.
+        output_dir (str): The directory where SPheno output files will be stored.
+        model_name (str):  The name of the specific SUSY model to be analyzed.
+        output_file_name (str):  The name of the primary output file.
+        output_file_path (str):  The full path to the primary output file.
+        standard_input_file_name (str): The standard name for SPheno input files.
+        model_executable (str): The full path to the SPheno executable for the specified model.
+
+    Methods:
+        __init__(self, spheno_dir, output_dir, model_name):
+            Initializes the SPheno object with required directory and model information.
+        
+        run(self, input_file):
+            Executes SPheno with the provided input file or SLHA object.
+    """
+    def __init__(self, heptool_dir: str, output_dir: str , model_name: str):
+        """Initializes a new SPheno object.
+
+        Parameters: 
+            spheno_dir (str): Path to the directory containing SPheno.
+            output_dir (str): Path to the directory where SPheno output should be saved.
+            model_name (str): Name of the SUSY model to be used.
+        """
+        self.heptool_dir = Path(heptool_dir)
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        self.model_name = model_name
+        self.executable = self.heptool_dir / "bin" / f'SPheno{self.model_name}'
+
+        self.output_file_name = f'SPheno.spc.{self.model_name}'
+        self.output_file_path = self.output_dir / self.output_file_name
+
+        self.standard_input_file_name = f'LesHouches.in.{self.model_name}'
+    
+    def run(self, input_file: str | SLHA) -> tuple[str | None, str]:
+        """Runs the SPheno calculation.
+
+        Parameters:
+            input_file (str or SLHA): Either a path to an input SLHA (LesHouches.in.Model) 
+                                        file (str) or an SLHA object containing the SLHA file.
+
+        Returns:
+            tuple: A tuple containing:
+                - Path: The path to the output file if the run was successful, or None if it failed.
+                - str:  The standard output (stdout) from the SPheno process. 
+        """
+        if isinstance(input_file, str):
+            input_file_path = Path(input_file_path)
+        elif isinstance(input_file, SLHA):
+            input_file_path = self.output_dir / self.standard_input_file_name
+            input_file.save(input_file_path)
+        else:
+            raise TypeError(f"Invalid input_file type: Expected str or SLHA, got {type(input_file).__name__}")
+
+        run = subprocess.run(
+            [
+                self.executable,
+                input_file_path,
+                self.output_file_path,
+            ],
+            capture_output=True,
+            text=True,
+            cwd=self.output_dir,
+        )
+        if "Finished" in run.stdout:
+            return self.output_file_path, run.stdout
+        else:
+            return None, run.stdout
+
+
+class _SPheno:
+    def __init__(self, spheno_dir, work_dir, model_name):
+        self._spheno_dir = Path(spheno_dir) 
+        self._work_dir = Path(work_dir)  
+        self._model_name = model_name
+
+    def run(self, in_file_name, out_file_name):
+        """Run SPhenoMODEL with input/output files in specific directories.
+
+        Parameters:
+        in_file_name (str): Input file's name (located in work_dir/SPhenoMODEL_input/).
+        out_file_name (str): Output file's name (created in work_dir/SPhenoMODEL_output/).
+
+        Returns:
+            Tuple[Optional[Path], str]: Path to output file if successful, else None. 
+                                        SPheno subprocess stdout.
+        """
+
+        in_dir = self._work_dir / f"SPheno{self._model_name}_input"
+        out_dir = self._work_dir / f"SPheno{self._model_name}_output"
+
+        in_file = in_dir / in_file_name
+        out_file = out_dir / out_file_name
+
+        out_dir.mkdir(exist_ok=True)  # Create output dir if not exists
+
+        spheno_executable = self._spheno_dir / "bin" / f"SPheno{self._model_name}"
+
+        run = subprocess.run(
+            [spheno_executable, in_file, out_file],
+            capture_output=True,
+            text=True,
+            cwd=self._work_dir, 
+        )
+
+        if "Finished" in run.stdout:
+            return out_file, run.stdout
+        else:
+            return None, run.stdout
+        
+        
+
 class Spheno:
     def __init__(self, spheno_dir, work_dir, model_name):
         self._spheno_dir = spheno_dir
         self._work_dir = work_dir
         self._model_name = model_name
+    
+    def run(self, input_file_path, output_directory, output_file_name = 'SPheno.spc.model'):
+        input_file_path = Path(input_file_path)
+
+        output_directory = Path(output_directory)
+        output_directory.mkdir(parents=True, exist_ok=True)
+
+        output_file_path = output_directory / output_file_name
+        run = subprocess.run(
+            [
+                self._spheno_dir + "/bin" + "/SPheno" + self._model_name,
+                input_file_path,
+                output_file_path,
+            ],
+            capture_output=True,
+            text=True,
+            cwd=output_directory,
+        )
+        if "Finished" in run.stdout:
+            return out_file_path, run.stdout
+        else:
+            return None, run.stdout
+
 
     def run(self, in_file_name, out_file_name):
         """
         Run SPhenoMODEL with the input_file_name in work_dir.
 
-        Args:
+        Parameters:
         -----
         in_file_name: str = input file's name located in work_dir/SPhenoMODEL_input/in_file_name
         out_file_name: str = output file's name located in work_dir/SPhenoMODEL_output/out_file_name
@@ -61,23 +206,27 @@ class Madgraph:
     - Figure out how to print some output from madgraph.
     """
 
-    def __init__(self, madgraph_dir, work_dir):
-        self._dir = madgraph_dir
-        self._work_dir = work_dir
+    def __init__(self, heptool_dir, output_dir):
+        self.tool_dir = Path(heptool_dir)
 
-    def run(self, input_file="MG5Script.txt", mode="local"):
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        self.executable = self.tool_dir / "bin/mg5_aMC"
+
+
+    def run(self, input_file):
         """
         Run madgraph with an script named MG5Script.txt (created by the MG5Script class) in within work_dir. \n
         Change input_file to change to another script within work_dir.
         """
-        if mode == "local":
-            subprocess.run(
-                [os.path.join(self._dir, "bin/mg5_aMC"), input_file],
-                text=True,
-                cwd=self._work_dir,
-            )
-        elif mode == "cluster":
-            print("Implement cluster mode.")
+        subprocess.run(
+            [self.executable, input_file],
+            capture_output=True,
+            text=True,
+            cwd=self.output_dir,
+        )
+        return True
 
 
 class HiggsBounds:

@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>hepaid package &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hepaid';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hepaid.hep package" href="hepaid.hep.html" />
+    <link rel="prev" title="hepaid" href="modules.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">hepaid package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html">hepaid.hep package</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="hepaid.search.html">hepaid.search package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.models.html">hepaid.search.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.parallel.html">hepaid.search.parallel package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.policy.html">hepaid.search.policy package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">hepaid</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">hepaid package</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="hepaid-package">
+<h1>hepaid package<a class="headerlink" href="#hepaid-package" title="Link to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hepaid.hep.html">hepaid.hep package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep.data">hepaid.hep.data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.DequeEncoder"><code class="docutils literal notranslate"><span class="pre">DequeEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.DequeEncoder.default"><code class="docutils literal notranslate"><span class="pre">DequeEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet"><code class="docutils literal notranslate"><span class="pre">HEPDataSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.add"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.as_dataframe"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.as_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.data"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.feature_vector"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.feature_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.is_none"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.is_none()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.load_from_directory"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.load_from_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.load_json"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.load_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.reset"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.HEPDataSet.save_json"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.save_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.feature_vector"><code class="docutils literal notranslate"><span class="pre">feature_vector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.find_hepdata_files"><code class="docutils literal notranslate"><span class="pre">find_hepdata_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.data.merge_hepstacks"><code class="docutils literal notranslate"><span class="pre">merge_hepstacks()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep.read">hepaid.hep.read module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.comments"><code class="docutils literal notranslate"><span class="pre">Block.comments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.get"><code class="docutils literal notranslate"><span class="pre">Block.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.get_"><code class="docutils literal notranslate"><span class="pre">Block.get_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.keys"><code class="docutils literal notranslate"><span class="pre">Block.keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.lines"><code class="docutils literal notranslate"><span class="pre">Block.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.set"><code class="docutils literal notranslate"><span class="pre">Block.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.set_"><code class="docutils literal notranslate"><span class="pre">Block.set_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.Block.values"><code class="docutils literal notranslate"><span class="pre">Block.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockLine"><code class="docutils literal notranslate"><span class="pre">BlockLine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockLine.fline"><code class="docutils literal notranslate"><span class="pre">BlockLine.fline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockLineSLHA"><code class="docutils literal notranslate"><span class="pre">BlockLineSLHA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA"><code class="docutils literal notranslate"><span class="pre">BlockSLHA</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.comments"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.comments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.entries"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.get"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.keys"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.lines"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.set"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.BlockSLHA.values"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults.read"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsBoundsResults.save"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults.read"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.HiggsSignalsResults.save"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches"><code class="docutils literal notranslate"><span class="pre">LesHouches</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.as_dict"><code class="docutils literal notranslate"><span class="pre">LesHouches.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.block"><code class="docutils literal notranslate"><span class="pre">LesHouches.block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.find_block"><code class="docutils literal notranslate"><span class="pre">LesHouches.find_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.keys"><code class="docutils literal notranslate"><span class="pre">LesHouches.keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.model_param_blocks"><code class="docutils literal notranslate"><span class="pre">LesHouches.model_param_blocks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.new_file"><code class="docutils literal notranslate"><span class="pre">LesHouches.new_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches_from_dict"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.LesHouches.read_leshouches_from_dir"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches_from_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script"><code class="docutils literal notranslate"><span class="pre">MG5Script</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.add_process"><code class="docutils literal notranslate"><span class="pre">MG5Script.add_process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.define_multiparticles"><code class="docutils literal notranslate"><span class="pre">MG5Script.define_multiparticles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.delphes_card"><code class="docutils literal notranslate"><span class="pre">MG5Script.delphes_card()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.detector"><code class="docutils literal notranslate"><span class="pre">MG5Script.detector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.import_model"><code class="docutils literal notranslate"><span class="pre">MG5Script.import_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.launch"><code class="docutils literal notranslate"><span class="pre">MG5Script.launch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.output"><code class="docutils literal notranslate"><span class="pre">MG5Script.output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.param_card"><code class="docutils literal notranslate"><span class="pre">MG5Script.param_card()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.process"><code class="docutils literal notranslate"><span class="pre">MG5Script.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.set_parameters"><code class="docutils literal notranslate"><span class="pre">MG5Script.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.show"><code class="docutils literal notranslate"><span class="pre">MG5Script.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.shower"><code class="docutils literal notranslate"><span class="pre">MG5Script.shower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.MG5Script.write"><code class="docutils literal notranslate"><span class="pre">MG5Script.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA"><code class="docutils literal notranslate"><span class="pre">SLHA</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.block"><code class="docutils literal notranslate"><span class="pre">SLHA.block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.new_file"><code class="docutils literal notranslate"><span class="pre">SLHA.new_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.as_dict"><code class="docutils literal notranslate"><span class="pre">SLHA.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.as_txt"><code class="docutils literal notranslate"><span class="pre">SLHA.as_txt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#id0"><code class="docutils literal notranslate"><span class="pre">SLHA.block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.find_block"><code class="docutils literal notranslate"><span class="pre">SLHA.find_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.keys"><code class="docutils literal notranslate"><span class="pre">SLHA.keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#id1"><code class="docutils literal notranslate"><span class="pre">SLHA.new_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.read_blocks"><code class="docutils literal notranslate"><span class="pre">SLHA.read_blocks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.read_from_dict"><code class="docutils literal notranslate"><span class="pre">SLHA.read_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.SLHA.read_slha_from_file"><code class="docutils literal notranslate"><span class="pre">SLHA.read_slha_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.block2dict"><code class="docutils literal notranslate"><span class="pre">block2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.extract_line_elements"><code class="docutils literal notranslate"><span class="pre">extract_line_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.lhe2dict"><code class="docutils literal notranslate"><span class="pre">lhe2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.lheblock2dict"><code class="docutils literal notranslate"><span class="pre">lheblock2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.read_mg_generation_info"><code class="docutils literal notranslate"><span class="pre">read_mg_generation_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.read.slha2dict"><code class="docutils literal notranslate"><span class="pre">slha2dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep.stack">hepaid.hep.stack module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno"><code class="docutils literal notranslate"><span class="pre">SPheno</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.hp"><code class="docutils literal notranslate"><span class="pre">SPheno.hp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.hp_input"><code class="docutils literal notranslate"><span class="pre">SPheno.hp_input</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.scan_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.scan_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.sampler_id_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.sampler_id_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.block"><code class="docutils literal notranslate"><span class="pre">SPheno.block</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.index"><code class="docutils literal notranslate"><span class="pre">SPheno.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.current_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.current_lhs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.current_spc"><code class="docutils literal notranslate"><span class="pre">SPheno.current_spc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.spheno"><code class="docutils literal notranslate"><span class="pre">SPheno.spheno</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.lhs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.get_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.get_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.run_stack_from_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.close"><code class="docutils literal notranslate"><span class="pre">SPheno.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#id2"><code class="docutils literal notranslate"><span class="pre">SPheno.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.create_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#id3"><code class="docutils literal notranslate"><span class="pre">SPheno.get_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#id4"><code class="docutils literal notranslate"><span class="pre">SPheno.run_stack_from_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPheno.sample"><code class="docutils literal notranslate"><span class="pre">SPheno.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.close"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.create_dir"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.get_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.get_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.run_stack_from_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoHbHs.sample"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5.run_stack_from_lhs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.SPhenoMg5.update_mg5_script"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5.update_mg5_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.THDMCExt"><code class="docutils literal notranslate"><span class="pre">THDMCExt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.close"><code class="docutils literal notranslate"><span class="pre">THDMCExt.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.create_dir"><code class="docutils literal notranslate"><span class="pre">THDMCExt.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.THDMCExt.sample"><code class="docutils literal notranslate"><span class="pre">THDMCExt.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.input_vector_to_lhs"><code class="docutils literal notranslate"><span class="pre">input_vector_to_lhs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.stack.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep.tools">hepaid.hep.tools module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.HiggsBounds"><code class="docutils literal notranslate"><span class="pre">HiggsBounds</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.HiggsBounds.run"><code class="docutils literal notranslate"><span class="pre">HiggsBounds.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.HiggsSignals"><code class="docutils literal notranslate"><span class="pre">HiggsSignals</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.HiggsSignals.run"><code class="docutils literal notranslate"><span class="pre">HiggsSignals.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.Madgraph"><code class="docutils literal notranslate"><span class="pre">Madgraph</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.Madgraph.run"><code class="docutils literal notranslate"><span class="pre">Madgraph.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.Spheno"><code class="docutils literal notranslate"><span class="pre">Spheno</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.Spheno.run"><code class="docutils literal notranslate"><span class="pre">Spheno.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.THDMC"><code class="docutils literal notranslate"><span class="pre">THDMC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.THDMC.result"><code class="docutils literal notranslate"><span class="pre">THDMC.result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.tools.THDMC.run"><code class="docutils literal notranslate"><span class="pre">THDMC.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep.utils">hepaid.hep.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.block2dict"><code class="docutils literal notranslate"><span class="pre">block2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.body_values_2dict"><code class="docutils literal notranslate"><span class="pre">body_values_2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.body_values_2dict_lhs"><code class="docutils literal notranslate"><span class="pre">body_values_2dict_lhs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.br_2dict"><code class="docutils literal notranslate"><span class="pre">br_2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.decay_block_2dict"><code class="docutils literal notranslate"><span class="pre">decay_block_2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.dict2json"><code class="docutils literal notranslate"><span class="pre">dict2json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.generic_block_2dict"><code class="docutils literal notranslate"><span class="pre">generic_block_2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.generic_block_2dict_lhs"><code class="docutils literal notranslate"><span class="pre">generic_block_2dict_lhs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.json2dict"><code class="docutils literal notranslate"><span class="pre">json2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.lhs2dict"><code class="docutils literal notranslate"><span class="pre">lhs2dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.merge_datasets"><code class="docutils literal notranslate"><span class="pre">merge_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.merge_slha_files"><code class="docutils literal notranslate"><span class="pre">merge_slha_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.hep.html#hepaid.hep.utils.slha2dict"><code class="docutils literal notranslate"><span class="pre">slha2dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.hep.html#module-hepaid.hep">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hepaid.search.html">hepaid.search package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.search.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.models.html">hepaid.search.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.models.html#module-hepaid.search.models.model_list">hepaid.search.models.model_list module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.models.html#module-hepaid.search.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.parallel.html">hepaid.search.parallel package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.parallel.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.parallel.html#module-hepaid.search.parallel.modules">hepaid.search.parallel.modules module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.parallel.html#module-hepaid.search.parallel">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.policy.html">hepaid.search.policy package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy.base">hepaid.search.policy.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy.bcastor">hepaid.search.policy.bcastor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy.cas">hepaid.search.policy.cas module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy.eci">hepaid.search.policy.eci module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy.mcmc">hepaid.search.policy.mcmc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hepaid.search.policy.html#module-hepaid.search.policy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hepaid.search.html#module-hepaid.search">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-hepaid">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hepaid" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="modules.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">hepaid</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="hepaid.hep.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">hepaid.hep package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/hepaid.rst">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1851 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>hepaid.hep package &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hepaid.hep';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hepaid.search package" href="hepaid.search.html" />
+    <link rel="prev" title="hepaid package" href="hepaid.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown.html">
+                        b-CASTOR
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks.html">
+                        Content with notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="markdown-notebooks.html">
+                        Notebooks with MyST Markdown
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        hepaid
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="hepaid.html">hepaid package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">hepaid.hep package</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="hepaid.search.html">hepaid.search package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.models.html">hepaid.search.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.parallel.html">hepaid.search.parallel package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hepaid.search.policy.html">hepaid.search.policy package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">hepaid</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="hepaid.html" class="nav-link">hepaid package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">hepaid.hep package</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="hepaid-hep-package">
+<h1>hepaid.hep package<a class="headerlink" href="#hepaid-hep-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-hepaid.hep.data">
+<span id="hepaid-hep-data-module"></span><h2>hepaid.hep.data module<a class="headerlink" href="#module-hepaid.hep.data" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.data.DequeEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.data.</span></span><span class="sig-name descname"><span class="pre">DequeEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.DequeEncoder" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONEncoder</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.DequeEncoder.default">
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.DequeEncoder.default" title="Link to this definition">#</a></dt>
+<dd><p>Implement this method in a subclass such that it returns
+a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
+(to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
+<p>For example, to support arbitrary iterators, you could
+implement default like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+    <span class="c1"># Let the base class default method raise the TypeError</span>
+    <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.data.</span></span><span class="sig-name descname"><span class="pre">HEPDataSet</span></span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates a data set structure to store objects in a deque, export
+as JSON to disk, reset and load from JSON.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add(data</span></span></dt>
+<dd><p>Dict) = Adds a data object into the deque.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">reset()</span> <span class="pre">=</span> <span class="pre">Clear</span> <span class="pre">the</span> <span class="pre">deque</span> <span class="pre">and</span> <span class="pre">reset</span> <span class="pre">the</span> <span class="pre">counter</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">save(path</span></span></dt>
+<dd><p>str) = Save to disk as a JSON file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load(path</span></span></dt>
+<dd><p>str) = Loads from JSON file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.add" title="Link to this definition">#</a></dt>
+<dd><p>Add a data point or a list of data points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.as_dataframe">
+<span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.as_dataframe" title="Link to this definition">#</a></dt>
+<dd><p>Create a pandas DataFrame from a dictionary of the form:
+{‘variable’ : [key, …, key], …}</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.feature_vector">
+<span class="sig-name descname"><span class="pre">feature_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.feature_vector" title="Link to this definition">#</a></dt>
+<dd><p>Create an array from a list of <cite>keys</cite>: [key, …, key]. If <cite>as_numpy</cite> is
+True returns a float np.array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.is_none">
+<span class="sig-name descname"><span class="pre">is_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SLHA'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.is_none" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.load_from_directory">
+<span class="sig-name descname"><span class="pre">load_from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HEPDataSet'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.load_from_directory" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.load_json">
+<span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.load_json" title="Link to this definition">#</a></dt>
+<dd><p>The path must include the format.
+Args:
+—-
+path: str = “path/to/data/set.json.gz”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.reset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.data.HEPDataSet.save_json">
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.HEPDataSet.save_json" title="Link to this definition">#</a></dt>
+<dd><p>Save dataset in json.gz format.
+:param path: path to dataset.
+:type path: str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.data.feature_vector">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.data.</span></span><span class="sig-name descname"><span class="pre">feature_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.feature_vector" title="Link to this definition">#</a></dt>
+<dd><p>Creates a list with the values obtained from querying
+a HEPDataSet object with a chain of keys. Example:
+m0 = feature_vector(blssm, [‘LHE’, ‘MINPAR’, ‘entries’, ‘1’, ‘value’])</p>
+<p>Added assertion since sometimes the value is in a list of len 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.data.find_hepdata_files">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.data.</span></span><span class="sig-name descname"><span class="pre">find_hepdata_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HEPDataSet'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.data.find_hepdata_files" title="Link to this definition">#</a></dt>
+<dd><p>Identify <cite>data_name = HEPDataSet</cite> files in a directory. Default name is HEPDataSet</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.data.merge_hepstacks">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.data.</span></span><span class="sig-name descname"><span class="pre">merge_hepstacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hepstack_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.data.merge_hepstacks" title="Link to this definition">#</a></dt>
+<dd><p>Takes a list of HEPStack Structures and merge them in a single
+indexed dictionary. The index starts from idx.</p>
+</dd></dl>
+
+</section>
+<section id="module-hepaid.hep.read">
+<span id="hepaid-hep-read-module"></span><h2>hepaid.hep.read module<a class="headerlink" href="#module-hepaid.hep.read" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">Block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_comment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MutableMapping</span></code></p>
+<p>It holds each line of a block.</p>
+<p>Call .set(parameter_number, value) to change the parameter value in the instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.comments">
+<span class="sig-name descname"><span class="pre">comments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block.comments" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">D[k]</span> <span class="pre">if</span> <span class="pre">k</span> <span class="pre">in</span> <span class="pre">D,</span> <span class="pre">else</span> <span class="pre">d.</span>&#160; <span class="pre">d</span> <span class="pre">defaults</span> <span class="pre">to</span> <span class="pre">None.</span></span></span><a class="headerlink" href="#hepaid.hep.read.Block.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.get_">
+<span class="sig-name descname"><span class="pre">get_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block.get_" title="Link to this definition">#</a></dt>
+<dd><blockquote>
+<div><p>Call set(option, param_value) method to modify the option N with a parameter_value</p>
+</div></blockquote>
+<dl>
+<dt>.</dt><dd><p>-option = Can be an int or a list [i, j].</p>
+<p>-param_value = Can be an int (on/off) or a float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="headerlink" href="#hepaid.hep.read.Block.keys" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.lines">
+<span class="sig-name descname"><span class="pre">lines</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block.lines" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block.set" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.set_">
+<span class="sig-name descname"><span class="pre">set_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.Block.set_" title="Link to this definition">#</a></dt>
+<dd><blockquote>
+<div><p>Call set(option, param_value) method to modify the option N with a parameter_value</p>
+</div></blockquote>
+<dl>
+<dt>.</dt><dd><p>-option = Can be an int or a list [i, j].</p>
+<p>-param_value = Can be an int (on/off) or a float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.Block.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">values</span></span></span><a class="headerlink" href="#hepaid.hep.read.Block.values" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockLine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">BlockLine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockLine" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockLine.fline">
+<span class="sig-name descname"><span class="pre">fline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockLine.fline" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockLineSLHA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">BlockLineSLHA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockLineSLHA" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Line contraining the elements of each line in a SLHA file.</p>
+<section id="args">
+<h3>Args:<a class="headerlink" href="#args" title="Link to this heading">#</a></h3>
+<p>entries: List[str, str, ..] = n-entries of a line (pid, option index, …).
+value: str (to float internally). The usual value in scientific notation.
+comment: str
+line_category: DECAY or BLOCK. Internal parameter.</p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">BlockSLHA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MutableMapping</span></code></p>
+<p>Class that holds each line of a block in the block_body attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong></p></li>
+<li><p><strong>block_comment</strong></p></li>
+<li><p><strong>q_values</strong></p></li>
+<li><p><strong>block_category</strong> – DECAY or BLOCK</p></li>
+<li><p><strong>decay_width</strong> – if block_categor is Decay</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.comments">
+<span class="sig-name descname"><span class="pre">comments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.comments" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.entries">
+<span class="sig-name descname"><span class="pre">entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.entries" title="Link to this definition">#</a></dt>
+<dd><p>Note: I don’t know why I don’t just use .keys()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">find</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'value'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.get" title="Link to this definition">#</a></dt>
+<dd><p>Method to get the value for a line in a block with acording to
+the given entries or comment (Which usually is the name or
+description).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>find</strong> – Tuple[int] = Tuple for values of entries. ex. (2,25,25)
+in a Decay Block.</p></li>
+<li><p><strong>request</strong> – str = search according to ‘value’ or ‘comment’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>requested value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.keys" title="Link to this definition">#</a></dt>
+<dd><p>A list for all the entries in each line to behave as dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.lines">
+<span class="sig-name descname"><span class="pre">lines</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.lines" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">find</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'value'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.set" title="Link to this definition">#</a></dt>
+<dd><p>Method to change or set the value for a line in a block with
+acording to the given entries or comment (Which usually is the
+name or description).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>find</strong> – Tuple[int] = Tuple for values of entries. ex. (2,25,25)
+in a Decay Block.</p></li>
+<li><p><strong>value</strong> – float = Value to set.</p></li>
+<li><p><strong>request</strong> – str = search according to ‘value’ or ‘comment’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.BlockSLHA.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">values</span></span></span><a class="headerlink" href="#hepaid.hep.read.BlockSLHA.values" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsBoundsResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">HiggsBoundsResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsBoundsResults" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsBoundsResults.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direct_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsBoundsResults.read" title="Link to this definition">#</a></dt>
+<dd><p>Read HiggsBounds_results.dat and outputs a dict with all the final results. For example for the BLSSM:</p>
+<p>[n, Mh(1), Mh(2), Mh(3), Mh(4), Mh(5), Mh(6), Mhplus(1), HBresult, chan, obsratio, ncomb]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsBoundsResults.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_spheno_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsBoundsResults.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the HiggsBounds results from the working directory to the Spheno output directory
+.</p>
+<blockquote>
+<div><p>To save all the higgs bounds results for scans for example.</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsSignalsResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">HiggsSignalsResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsSignalsResults" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsSignalsResults.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direct_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsSignalsResults.read" title="Link to this definition">#</a></dt>
+<dd><p>Read HiggsSignals_results.dat and outputs a dict all the results. For example for the BLSSM:</p>
+<p>[n, Mh(1), Mh(2), Mh(3), Mh(4), Mh(5), Mh(6), Mhplus(1), csq(mu), csq(mh), csq(tot), nobs(mu), nobs(mh), nobs(tot), Pvalue]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.HiggsSignalsResults.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_spheno_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.HiggsSignalsResults.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the HiggsSignals results from the working directory to the
+Spheno output directory. To save all the higgs Signals results for
+scans for example.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">LesHouches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></p>
+<p>Reading LesHouces files. Format used for input for SPheno.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.as_dict" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.block">
+<span class="sig-name descname"><span class="pre">block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.block" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.find_block">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.find_block" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="headerlink" href="#hepaid.hep.read.LesHouches.keys" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.model_param_blocks">
+<span class="sig-name descname"><span class="pre">model_param_blocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.model_param_blocks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.new_file">
+<span class="sig-name descname"><span class="pre">new_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.new_file" title="Link to this definition">#</a></dt>
+<dd><p>Writes a new LesHouches file with the blocks defined in the instance.</p>
+<p>Possibly with new values for the parameters and options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.read_leshouches">
+<span class="sig-name descname"><span class="pre">read_leshouches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.read_leshouches" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.read_leshouches_from_dict">
+<span class="sig-name descname"><span class="pre">read_leshouches_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.read_leshouches_from_dict" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.LesHouches.read_leshouches_from_dir">
+<span class="sig-name descname"><span class="pre">read_leshouches_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.LesHouches.read_leshouches_from_dir" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">MG5Script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ufo_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a object containing mostly* all the necesary commands to compute a process in madgraph with the</p>
+<p>text-file-input/script mode. A default or template input file can be preview with the show() method within this class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.add_process">
+<span class="sig-name descname"><span class="pre">add_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">syntax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.add_process" title="Link to this definition">#</a></dt>
+<dd><p>Example: InputFile.add_process(‘p p &gt; h2 &gt; a a’)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.define_multiparticles">
+<span class="sig-name descname"><span class="pre">define_multiparticles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">syntax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['p</span> <span class="pre">=</span> <span class="pre">g</span> <span class="pre">d1</span> <span class="pre">d2</span>&#160; <span class="pre">u1</span> <span class="pre">u2</span>&#160; <span class="pre">d1bar</span> <span class="pre">d2bar</span> <span class="pre">u1bar</span> <span class="pre">u2bar',</span> <span class="pre">'l+</span> <span class="pre">=</span> <span class="pre">e1bar</span> <span class="pre">e2bar',</span> <span class="pre">'l-</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">e2']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.define_multiparticles" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.delphes_card">
+<span class="sig-name descname"><span class="pre">delphes_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.delphes_card" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.detector">
+<span class="sig-name descname"><span class="pre">detector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">detector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Delphes'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.detector" title="Link to this definition">#</a></dt>
+<dd><p>Call .detector(‘OFF’) to deactivate detector effects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.import_model">
+<span class="sig-name descname"><span class="pre">import_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.import_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.launch">
+<span class="sig-name descname"><span class="pre">launch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pph1aa'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.launch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pph1aa'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.output" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.param_card">
+<span class="sig-name descname"><span class="pre">param_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.param_card" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">syntax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'p</span> <span class="pre">p</span> <span class="pre">&gt;</span> <span class="pre">h1</span> <span class="pre">&gt;</span> <span class="pre">a</span> <span class="pre">a'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.process" title="Link to this definition">#</a></dt>
+<dd><p>Example: InputFile.process(‘p p &gt; h1 &gt; a a’)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.set_parameters" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.show" title="Link to this definition">#</a></dt>
+<dd><p>Print the current MG5InputFile</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.shower">
+<span class="sig-name descname"><span class="pre">shower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Pythia8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.shower" title="Link to this definition">#</a></dt>
+<dd><p>Call .shower(‘OFF’) to deactivate shower effects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.MG5Script.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.MG5Script.write" title="Link to this definition">#</a></dt>
+<dd><p>Write a new madgraph script as MG5Script.txt used internally by madgraph.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">SLHA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></p>
+<p>Read a SLHA file (usually the param_card.dat or first section of
+and LHE file) and stores each block in BlockSLHA classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – Union[str, dict] = Path/dict for the SLHA file to read</p></li>
+<li><p><strong>work_dir</strong> – str = Working directory</p></li>
+<li><p><strong>model</strong> – str = Name of the model</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Atributes:</dt><dd><p>block_list: List with the names of all the blocks in the SLHA file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.block">
+<span class="sig-name descname"><span class="pre">block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.block" title="Link to this definition">#</a></dt>
+<dd><p>Call a Block object stored in the SLHA instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.new_file">
+<span class="sig-name descname"><span class="pre">new_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.new_file" title="Link to this definition">#</a></dt>
+<dd><p>Save the instance as a new SLHA file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.as_dict" title="Link to this definition">#</a></dt>
+<dd><p>Return SLHA data as a dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.as_txt">
+<span class="sig-name descname"><span class="pre">as_txt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.as_txt" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.find_block">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.find_block" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="headerlink" href="#hepaid.hep.read.SLHA.keys" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">new_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
+<dd><p>Write the instance as a new SLHA file in /{work_dir}/SLHA_{model}/{new_file_name}.
+Args:
+—–
+new_file_name: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.read_blocks">
+<span class="sig-name descname"><span class="pre">read_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#hepaid.hep.read.SLHA.read_blocks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.read_from_dict">
+<span class="sig-name descname"><span class="pre">read_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slha_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.read_from_dict" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.read.SLHA.read_slha_from_file">
+<span class="sig-name descname"><span class="pre">read_slha_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.SLHA.read_slha_from_file" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.block2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">block2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.block2dict" title="Link to this definition">#</a></dt>
+<dd><p>Converts a given data block into a dictionary format, capturing detailed elements and
+properties of the block.</p>
+<p>Parameters:
+block (Block): An Block object with methods to access its elements</p>
+<blockquote>
+<div><p>and properties such as entries, values, comments, and other metadata.</p>
+</div></blockquote>
+<p>Returns:
+dict: A dictionary containing all relevant data extracted from the block, structured as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>‘entries’: A dictionary of entries where each key is a comma-joined string of entries,</dt><dd><p>and each value is another dictionary with ‘value’, ‘comment’, and ‘line’.</p>
+</dd>
+</dl>
+</li>
+<li><p>‘block_name’: The name of the block.</p></li>
+<li><p>‘block_comment’: The comment associated with the block.</p></li>
+<li><p>‘q_values’: The Q values associated with the block, if any.</p></li>
+<li><p>‘block_category’: The category of the block.</p></li>
+<li><p>‘header_line’: The header line of the block.</p></li>
+<li><p>‘pid’: (optional) The PID, if the block category is related to decay processes.</p></li>
+<li><p>‘decay_width’: (optional) The decay width, if applicable.</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.extract_line_elements">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">extract_line_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#hepaid.hep.read.extract_line_elements" title="Link to this definition">#</a></dt>
+<dd><p>Extracts various elements from a given line of text based on predefined patterns.</p>
+<p>Parameters:
+line (str): A string line from which elements are to be extracted.</p>
+<p>Returns:
+dict: A dictionary containing extracted elements categorized by their type:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>‘comment’: A string containing the comment portion of the line.</p></li>
+<li><p>‘value’: A list of floating-point numbers in scientific notation found in the line.</p></li>
+<li><p>‘entries’: A list of integer values found in the line.</p></li>
+</ul>
+</div></blockquote>
+<p>Example:
+Input: “123 1.23E10 # Example”
+Output: {‘comment’: [’# Example’], ‘value’: [‘1.23E10’], ‘entries’: [‘123’]}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.lhe2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">lhe2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.lhe2dict" title="Link to this definition">#</a></dt>
+<dd><p>Converts the whole LesHouches object into a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.lheblock2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">lheblock2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.lheblock2dict" title="Link to this definition">#</a></dt>
+<dd><p>Converts a block from LesHouches object into a dictionary for easier manipulation and access.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.read_mg_generation_info">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">read_mg_generation_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#hepaid.hep.read.read_mg_generation_info" title="Link to this definition">#</a></dt>
+<dd><p>Reads the MGGenerationInfo block in run tag banner (Saved by default with
+the name run_01_tag_1_banner.txt).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – str</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[‘number_of_events’: int, ‘cross_section_pb’: float]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mg5_gen_info</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.read.slha2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.read.</span></span><span class="sig-name descname"><span class="pre">slha2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slha</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.read.slha2dict" title="Link to this definition">#</a></dt>
+<dd><p>Converts the whole SLHA object into a dictionary.</p>
+</dd></dl>
+
+</section>
+<section id="module-hepaid.hep.stack">
+<span id="hepaid-hep-stack-module"></span><h2>hepaid.hep.stack module<a class="headerlink" href="#module-hepaid.hep.stack" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">SPheno</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hep_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPheno" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>SPheno class handles the manipulation and execution of the SPheno
+tool, managing input operations for Les Houches files, and
+output operations of SLHA/Spc files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.hp">
+<span class="sig-name descname"><span class="pre">hp</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.hp" title="Link to this definition">#</a></dt>
+<dd><p>Saves the <cite>hep_config</cite> configuration object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DictConfig</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.hp_input">
+<span class="sig-name descname"><span class="pre">hp_input</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.hp_input" title="Link to this definition">#</a></dt>
+<dd><p>Stores <cite>hep_config.model.input</cite> for easier manipulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.scan_dir">
+<span class="sig-name descname"><span class="pre">scan_dir</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.scan_dir" title="Link to this definition">#</a></dt>
+<dd><p>Stores <cite>hep_config.directories.scan_dir</cite> for easier manipulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.sampler_id_dir">
+<span class="sig-name descname"><span class="pre">sampler_id_dir</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.sampler_id_dir" title="Link to this definition">#</a></dt>
+<dd><p>Directory path specific to the sampler ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.block">
+<span class="sig-name descname"><span class="pre">block</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.block" title="Link to this definition">#</a></dt>
+<dd><p>List of block names from model input configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.index" title="Link to this definition">#</a></dt>
+<dd><p>List of parameter indices corresponding to each block in ‘block’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.current_lhs">
+<span class="sig-name descname"><span class="pre">current_lhs</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.current_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Filename for the current Les Houches input file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.current_spc">
+<span class="sig-name descname"><span class="pre">current_spc</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.current_spc" title="Link to this definition">#</a></dt>
+<dd><p>Filename for the current SPheno spectrum output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.spheno">
+<span class="sig-name descname"><span class="pre">spheno</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.spheno" title="Link to this definition">#</a></dt>
+<dd><p>SPheno execution object initialized with paths and model details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#hepaid.hep.tools.Spheno" title="hepaid.hep.tools.Spheno">Spheno</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.lhs">
+<span class="sig-name descname"><span class="pre">lhs</span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.lhs" title="Link to this definition">#</a></dt>
+<dd><p>Initialises a LesHouches object from a reference lhs
+in <cite>hep_config.directories.reference_lhs</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#hepaid.hep.read.LesHouches" title="hepaid.hep.read.LesHouches">LesHouches</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">create_dir(run_name</span></span></dt>
+<dd><p>str): Creates directory for the specified run.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.get_lhs">
+<span class="sig-name descname"><span class="pre">get_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPheno.get_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Returns the Les Houches file handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.run_stack_from_lhs">
+<span class="sig-name descname"><span class="pre">run_stack_from_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPheno.run_stack_from_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Executes the SPheno tool with the current LHS file and gathers outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sample(parameter_point</span></span></dt>
+<dd><p>np.ndarray): Updates LHS with new parameters, runs simulations, and returns outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__call__(parameter_point</span></span></dt>
+<dd><p>np.ndarray): Callable method to simplify sampling operations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPheno.close" title="Link to this definition">#</a></dt>
+<dd><p>Cleans up by removing the sampler ID directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPheno.create_dir" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">get_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">run_stack_from_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Link to this definition">#</a></dt>
+<dd><p>Run the hep_stack with the LHS file saved in the
+self.lhs property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPheno.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#hepaid.hep.stack.SPheno.sample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">SPhenoHbHs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hep_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs.close" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs.create_dir" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs.get_lhs">
+<span class="sig-name descname"><span class="pre">get_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs.get_lhs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs.run_stack_from_lhs">
+<span class="sig-name descname"><span class="pre">run_stack_from_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs.run_stack_from_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Run the hep_stack with the LHS file saved in the
+self.lhs property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoHbHs.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#hepaid.hep.stack.SPhenoHbHs.sample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoMg5">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">SPhenoMg5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hep_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mg5_script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoMg5" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hepaid.hep.stack.SPhenoHbHs" title="hepaid.hep.stack.SPhenoHbHs"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPhenoHbHs</span></code></a></p>
+<p>Class to run from (LHS, MG5Script) -&gt; SPHENO, HB, HS -&gt; MG5 -&gt; Output Dir.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoMg5.run_stack_from_lhs">
+<span class="sig-name descname"><span class="pre">run_stack_from_lhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoMg5.run_stack_from_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Run the hep_stack with the LHS file saved in the
+self.lhs property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.SPhenoMg5.update_mg5_script">
+<span class="sig-name descname"><span class="pre">update_mg5_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mg5_script</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.SPhenoMg5.update_mg5_script" title="Link to this definition">#</a></dt>
+<dd><p>Takes the template madgraph script and updated with current directories
+to be consistent with the HEPSTACK.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.stack.THDMCExt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">THDMCExt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hep_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.THDMCExt" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>THDMC Stack with External calculations to get mu values</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.THDMCExt.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.THDMCExt.close" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.THDMCExt.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.stack.THDMCExt.create_dir" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.stack.THDMCExt.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hepaid.hep.stack.THDMCExt.sample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.stack.input_vector_to_lhs">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">input_vector_to_lhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#hepaid.hep.read.LesHouches" title="hepaid.hep.read.LesHouches"><span class="pre">LesHouches</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hepaid.hep.read.LesHouches" title="hepaid.hep.read.LesHouches"><span class="pre">LesHouches</span></a></span></span><a class="headerlink" href="#hepaid.hep.stack.input_vector_to_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Updates a LesHouches’s parameter blocks with new values from the sample input vector.</p>
+<p>This function is designed to integrate the parameter values (sample) into an LesHouches object,
+updating specific block parameters with values provided in the <cite>sample</cite> array. Each parameter
+is associated with a block name and an index within that block, as defined in <cite>model_input</cite>.</p>
+<p>Parameters:
+sample (np.ndarray): A numpy array of sampled values to be updated in the LesHouches object.
+lhs (LesHouches): An instance of a LesHouches class representing the LHS file to be modified.
+model_input (dict): A dictionary mapping parameter names to their respective ‘block_name’</p>
+<blockquote>
+<div><p>and ‘block_index’ within the LHS structure.</p>
+</div></blockquote>
+<p>Returns:
+LesHouches: The modified instance of the LesHouches class with updated parameter values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.stack.register">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.stack.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hep_stack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hepaid.hep.stack.register" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-hepaid.hep.tools">
+<span id="hepaid-hep-tools-module"></span><h2>hepaid.hep.tools module<a class="headerlink" href="#module-hepaid.hep.tools" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.tools.HiggsBounds">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.tools.</span></span><span class="sig-name descname"><span class="pre">HiggsBounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">higgs_bounds_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral_higgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charged_higgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.HiggsBounds" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.HiggsBounds.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.HiggsBounds.run" title="Link to this definition">#</a></dt>
+<dd><p>Runs HiggsBounds with the last point calculated by SPheno.
+Returns the path for HiggsBounds_results.dat if SPheno and
+HiggsBounds succeed. If there is an Error in one them it
+returns None and prints the error output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.tools.HiggsSignals">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.tools.</span></span><span class="sig-name descname"><span class="pre">HiggsSignals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">higgs_signals_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral_higgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charged_higgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.HiggsSignals" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.HiggsSignals.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.HiggsSignals.run" title="Link to this definition">#</a></dt>
+<dd><p>Runs HiggsSignals with the last point calculated by SPheno.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.tools.Madgraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.tools.</span></span><span class="sig-name descname"><span class="pre">Madgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">madgraph_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.Madgraph" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basicaly just run madgraph with in the script mode with the scripts created</p>
+<p>by the MG5Script class.</p>
+<p>Todo:
+- Figure out how to print some output from madgraph.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.Madgraph.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MG5Script.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.Madgraph.run" title="Link to this definition">#</a></dt>
+<dd><p>Run madgraph with an script named MG5Script.txt (created by the MG5Script class) in within work_dir.</p>
+<p>Change input_file to change to another script within work_dir.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.tools.Spheno">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.tools.</span></span><span class="sig-name descname"><span class="pre">Spheno</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spheno_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.Spheno" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.Spheno.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.Spheno.run" title="Link to this definition">#</a></dt>
+<dd><p>Run SPhenoMODEL with the input_file_name in work_dir.</p>
+<section id="id5">
+<h3>Args:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>in_file_name: str = input file’s name located in work_dir/SPhenoMODEL_input/in_file_name
+out_file_name: str = output file’s name located in work_dir/SPhenoMODEL_output/out_file_name</p>
+</section>
+<section id="return">
+<h3>Return:<a class="headerlink" href="#return" title="Link to this heading">#</a></h3>
+<p>out_file: str = Global path to the output file name if SPheno runs successfully. None if SPheno gets an Error.
+spheno_stdout = stdout of the subprocess that runs SPheno.</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hepaid.hep.tools.THDMC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hepaid.hep.tools.</span></span><span class="sig-name descname"><span class="pre">THDMC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">program_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hepaid.hep.tools.THDMC" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility class to run 2HDMC programs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.THDMC.result">
+<span class="sig-name descname"><span class="pre">result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hepaid.hep.read.SLHA" title="hepaid.hep.read.SLHA"><span class="pre">SLHA</span></a></span></span><a class="headerlink" href="#hepaid.hep.tools.THDMC.result" title="Link to this definition">#</a></dt>
+<dd><p>Returns the SLHA file saved in working directory, after .run()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hepaid.hep.tools.THDMC.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#hepaid.hep.tools.THDMC.run" title="Link to this definition">#</a></dt>
+<dd><p>Parameters are in the standard basis:
+lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,            m12_2, tan_beta = parameters</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-hepaid.hep.utils">
+<span id="hepaid-hep-utils-module"></span><h2>hepaid.hep.utils module<a class="headerlink" href="#module-hepaid.hep.utils" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.block2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">block2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.block2dict" title="Link to this definition">#</a></dt>
+<dd><p>Turn any block into dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.body_values_2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">body_values_2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.body_values_2dict" title="Link to this definition">#</a></dt>
+<dd><p>Turn the value for every non Decay block body in to a dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.body_values_2dict_lhs">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">body_values_2dict_lhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.body_values_2dict_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Turn the value for every non Decay block body in to a dict in LesHouches Files</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.br_2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">br_2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.br_2dict" title="Link to this definition">#</a></dt>
+<dd><p>Turn branching ratios into a dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.decay_block_2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">decay_block_2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.decay_block_2dict" title="Link to this definition">#</a></dt>
+<dd><p>Turn Decay Block info into a dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.dict2json">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">dict2json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hepaid.hep.utils.dict2json" title="Link to this definition">#</a></dt>
+<dd><p>Takes dictionaries and save it in path as a compressed JSON file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.generic_block_2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">generic_block_2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.generic_block_2dict" title="Link to this definition">#</a></dt>
+<dd><p>Turn every Non-Decay block into a dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.generic_block_2dict_lhs">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">generic_block_2dict_lhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.generic_block_2dict_lhs" title="Link to this definition">#</a></dt>
+<dd><p>Turn every Non-Decay block into a dict in LesHouches Files</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.json2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">json2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.json2dict" title="Link to this definition">#</a></dt>
+<dd><p>Loads a copressed JSON file from path and returns a dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.lhs2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">lhs2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.lhs2dict" title="Link to this definition">#</a></dt>
+<dd><p>Convert a LesHouches object into dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.merge_datasets">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">merge_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.merge_datasets" title="Link to this definition">#</a></dt>
+<dd><p>Merge two DataSets structures into one.
+To-do: Implement SLHADataSet/HEPStack type.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.merge_slha_files">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">merge_slha_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slha_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.merge_slha_files" title="Link to this definition">#</a></dt>
+<dd><p>Takes a list of SLHA files and merge them in a single
+indexed dictionary. The index starts from idx.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hepaid.hep.utils.slha2dict">
+<span class="sig-prename descclassname"><span class="pre">hepaid.hep.utils.</span></span><span class="sig-name descname"><span class="pre">slha2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slha</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#hepaid.hep.utils.slha2dict" title="Link to this definition">#</a></dt>
+<dd><p>Convert a SLHA object into dict</p>
+</dd></dl>
+
+</section>
+<section id="module-hepaid.hep">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hepaid.hep" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="hepaid.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">hepaid package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="hepaid.search.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">hepaid.search package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep.data">hepaid.hep.data module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.DequeEncoder"><code class="docutils literal notranslate"><span class="pre">DequeEncoder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.DequeEncoder.default"><code class="docutils literal notranslate"><span class="pre">DequeEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet"><code class="docutils literal notranslate"><span class="pre">HEPDataSet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.add"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.add()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.as_dataframe"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.as_dataframe()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.data"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.data</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.feature_vector"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.feature_vector()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.is_none"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.is_none()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.load_from_directory"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.load_from_directory()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.load_json"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.load_json()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.reset"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.HEPDataSet.save_json"><code class="docutils literal notranslate"><span class="pre">HEPDataSet.save_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.feature_vector"><code class="docutils literal notranslate"><span class="pre">feature_vector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.find_hepdata_files"><code class="docutils literal notranslate"><span class="pre">find_hepdata_files()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.data.merge_hepstacks"><code class="docutils literal notranslate"><span class="pre">merge_hepstacks()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep.read">hepaid.hep.read module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.comments"><code class="docutils literal notranslate"><span class="pre">Block.comments()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.get"><code class="docutils literal notranslate"><span class="pre">Block.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.get_"><code class="docutils literal notranslate"><span class="pre">Block.get_()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.keys"><code class="docutils literal notranslate"><span class="pre">Block.keys()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.lines"><code class="docutils literal notranslate"><span class="pre">Block.lines()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.set"><code class="docutils literal notranslate"><span class="pre">Block.set()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.set_"><code class="docutils literal notranslate"><span class="pre">Block.set_()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.Block.values"><code class="docutils literal notranslate"><span class="pre">Block.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockLine"><code class="docutils literal notranslate"><span class="pre">BlockLine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockLine.fline"><code class="docutils literal notranslate"><span class="pre">BlockLine.fline()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockLineSLHA"><code class="docutils literal notranslate"><span class="pre">BlockLineSLHA</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA"><code class="docutils literal notranslate"><span class="pre">BlockSLHA</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.comments"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.comments()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.entries"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.entries()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.get"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.keys"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.keys()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.lines"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.lines()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.set"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.set()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.BlockSLHA.values"><code class="docutils literal notranslate"><span class="pre">BlockSLHA.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsBoundsResults"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsBoundsResults.read"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults.read()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsBoundsResults.save"><code class="docutils literal notranslate"><span class="pre">HiggsBoundsResults.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsSignalsResults"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsSignalsResults.read"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults.read()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.HiggsSignalsResults.save"><code class="docutils literal notranslate"><span class="pre">HiggsSignalsResults.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches"><code class="docutils literal notranslate"><span class="pre">LesHouches</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.as_dict"><code class="docutils literal notranslate"><span class="pre">LesHouches.as_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.block"><code class="docutils literal notranslate"><span class="pre">LesHouches.block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.find_block"><code class="docutils literal notranslate"><span class="pre">LesHouches.find_block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.keys"><code class="docutils literal notranslate"><span class="pre">LesHouches.keys()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.model_param_blocks"><code class="docutils literal notranslate"><span class="pre">LesHouches.model_param_blocks()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.new_file"><code class="docutils literal notranslate"><span class="pre">LesHouches.new_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.read_leshouches"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.read_leshouches_from_dict"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches_from_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.LesHouches.read_leshouches_from_dir"><code class="docutils literal notranslate"><span class="pre">LesHouches.read_leshouches_from_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script"><code class="docutils literal notranslate"><span class="pre">MG5Script</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.add_process"><code class="docutils literal notranslate"><span class="pre">MG5Script.add_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.define_multiparticles"><code class="docutils literal notranslate"><span class="pre">MG5Script.define_multiparticles()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.delphes_card"><code class="docutils literal notranslate"><span class="pre">MG5Script.delphes_card()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.detector"><code class="docutils literal notranslate"><span class="pre">MG5Script.detector()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.import_model"><code class="docutils literal notranslate"><span class="pre">MG5Script.import_model()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.launch"><code class="docutils literal notranslate"><span class="pre">MG5Script.launch()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.output"><code class="docutils literal notranslate"><span class="pre">MG5Script.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.param_card"><code class="docutils literal notranslate"><span class="pre">MG5Script.param_card()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.process"><code class="docutils literal notranslate"><span class="pre">MG5Script.process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.set_parameters"><code class="docutils literal notranslate"><span class="pre">MG5Script.set_parameters()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.show"><code class="docutils literal notranslate"><span class="pre">MG5Script.show()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.shower"><code class="docutils literal notranslate"><span class="pre">MG5Script.shower()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.MG5Script.write"><code class="docutils literal notranslate"><span class="pre">MG5Script.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA"><code class="docutils literal notranslate"><span class="pre">SLHA</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.block"><code class="docutils literal notranslate"><span class="pre">SLHA.block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.new_file"><code class="docutils literal notranslate"><span class="pre">SLHA.new_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.as_dict"><code class="docutils literal notranslate"><span class="pre">SLHA.as_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.as_txt"><code class="docutils literal notranslate"><span class="pre">SLHA.as_txt()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">SLHA.block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.find_block"><code class="docutils literal notranslate"><span class="pre">SLHA.find_block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.keys"><code class="docutils literal notranslate"><span class="pre">SLHA.keys()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">SLHA.new_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.read_blocks"><code class="docutils literal notranslate"><span class="pre">SLHA.read_blocks()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.read_from_dict"><code class="docutils literal notranslate"><span class="pre">SLHA.read_from_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.SLHA.read_slha_from_file"><code class="docutils literal notranslate"><span class="pre">SLHA.read_slha_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.block2dict"><code class="docutils literal notranslate"><span class="pre">block2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.extract_line_elements"><code class="docutils literal notranslate"><span class="pre">extract_line_elements()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.lhe2dict"><code class="docutils literal notranslate"><span class="pre">lhe2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.lheblock2dict"><code class="docutils literal notranslate"><span class="pre">lheblock2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.read_mg_generation_info"><code class="docutils literal notranslate"><span class="pre">read_mg_generation_info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.read.slha2dict"><code class="docutils literal notranslate"><span class="pre">slha2dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep.stack">hepaid.hep.stack module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno"><code class="docutils literal notranslate"><span class="pre">SPheno</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.hp"><code class="docutils literal notranslate"><span class="pre">SPheno.hp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.hp_input"><code class="docutils literal notranslate"><span class="pre">SPheno.hp_input</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.scan_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.scan_dir</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.sampler_id_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.sampler_id_dir</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.block"><code class="docutils literal notranslate"><span class="pre">SPheno.block</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.index"><code class="docutils literal notranslate"><span class="pre">SPheno.index</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.current_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.current_lhs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.current_spc"><code class="docutils literal notranslate"><span class="pre">SPheno.current_spc</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.spheno"><code class="docutils literal notranslate"><span class="pre">SPheno.spheno</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.lhs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.get_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.get_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPheno.run_stack_from_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.close"><code class="docutils literal notranslate"><span class="pre">SPheno.close()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">SPheno.close()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.create_dir"><code class="docutils literal notranslate"><span class="pre">SPheno.create_dir()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">SPheno.get_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">SPheno.run_stack_from_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPheno.sample"><code class="docutils literal notranslate"><span class="pre">SPheno.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs.close"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.close()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs.create_dir"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.create_dir()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs.get_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.get_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.run_stack_from_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoHbHs.sample"><code class="docutils literal notranslate"><span class="pre">SPhenoHbHs.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoMg5"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoMg5.run_stack_from_lhs"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5.run_stack_from_lhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.SPhenoMg5.update_mg5_script"><code class="docutils literal notranslate"><span class="pre">SPhenoMg5.update_mg5_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.THDMCExt"><code class="docutils literal notranslate"><span class="pre">THDMCExt</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.THDMCExt.close"><code class="docutils literal notranslate"><span class="pre">THDMCExt.close()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.THDMCExt.create_dir"><code class="docutils literal notranslate"><span class="pre">THDMCExt.create_dir()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.THDMCExt.sample"><code class="docutils literal notranslate"><span class="pre">THDMCExt.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.input_vector_to_lhs"><code class="docutils literal notranslate"><span class="pre">input_vector_to_lhs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.stack.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep.tools">hepaid.hep.tools module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.HiggsBounds"><code class="docutils literal notranslate"><span class="pre">HiggsBounds</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.HiggsBounds.run"><code class="docutils literal notranslate"><span class="pre">HiggsBounds.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.HiggsSignals"><code class="docutils literal notranslate"><span class="pre">HiggsSignals</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.HiggsSignals.run"><code class="docutils literal notranslate"><span class="pre">HiggsSignals.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.Madgraph"><code class="docutils literal notranslate"><span class="pre">Madgraph</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.Madgraph.run"><code class="docutils literal notranslate"><span class="pre">Madgraph.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.Spheno"><code class="docutils literal notranslate"><span class="pre">Spheno</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.Spheno.run"><code class="docutils literal notranslate"><span class="pre">Spheno.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.THDMC"><code class="docutils literal notranslate"><span class="pre">THDMC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.THDMC.result"><code class="docutils literal notranslate"><span class="pre">THDMC.result()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.tools.THDMC.run"><code class="docutils literal notranslate"><span class="pre">THDMC.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep.utils">hepaid.hep.utils module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.block2dict"><code class="docutils literal notranslate"><span class="pre">block2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.body_values_2dict"><code class="docutils literal notranslate"><span class="pre">body_values_2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.body_values_2dict_lhs"><code class="docutils literal notranslate"><span class="pre">body_values_2dict_lhs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.br_2dict"><code class="docutils literal notranslate"><span class="pre">br_2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.decay_block_2dict"><code class="docutils literal notranslate"><span class="pre">decay_block_2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.dict2json"><code class="docutils literal notranslate"><span class="pre">dict2json()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.generic_block_2dict"><code class="docutils literal notranslate"><span class="pre">generic_block_2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.generic_block_2dict_lhs"><code class="docutils literal notranslate"><span class="pre">generic_block_2dict_lhs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.json2dict"><code class="docutils literal notranslate"><span class="pre">json2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.lhs2dict"><code class="docutils literal notranslate"><span class="pre">lhs2dict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.merge_datasets"><code class="docutils literal notranslate"><span class="pre">merge_datasets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.merge_slha_files"><code class="docutils literal notranslate"><span class="pre">merge_slha_files()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hepaid.hep.utils.slha2dict"><code class="docutils literal notranslate"><span class="pre">slha2dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hepaid.hep">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/hepaid.hep.rst">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

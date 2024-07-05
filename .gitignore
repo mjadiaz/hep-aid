@@ -56,3 +56,7 @@ MANIFEST
 
 /gpu_experiments/datasets
 examples
+docs/
+examples/
+notes/
+files/

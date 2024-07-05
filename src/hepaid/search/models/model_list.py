@@ -68,7 +68,7 @@ def get_model_and_likelihood(train_x, train_y):
     model = get_model_list_gp(train_x, train_y)
     return model, model.likelihood
     
-def predict(model, likelihood, x, training=True):
+def predict(model, x):
     mean, lower, upper = get_posterior(model, x)
     return mean, lower, upper 
 

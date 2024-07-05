@@ -1,3 +1,15 @@
+"""Collection of utility function and classes to read SLHA files, HiggsBounds/HiggsSignals output and MadGraph results.
+
+Key Features:
+- Utilities for reading and writing SLHA blocks, supporting both generals BLOCK and DECAY types.
+- Parsing and manipulation of SLHA files, including block extraction and conversion to dictionaries.
+- Tools for handling HiggsBounds and HiggsSignals results.
+- Utilty class to create example MadGraph scripts.
+
+Example:
+    >>> from hep_aid import SLHA
+    >>> slha_file = SLHA("path_to_slha_file")
+"""
 import re
 import os
 from shutil import copy
@@ -19,12 +31,6 @@ PATTERNS_SLHA = dict(
     decay_body_pattern=r"(?P<value>.?\d+\.\d+E.\d+)\s+(?P<entries>.+)\s+(?P<comment>#.*)",
 )
 
-PATTERNS_LHE = dict(
-    block_header=r"(?P<block>BLOCK)\s+(?P<block_name>\w+)\s+(?P<comment>#.*)",
-    on_off=r"(?P<index>\d+)\s+(?P<on_off>-?\d+\.?)\s+(?P<comment>#.*)",
-    value=r"(?P<index>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)",
-    matrix_value=r"(?P<i>\d+)\s+(?P<j>\d+)\s+(?P<value>-?\d+\.\d+E.\d+)\s+(?P<comment>#.*)",
-)
 
 SPHENO_ON_OFF_BLOCKS = ['SPHENOINPUT', 'DECAYOPTIONS', 'MODSEL' ]
 
@@ -282,36 +288,6 @@ def block2dict(block):
     return block_dict
 
 
-def lheblock2dict(block):
-    """
-    Converts a block from LesHouches object into a dictionary for easier manipulation and access.
-    """
-    block_dict = {}
-    entries_dict = {}
-    for i, entries in enumerate(block.keys()):
-        entries_dict[entries] = {
-            "value": block.values()[i],
-            "comment": block.comments()[i],
-            "line": block.lines()[i],
-        }
-    block_dict["entries"] = entries_dict
-    block_dict["block_name"] = block.block_name
-    block_dict["block_comment"] = block.block_comment
-    block_dict["block_category"] = block.category
-    block_dict["header_line"] = block.header_line
-    return block_dict
-
-
-def lhe2dict(lhe):
-    """
-    Converts the whole LesHouches object into a dictionary.
-    """
-    lhe_dict = {}
-    for i, block in enumerate(lhe.block_list):
-        lhe_dict[block] = lheblock2dict(lhe[block])
-    return lhe_dict
-
-
 def slha2dict(slha):
     """
     Converts the whole SLHA object into a dictionary.
@@ -321,441 +297,6 @@ def slha2dict(slha):
         slha_dict[block] = block2dict(slha[block])
     return slha_dict
 
-
-#########################################
-# Classes for reading LesHouches files. #
-# Focusing on Spheno.                   #
-#########################################
-
-
-class BlockLine:
-    def __init__(self, entries, value, comment, line_category, line=None):
-        self.entries = entries
-        self.value = value
-        self.comment = comment
-        self.line_category = line_category
-        self.line_format = self.fline()
-        self.line = line
-
-    def fline(self):
-        cat = self.line_category
-        if cat == "block_header":
-            return "{:6s} {:20s}  {:13s}"
-        elif cat == "on_off":
-            return "{:6s} {:18s}  {:13s}".format(self.entries, self.value, self.comment)
-        elif cat == "value":
-            return "{:6s} {:18s}  {:13s}".format(self.entries, self.value, self.comment)
-        elif cat == "matrix_value":
-            entries = self.entries.split(",")
-            return "{:3s}{:3s} {:18}  {:13s}".format(*entries, self.value, self.comment)
-
-    def __repr__(self):
-        return self.fline()
-
-
-class Block(MutableMapping):
-    """
-    It holds each line of a block.\n
-    Call .set(parameter_number, value) to change the parameter value in the instance.
-    """
-
-    def __init__(
-        self,
-        block_name: str,
-        block_comment: str = None,
-        category: str = None,
-        output_mode: bool = False,
-        header_line: str = None,
-    ):
-        self.block_name = block_name
-        self.block_comment = block_comment
-        self.block_body = []
-        self.category = category
-        self.output_mode = output_mode
-        self.header_line = header_line
-
-    def __repr__(self):
-        block_header = "{} {}   {:10s}\n".format(
-            "Block", self.block_name, self.block_comment
-        )
-        block_format = ""
-        for line in self.block_body:
-            block_format += str(line).format(*line.entries) + "\n"
-        return block_header + block_format
-
-    def __getitem__(self, key):
-        return self.get(key)
-
-    def __setitem__(self, key, value):
-        self.set(key, value)
-
-    def __delitem__(self, key):
-        pass
-
-    def __iter__(self):
-        return iter(self.block_body)
-
-    def __len__(self):
-        return len(self.block_body)
-
-    def keys(self):
-        entries = [i.entries for i in self]
-        return entries
-
-    def values(self):
-        values = [i.value for i in self]
-        return values
-
-    def comments(self):
-        comments = [i.comment for i in self]
-        return comments
-
-    def lines(self):
-        lines = [i.line for i in self]
-        return lines
-
-    def get_(self, option):
-        """
-        Call set(option, param_value) method to modify the option N with a parameter_value \n.
-        -option = Can be an int or a list [i, j]. \n
-        -param_value = Can be an int (on/off) or a float. \n
-        """
-        for line in self.block_body:
-            if line.line_category == "matrix_value":
-                if option == [int(line.entries[0]), int(line.entries[1])]:
-                    item = line.entries[2]
-                    break
-            if (line.line_category == "value") & (option == int(line.entries[0])):
-                item = line.entries[1]
-                break
-            elif (line.line_category == "on_off") & (option == int(line.entries[0])):
-                item = line.entries[1]
-                break
-        return item
-
-    def get(self, entry):
-        try:
-            if isinstance(entry, Tuple):
-                entry = [str(i) for i in entry]
-                entry = ",".join(entry)
-            else:
-                entry = str(entry)
-
-            for line in self.block_body:
-                if entry == line.entries:
-                    item = line.value
-                    break
-            return item
-        except UnboundLocalError:
-            assert False, "Entry not found"
-
-    def set(self, entry, param_value):
-        try:
-            if isinstance(entry, Tuple):
-                entry = [str(i) for i in entry]
-                entry = ",".join(entry)
-            else:
-                entry = str(entry)
-
-            for line in self.block_body:
-                if entry == line.entries:
-                    item = line.value
-                    if line.line_category == "matrix_value":
-                        line.value = "{:E}".format(param_value)
-                    if line.line_category == "value":
-                        line.value = "{:E}".format(param_value)
-                    if line.line_category == "on_off":
-                        line.value = "{}".format(param_value)
-                    new_item = line.value
-                    break
-            if item == new_item:
-                warnings.warn("Parameter value not changed")
-        except UnboundLocalError:
-            assert False, "Entry not found"
-
-    def set_(self, option, param_value):
-        """
-        Call set(option, param_value) method to modify the option N with a parameter_value \n.
-        -option = Can be an int or a list [i, j]. \n
-        -param_value = Can be an int (on/off) or a float. \n
-        """
-        for line in self.block_body:
-            if line.line_category == "matrix_value":
-                if option == [int(line.entries[0]), int(line.entries[1])]:
-                    line.entries[2] = "{:E}".format(param_value)
-                    if self.output_mode:
-                        print(
-                            "{} setted to : {}".format(
-                                line.entries[-1], line.entries[1]
-                            )
-                        )
-                    break
-            if (line.line_category == "value") & (option == int(line.entries[0])):
-                line.entries[1] = "{:E}".format(param_value)
-                if self.output_mode:
-                    print("{} setted to : {}".format(line.entries[-1], line.entries[1]))
-                break
-            elif (line.line_category == "on_off") & (option == int(line.entries[0])):
-                if isinstance(param_value, int):
-                    line.entries[1] = "{}".format(param_value)
-                    if self.output_mode:
-                        print(
-                            "{} setted to : {}".format(
-                                line.entries[-1], line.entries[1]
-                            )
-                        )
-                else:
-                    if self.output_mode:
-                        print("param_value={} is not integer".format(param_value))
-                break
-
-
-class LesHouches(Mapping):
-    """
-    Reading LesHouces files. Format used for input for SPheno.
-    """
-
-    def __init__(
-        self,
-        file_dir: str,
-        work_dir: str = ".",
-        model: str = "Model",
-        output_mode: bool = False,
-    ):
-        self.file_dir = file_dir
-        self.output_mode = output_mode
-        if self.output_mode:
-            print(f"Reading LesHouches from : {file_dir}")
-
-        self._blocks = self.read_leshouches(file_dir, output_mode)
-        self.block_list = [name.block_name for name in self._blocks]
-        self.work_dir = work_dir
-        self.model = model
-        # Experimental
-        self._spheno_blocks = ["MODSEL", "SMINPUTS", "SPHENOINPUT", "DECAYOPTIONS"]
-
-    def model_param_blocks(self):
-        param_blocks = []
-        for block_name in self.block_list:
-            if not (block_name in self._spheno_blocks):
-                param_blocks.append(block_name)
-        return param_blocks
-
-    def __repr__(self):
-        return "LesHouches: {} model: {} blocks".format(
-            self.model, len(self.block_list)
-        )
-
-    def __getitem__(self, key):
-        return self.block(key)
-
-    def keys(self):
-        return self.block_list
-
-    def __iter__(self):
-        return iter(self._blocks)
-
-    def __len__(self):
-        return len(self.block_list)
-
-    def block(self, name):
-        block = find_block(name.upper(), self._blocks)
-        return block
-
-    def read_leshouches(self, file_dir, output_mode):
-        assert isinstance(file_dir, str) or isinstance(file_dir, dict)
-        if isinstance(file_dir, dict):
-            lhs = self.read_leshouches_from_dict(file=file_dir, output_mode=output_mode)
-        else:
-            lhs = self.read_leshouches_from_dir(
-                file_dir=file_dir, output_mode=output_mode
-            )
-        return lhs
-
-    def read_leshouches_from_dir(self, file_dir, output_mode):
-        block_list = []
-        with open(file_dir, "r") as f:
-            for line in f:
-                # Match in 3 groups a pattern like: '1000001     2.00706278E+02   # Sd_1'
-                m_block = re.match(PATTERNS_LHE["block_header"], line.upper().strip())
-                if not (m_block == None):
-
-                    if m_block.group("block_name") in [
-                        "MODSEL",
-                        "SPHENOINPUT",
-                        "DECAYOPTIONS",
-                    ]:
-                        block_list.append(
-                            Block(
-                                block_name=m_block.group("block_name"),
-                                block_comment=m_block.group("comment"),
-                                category="spheno_data",
-                                output_mode=output_mode,
-                                header_line=line,
-                            )
-                        )
-                        in_block = m_block.group("block_name")
-                        block_from = "spheno_data"
-
-                    else:
-                        block_list.append(
-                            Block(
-                                block_name=m_block.group("block_name"),
-                                block_comment=m_block.group("comment"),
-                                category="parameters_data",
-                                output_mode=output_mode,
-                                header_line=line,
-                            )
-                        )
-                        in_block = m_block.group("block_name")
-                        block_from = "parameters_data"
-
-                m_body = re.match(PATTERNS_LHE["on_off"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            # entries=list(m_body.groups()),
-                            line_category="on_off",
-                            value=m_body.group("on_off"),
-                            comment=m_body.group("comment"),
-                            entries=m_body.group("index"),
-                            line=line,
-                        )
-                    )
-                m_body = re.match(PATTERNS_LHE["value"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            # entries=list(m_body.groups()),
-                            line_category="value",
-                            value=m_body.group("value"),
-                            comment=m_body.group("comment"),
-                            entries=m_body.group("index"),
-                            line=line,
-                        )
-                    )
-                m_body = re.match(PATTERNS_LHE["matrix_value"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            # entries=list(m_body.groups()),
-                            line_category="matrix_value",
-                            value=m_body.group("value"),
-                            comment=m_body.group("comment"),
-                            entries=",".join(
-                                [m_body.group("i")[0], m_body.group("j")[0]],
-                            ),
-                            line=line,
-                        )
-                    )
-        return block_list
-
-    def read_leshouches_from_dict(self, file, output_mode):
-        block_list = []
-        for b in file:
-            m_block = re.match(
-                PATTERNS_LHE["block_header"], file[b]["header_line"].upper().strip()
-            )
-            if not (m_block == None):
-                if m_block.group("block_name") in [
-                    "MODSEL",
-                    "SPHENOINPUT",
-                    "DECAYOPTIONS",
-                ]:
-                    block_list.append(
-                        Block(
-                            block_name=m_block.group("block_name"),
-                            block_comment=m_block.group("comment"),
-                            category="spheno_data",
-                            output_mode=output_mode,
-                            header_line=file[b]["header_line"],
-                        )
-                    )
-                    in_block = m_block.group("block_name")
-                    block_from = "spheno_data"
-                else:
-                    block_list.append(
-                        Block(
-                            block_name=m_block.group("block_name"),
-                            block_comment=m_block.group("comment"),
-                            category="parameters_data",
-                            output_mode=output_mode,
-                        )
-                    )
-                    in_block = m_block.group("block_name")
-                    block_from = "parameters_data"
-
-            for k in file[b]["entries"]:
-                line = file[b]["entries"][k]["line"]
-                line_obj = file[b]["entries"][k]
-                m_body = re.match(PATTERNS_LHE["on_off"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            line_category="on_off",
-                            value=line_obj["value"],
-                            comment=line_obj["comment"],
-                            entries=k,
-                            line=line,
-                        )
-                    )
-                m_body = re.match(PATTERNS_LHE["value"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            line_category="value",
-                            value=line_obj["value"],
-                            comment=line_obj["comment"],
-                            entries=k,
-                            line=line,
-                        )
-                    )
-                m_body = re.match(PATTERNS_LHE["matrix_value"], line.strip())
-                if not (m_body == None):
-                    find_block(in_block, block_list).block_body.append(
-                        BlockLine(
-                            line_category="matrix_value",
-                            value=line_obj["value"],
-                            comment=line_obj["comment"],
-                            entries=k,
-                            line=line,
-                        )
-                    )
-        return block_list
-
-    def as_dict(self):
-        return lhe2dict(self)
-
-    def new_file(self, new_file_name):
-        """
-        Writes a new LesHouches file with the blocks defined in the instance. \n
-        Possibly with new values for the parameters and options.
-        """
-        new_file_dir = os.path.join(self.work_dir, "SPheno" + self.model + "_input")
-
-        if not (os.path.exists(new_file_dir)):
-            os.makedirs(new_file_dir)
-        file_dir = os.path.join(new_file_dir, new_file_name)
-        if self.output_mode:
-            print(f"Writing new LesHouches in :{file_dir}")
-
-        with open(file_dir, "w+") as f:
-            for block in self._blocks:
-                head = (
-                    "{} {}  {:10s}".format(
-                        "Block", block.block_name, block.block_comment
-                    )
-                    + "\n"
-                )
-                f.write(head)
-                for b in block.block_body:
-                    f.write(b.fline() + "\n")
-
-
-#########################################
-# Classes for reading SLHA files V2     #
-# Focusing on Madraph.                  #
-#########################################
 
 
 class BlockLineSLHA:
@@ -1158,20 +699,46 @@ def read_blocks_from_file(file_dir: str) -> list:
         return block_list
 
 class SLHA(Mapping):
-    """
-    Read a SLHA file (usually the param_card.dat or first section of
-    and LHE file) and stores each block in BlockSLHA classes.
+    """Reads and manages SLHA (SUSY Les Houches Accord) files.
 
-    Parameters:
-        file: Union[str, dict] = Path/dict for the SLHA file to read
+    This class provides a convenient way to parse, access, and manipulate data within 
+    the file. Stores each block of an SLHA file as BlockSLHA objects, each BlockSLHA
+    contains a list of BlockLineSLHA to extract entries and values.
+    This class inherits from `Mapping`, providing dict-like behavior.
 
-    Atributes:
-        block_list: List with the names of all the blocks in the SLHA file.
+    Attributes:
+        _blocks (list): A list of BlockSLHA objects, each representing a block in the SLHA file.
+        block_list (list): A list of block names in the SLHA file.
 
     Methods:
-        block(name): Call a Block object stored in the SLHA instance.
-        new_file(new_file_name): Save the instance as a new SLHA file.
+        __init__(file): Initializes an SLHA object from a file path or dictionary.
+        __getitem__(key): Retrieves a BlockSLHA object by name.
+        __repr__(): Returns a string representation of the SLHA object.
+        __iter__(): Returns an iterator over the BlockSLHA objects.
+        __len__(): Returns the number of blocks in the SLHA file.
+        keys(): Returns a list of block names.
+        block(name): Retrieves a BlockSLHA object by name.
+        as_txt(): Returns the SLHA file content as a string.
+        as_dict(): Returns the SLHA file content as a dictionary.
+        save(path): Saves the SLHA data to a new file.
+
+    Example:
+        ```python
+        slha = SLHA("param_card.dat")
+        block = slha["SMINPUTS"]
+        value = block["1"]   # Access a value within the block
+        print(slha.as_dict()) 
+        slha.save("modified_param_card.dat")
+        ```
+
+    Parameters:
+        file (str | dict): The path to the SLHA file or a dictionary containing the data.
+
+    Raises:
+        FileNotFoundError: If the specified file path does not exist.
+        ValueError: If the input file is not a valid SLHA file or if the dictionary is malformed.
     """
+
 
     def __init__(
         self,
@@ -1180,7 +747,7 @@ class SLHA(Mapping):
         """Initialise an SLHA instance
 
         Parameters:
-            file (str | dict): path/to/slha
+            file (str | dict): The path to the SLHA file or a SLHA dictionary containing the data.
         """
 
         # Initialize
@@ -1218,6 +785,8 @@ class SLHA(Mapping):
         return block
 
     def as_txt(self):
+        """ Return blocks as texts
+        """
         txt = ""
         for b in self._blocks:
             txt += b.__repr__()
@@ -1241,11 +810,6 @@ class SLHA(Mapping):
                 f.write(str(block))
 
     
-
-
-#######################################
-# Class for writing a Madgraph script #
-#######################################
 
 
 class MG5Script:

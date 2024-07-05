@@ -1,3 +1,20 @@
+"""
+This module provides classes and methods for managing and executing various high-energy 
+physics tools such as SPheno, Madgraph, HiggsBounds, and HiggsSignals. 
+
+Classes defined within this module facilitate the setup, execution, and analysis of outputs from these tools. 
+Each class corresponds to a specific tool, abstracting away the complexities of file management, 
+command-line argument construction, and result parsing, thereby simplifying the process of integrating these tools into 
+larger computational workflows. Each tool has the form of the `BaseTool` class, with the run and results methods.
+
+Key features include:
+- Simplified interface for running computations with minimal boilerplate code.
+- Automatic handling of input and output files, including creation of necessary directories.
+- Parsing of tool-specific output formats into structured Python objects for further analysis.
+
+This module is designed to be easily extendable, allowing for the addition of support for further tools or 
+customised configurations as needed.
+"""
 import os
 import re
 import subprocess
@@ -7,7 +24,54 @@ from pathlib import Path
 import numpy as np
 
 from hepaid.hep.read import SLHA
+from hepaid.hep.read import HiggsBoundsResults, HiggsSignalsResults
+from hepaid.hep.read import read_mg_generation_info
 
+class BaseTool:
+    """
+    Base class for a HEP tool supported by this module.
+    
+    This class provides a common interface for running and retrieving results from various tools 
+    like SPheno, Madgraph, HiggsBounds, and HiggsSignals. Subclasses should implement their own logic 
+    for the `run` and `results` methods according to the specifics of the tool they represent.
+    """
+
+    def __init__(self, heptool_dir: str, output_dir: str):
+        """
+        Initialises a new instance of the BaseTool class.
+        
+        Parameters:
+            heptool_dir (str): The directory path containing the tool's executables.
+            output_dir (str): The directory path where the tool's output will be stored.
+        """
+        self.heptool_dir = Path(heptool_dir)
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+    def run(self, *args, **kwargs):
+        """
+        Executes the tool with the provided arguments.
+        
+        This method should be overridden by subclasses to implement the actual execution logic of the tool.
+        
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        raise NotImplementedError("Subclasses must implement the run method.")
+
+    def results(self):
+        """
+        Retrieves the results produced by the tool.
+        
+        This method should parse the tool's output and return the results in a structured format. 
+        The implementation details depend on the specific output format of the tool.
+        If no additional arguments are needed is recommended to use the @property decorator.
+        
+        Returns:
+            Any: The results parsed from the tool's output.
+        """
+        raise NotImplementedError("Subclasses must implement the results method.")
 
 class SPheno:
 
@@ -16,7 +80,7 @@ class SPheno:
     This class facilitates the setup, execution, and output handling of SPheno.
 
     Attributes:
-        spheno_dir (str): The directory containing the SPheno executable.
+        heptool_dir (str): The directory containing the SPheno directory (after extracting from zipped file).
         output_dir (str): The directory where SPheno output files will be stored.
         model_name (str):  The name of the specific SUSY model to be analyzed.
         output_file_name (str):  The name of the primary output file.
@@ -25,7 +89,7 @@ class SPheno:
         model_executable (str): The full path to the SPheno executable for the specified model.
 
     Methods:
-        __init__(self, spheno_dir, output_dir, model_name):
+        __init__(self, heptool_dir, output_dir, model_name):
             Initializes the SPheno object with required directory and model information.
         
         run(self, input_file):
@@ -51,6 +115,14 @@ class SPheno:
 
         self.standard_input_file_name = f'LesHouches.in.{self.model_name}'
     
+    @property
+    def results(self):
+        if self.output_file_path.exists():
+            results_obj = SLHA(self.output_file_path)
+            return results_obj
+        else:
+            return None
+
     def run(self, input_file: str | SLHA) -> tuple[str | None, str]:
         """Runs the SPheno calculation.
 
@@ -64,7 +136,7 @@ class SPheno:
                 - str:  The standard output (stdout) from the SPheno process. 
         """
         if isinstance(input_file, str):
-            input_file_path = Path(input_file_path)
+            input_file_path = Path(input_file)
         elif isinstance(input_file, SLHA):
             input_file_path = self.output_dir / self.standard_input_file_name
             input_file.save(input_file_path)
@@ -81,310 +153,217 @@ class SPheno:
             text=True,
             cwd=self.output_dir,
         )
-        if "Finished" in run.stdout:
-            return self.output_file_path, run.stdout
-        else:
-            return None, run.stdout
+        self.stdout = run.stdout
 
-
-class _SPheno:
-    def __init__(self, spheno_dir, work_dir, model_name):
-        self._spheno_dir = Path(spheno_dir) 
-        self._work_dir = Path(work_dir)  
-        self._model_name = model_name
-
-    def run(self, in_file_name, out_file_name):
-        """Run SPhenoMODEL with input/output files in specific directories.
-
-        Parameters:
-        in_file_name (str): Input file's name (located in work_dir/SPhenoMODEL_input/).
-        out_file_name (str): Output file's name (created in work_dir/SPhenoMODEL_output/).
-
-        Returns:
-            Tuple[Optional[Path], str]: Path to output file if successful, else None. 
-                                        SPheno subprocess stdout.
-        """
-
-        in_dir = self._work_dir / f"SPheno{self._model_name}_input"
-        out_dir = self._work_dir / f"SPheno{self._model_name}_output"
-
-        in_file = in_dir / in_file_name
-        out_file = out_dir / out_file_name
-
-        out_dir.mkdir(exist_ok=True)  # Create output dir if not exists
-
-        spheno_executable = self._spheno_dir / "bin" / f"SPheno{self._model_name}"
-
-        run = subprocess.run(
-            [spheno_executable, in_file, out_file],
-            capture_output=True,
-            text=True,
-            cwd=self._work_dir, 
-        )
-
-        if "Finished" in run.stdout:
-            return out_file, run.stdout
-        else:
-            return None, run.stdout
-        
-        
-
-class Spheno:
-    def __init__(self, spheno_dir, work_dir, model_name):
-        self._spheno_dir = spheno_dir
-        self._work_dir = work_dir
-        self._model_name = model_name
-    
-    def run(self, input_file_path, output_directory, output_file_name = 'SPheno.spc.model'):
-        input_file_path = Path(input_file_path)
-
-        output_directory = Path(output_directory)
-        output_directory.mkdir(parents=True, exist_ok=True)
-
-        output_file_path = output_directory / output_file_name
-        run = subprocess.run(
-            [
-                self._spheno_dir + "/bin" + "/SPheno" + self._model_name,
-                input_file_path,
-                output_file_path,
-            ],
-            capture_output=True,
-            text=True,
-            cwd=output_directory,
-        )
-        if "Finished" in run.stdout:
-            return out_file_path, run.stdout
-        else:
-            return None, run.stdout
-
-
-    def run(self, in_file_name, out_file_name):
-        """
-        Run SPhenoMODEL with the input_file_name in work_dir.
-
-        Parameters:
-        -----
-        in_file_name: str = input file's name located in work_dir/SPhenoMODEL_input/in_file_name
-        out_file_name: str = output file's name located in work_dir/SPhenoMODEL_output/out_file_name
-
-        Return:
-        ------
-        out_file: str = Global path to the output file name if SPheno runs successfully. None if SPheno gets an Error.
-        spheno_stdout = stdout of the subprocess that runs SPheno.
-        """
-        # Reads the input file created with LesHouches.new_file in work_dir
-        in_file = os.path.join(
-            self._work_dir, "SPheno" + self._model_name + "_input", in_file_name
-        )
-        # Create and output directory in work_dir/SPhenoMODEL_output
-        out_dir = os.path.join(self._work_dir, "SPheno" + self._model_name + "_output")
-        if not (os.path.exists(out_dir)):
-            os.makedirs(out_dir)
-        out_file = os.path.join(out_dir, out_file_name)
-
-        run = subprocess.run(
-            [
-                self._spheno_dir + "/bin" + "/SPheno" + self._model_name,
-                in_file,
-                out_file,
-            ],
-            capture_output=True,
-            text=True,
-            cwd=self._work_dir,
-        )
-        if "Finished" in run.stdout:
-            return out_file, run.stdout
-        else:
-            return None, run.stdout
 
 
 class Madgraph:
-    """
-    Basicaly just run madgraph with in the script mode with the scripts created \n
-    by the MG5Script class. \n
-    Todo:
-    - Figure out how to print some output from madgraph.
-    """
+    """Manages the execution of Madgraph.
 
+    This class facilitates the setup, execution, and output handling of Madgraph.
+
+    Attributes:
+        heptool_dir (str): The directory containing the SPheno executable.
+        output_dir (str): The directory where Madgraph output will be stored.
+        executable (str): The full path to the Madgraph mg5_aMC executable.
+    """
+          
     def __init__(self, heptool_dir, output_dir):
-        self.tool_dir = Path(heptool_dir)
+        self.heptool_dir = Path(heptool_dir)
 
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        self.executable = self.tool_dir / "bin/mg5_aMC"
+        self.executable = self.heptool_dir / "bin/mg5_aMC"
 
 
-    def run(self, input_file):
+    
+    def results(self, output_path: str):
         """
-        Run madgraph with an script named MG5Script.txt (created by the MG5Script class) in within work_dir. \n
-        Change input_file to change to another script within work_dir.
+        Results from MadGraph depends on the output folder which is internal to the script.
+        Then, we need to give it as an input in output_path. It assumes a single process with 
+        one run.
+
+        Parameters:
+            output_path (str): Path to the madgraph output directory
         """
-        subprocess.run(
+        output_path = Path(output_path)/ "Events/run_01/run_01_tag_1_banner.txt"
+        if output_path.exists():
+            results_obj = read_mg_generation_info(output_path)
+            return results_obj
+        else:
+            return None
+
+    def run(self, input_file: str):
+        """
+        Run madgraph with a script in `input_file` (an example script can be created by the MG5Script class) in within work_dir. 
+
+        Parameters:
+            input_file (str): Madgraph script.
+
+        Returns:
+            bool: True.
+        """
+        run = subprocess.run(
             [self.executable, input_file],
             capture_output=True,
             text=True,
             cwd=self.output_dir,
         )
-        return True
+        self.stdout = run.stdout
 
 
 class HiggsBounds:
+    """A class for running HiggsBounds.
+
+    Attributes:
+        heptool_dir (str): The directory path containing the HiggsBounds executable.
+        output_dir (str): The directory path to store the output results.
+        neutral_higgs (int): The number of neutral Higgs bosons in the model.
+        charged_higgs (int): The number of charged Higgs bosons in the model.
+        executable (str): The path to the HiggsBounds executable.
+        output_file_path (str): The path where HiggsBounds results will be saved.
+
+    """
     def __init__(
         self,
-        higgs_bounds_dir,
-        work_dir,
-        model=None,
-        neutral_higgs=None,
-        charged_higgs=None,
-        output_mode=False,
+        heptool_dir: str,
+        output_dir: str,
+        neutral_higgs: int,
+        charged_higgs: int,
     ):
-        self._dir = higgs_bounds_dir
-        self.work_dir = work_dir
-        self.model = model
+        """Initializes the HiggsBounds object.
+
+        Parameters:
+            heptool_dir (str): The directory path to the HiggsBounds build.
+            output_dir (str): The directory path to store the output results.
+            neutral_higgs (int): The number of neutral Higgs bosons in the model.
+            charged_higgs (int): The number of charged Higgs bosons in the model.
+        """
+        self.heptool_dir = Path(heptool_dir)
+
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
         self.neutral_higgs = neutral_higgs
         self.charged_higgs = charged_higgs
-        self.output_mode = output_mode
+
+        self.executable = self.heptool_dir / "HiggsBounds"
+
+        self.output_file_path =  self.output_dir / "HiggsBounds_results.dat"
+
+    @property
+    def results(self):
+        if self.output_file_path.exists():
+            results_obj = HiggsBoundsResults(self.output_dir)
+            return results_obj.read()
+        else:
+            return None
 
     def run(self):
-        """
-        Runs HiggsBounds with the last point calculated by SPheno.
-        Returns the path for HiggsBounds_results.dat if SPheno and
-        HiggsBounds succeed. If there is an Error in one them it
-        returns None and prints the error output.
+        """Executes HiggsBounds.
+
+        Runs HiggsBounds with the specified parameters and returns the output file path and stdout.
+        
+        Returns:
+            tuple: A tuple containing:
+                - output_file_path (Path): Path to the HiggsBounds_results.dat file.
+                - stdout (str): The standard output from the HiggsBounds process.
+
+        Raises:
+            RuntimeError: If HiggsBounds fails to run successfully (e.g., doesn't produce the expected "finished" output).
+
         """
         run = subprocess.run(
             [
-                os.path.join(self._dir, "HiggsBounds"),
+                self.executable,
                 "LandH",
                 "effC",
                 str(self.neutral_higgs),
                 str(self.charged_higgs),
-                self.work_dir + "/",
+                str(self.output_dir) + "/",
             ],
             capture_output=True,
             text=True,
-            cwd=self.work_dir,
+            cwd=self.output_dir,
         )
-        if "finished" in run.stdout:
-            if self.output_mode:
-                print(run.stdout)
-            return os.path.join(self.work_dir, "HiggsBounds_results.dat")
-        else:
-            if self.output_mode:
-                print("HiggsBound not finished!")
-                print(run.stdout)
-            return None
-
+        self.stdout = run.stdout
 
 class HiggsSignals:
+    """A class for running HiggsSignals.
+
+    Attributes:
+        heptool_dir (str): The directory path to the HiggsSignals builds.
+        output_dir (str): The directory path to store the output results.
+        neutral_higgs (int): The number of neutral Higgs bosons in the model.
+        charged_higgs (int): The number of charged Higgs bosons in the model.
+        executable (str): The path to the HiggsBounds executable.
+        output_file_path (str): The path where HiggsBounds results will be saved.
+
+    """
     def __init__(
         self,
-        higgs_signals_dir,
-        work_dir,
-        model=None,
-        neutral_higgs=None,
-        charged_higgs=None,
-        output_mode=False,
+        heptool_dir: str,
+        output_dir: str,
+        neutral_higgs: int,
+        charged_higgs: int,
     ):
-        self._dir = higgs_signals_dir
-        self.work_dir = work_dir
-        self.model = model
+        """Initializes the HiggsBounds object.
+
+        Parameters:
+            heptool_dir (str): The directory path containing the HiggsBounds executable.
+            output_dir (str): The directory path to store the output results.
+            neutral_higgs (int): The number of neutral Higgs bosons in the model.
+            charged_higgs (int): The number of charged Higgs bosons in the model.
+        """
+        self.heptool_dir = Path(heptool_dir)
+
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
         self.neutral_higgs = neutral_higgs
         self.charged_higgs = charged_higgs
-        self.output_mode = output_mode
+
+        self.executable = self.heptool_dir / "HiggsSignals"
+
+        self.output_file_path =  self.output_dir / "HiggsSignals_results.dat"
+
+
+    @property
+    def results(self):
+        if self.output_file_path.exists():
+            results_obj = HiggsSignalsResults(self.output_dir)
+            return results_obj.read()
+        else:
+            return None
 
     def run(self):
-        """
-        Runs HiggsSignals with the last point calculated by SPheno.
+        """Executes HiggsSignals.
+
+        Runs HiggsSignals with the specified parameters and returns the output file path and stdout.
+        
+        Returns:
+            tuple: A tuple containing:
+                - output_file_path (Path): Path to the HiggsSignals_results.dat file.
+                - stdout (str): The standard output from the HiggsSignals process.
+
+        Raises:
+            RuntimeError: If HiggsSignals fails to run successfully (e.g., doesn't produce the expected "Error" output).
+
         """
         run = subprocess.run(
             [
-                os.path.join(self._dir, "HiggsSignals"),
+                self.executable,
                 "latestresults",
                 "2",
                 "effC",
                 str(self.neutral_higgs),
                 str(self.charged_higgs),
-                self.work_dir + "/",
+                str(self.output_dir) + "/",
             ],
             capture_output=True,
             text=True,
-            cwd=self.work_dir,
+            cwd=self.output_dir,
         )
-        if not ("Error") in run.stdout:
-            if self.output_mode:
-                print(run.stdout)
-            return os.path.join(self.work_dir, "HiggsSignals_results.dat")
-        else:
-            if self.output_mode:
-                print("HiggsSignals Error")
-                print(run.stdout)
-            return None
+        self.stdout = run.stdout
 
-
-class THDMC:
-    """
-    Utility class to run 2HDMC programs.
-    """
-
-    def __init__(
-        self,
-        tool_dir: str,
-        work_dir: str,
-        program_name: str,
-    ):
-        self.tool_dir = tool_dir
-        self.work_dir = work_dir
-        self.program_name = program_name
-        self.program = os.path.join(tool_dir, program_name)
-        self.thdm_dir = os.path.join(self.work_dir, "2HDMC")
-
-    def run(
-        self,
-        parameters: np.ndarray,
-    ) -> bool:
-        """
-        Parameters are in the standard basis:
-        lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,\
-            m12_2, tan_beta = parameters
-        """
-
-        if not (os.path.exists(self.thdm_dir)):
-            os.makedirs(self.thdm_dir)
-
-        parameters = [str(val) for val in parameters]
-
-        # lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7,\
-        #    m12_2, tan_beta = parameters
-        try:
-            run = subprocess.run(
-                [
-                    self.program,
-                    *parameters,
-                    # lambda1,
-                    # lambda2,
-                    # lambda3,
-                    # lambda4,
-                    # lambda5,
-                    # lambda6,
-                    # lambda7,
-                    # m12_2,
-                    # tan_beta
-                ],
-                capture_output=True,
-                text=True,
-                cwd=self.thdm_dir,
-            )
-            return True
-        except:
-            return False
-
-    def result(self) -> SLHA:
-        """Returns the SLHA file saved in working directory, after .run()"""
-        file = os.path.join(self.thdm_dir, "Demo_out.lha")
-        if os.path.exists(file):
-            slha = SLHA(file=file)
-            return slha
-        else:
-            return None

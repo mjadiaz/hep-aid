@@ -88,7 +88,10 @@ def resolve_key_chain(nested_dictionary: dict, keys: list[str]) -> Any:
     obj = nested_dictionary
     for a in keys:
         try:
-            obj = extract_element_or_return(obj.__getitem__(a))
+            if obj is not None:
+                obj = extract_element_or_return(obj[a])
+            else:
+                obj = None
         except KeyError:
             obj = None
             break

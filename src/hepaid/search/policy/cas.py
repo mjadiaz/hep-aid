@@ -182,7 +182,7 @@ class CAS(Policy):
 
                 self.iteration = i
 
-        return self.model, self.likelihood, self.eci, self.study, self.metrics
+        return self.model, self.likelihood, self.eci, self.metrics
 
 
     

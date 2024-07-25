@@ -30,6 +30,7 @@ from hepaid.hep.tools import HiggsBounds, HiggsSignals
 from hepaid.hep.tools import SPheno
 from hepaid.hep.tools import Madgraph
 from hepaid.hep.utils import id_generator
+from hepaid.utils import load_config, save_config
 
 
 HEPSTACK: Dict[str, Callable[..., Any]] = dict()
@@ -137,10 +138,17 @@ class BaseStack:
     """
     def __init__(
         self,
-        hep_config: DictConfig,
+        hep_config: DictConfig | str,
         stack_id: str | None = None,
     ):
         """Initialize the HEP tools"""
+
+        
+        if isinstance(hep_config, str):
+            self.hp = load_config(hep_config)
+        else:
+            self.hp = hep_config
+
         self.hp = hep_config
         self.hp_input = hep_config.model.input
         self.scan_dir = Path(self.hp.hep_stack.scan_dir)
@@ -220,7 +228,7 @@ class SPhenoStack(BaseStack):
     """
     def __init__(
         self,
-        hep_config: DictConfig,
+        hep_config: DictConfig | str,
         stack_id: str | None = None, 
     ):
         super().__init__(hep_config, stack_id)
@@ -295,7 +303,7 @@ class SPhenoHBHS(SPhenoStack):
     """
     def __init__(
         self,
-        hep_config: DictConfig,
+        hep_config: DictConfig | str,
         stack_id: str | None = None,
     ):
         super().__init__(hep_config, stack_id)
@@ -381,7 +389,7 @@ class SPhenoHBHSMG5(SPhenoHBHS):
 
     def __init__(
         self,
-        hep_config: DictConfig,
+        hep_config: DictConfig | str,
         stack_id: str | None = None,
     ):
         super().__init__(hep_config, stack_id)

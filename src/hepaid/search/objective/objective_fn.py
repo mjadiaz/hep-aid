@@ -16,7 +16,7 @@ import torch
 
 
 from hepaid.search.policy.eci import tkwargs
-from hepaid.search.objective.utils import load_config, save_config
+from hepaid.utils import load_config, save_config
 
 
 def obj_fn_export(

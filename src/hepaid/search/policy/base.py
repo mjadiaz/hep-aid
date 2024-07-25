@@ -4,7 +4,7 @@ from omegaconf import OmegaConf, DictConfig
 
 from hepaid.search.objective.objective_fn import ObjectiveFunction
 from hepaid.search.objective.metrics import Metrics
-from hepaid.search.objective.utils import save_config, load_config
+from hepaid.utils import save_config, load_config
 
 
 class Policy:

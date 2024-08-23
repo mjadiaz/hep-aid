@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 setup.cfg
 src/hepaid/__init__.py
+src/hepaid/utils.py
 src/hepaid.egg-info/PKG-INFO
 src/hepaid.egg-info/SOURCES.txt
 src/hepaid.egg-info/dependency_links.txt

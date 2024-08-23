@@ -8,7 +8,7 @@ from torch.quasirandom import SobolEngine
 
 from hepaid.search.objective.metrics import VolumeCoverage, s_ns_history
 from hepaid.search.parallel.modules import run_x_with_pool
-
+from hepaid.search.objective.objective_fn import ObjectiveFunction
 
 def dict_to_eval_string(obj_dict: Dict) -> str:
     """
@@ -98,3 +98,37 @@ def generate_initial_dataset(
         for x in X:
             objective_function.sample(x.reshape(1, -1), True)
     return True
+
+
+def batch_evaluation(
+    X: np.ndarray, 
+    objective_function: ObjectiveFunction, 
+    parallel: bool, 
+    n_evaluation_workers: int, 
+    add: bool = True, 
+    is_normalised: bool = True
+) -> None:
+    """
+    Evaluate a batch of points in the objective function either sequentially or in parallel.
+
+    Parameters:
+        X (np.ndarray): A batch of points to evaluate.
+        objective_function (ObjectiveFunction): The objective function to evaluate the points.
+        parallel (bool): Whether to run the evaluation in parallel.
+        n_evaluation_workers (int): Number of workers to use for parallel evaluation.
+        add (bool, optional): Whether to add the samples to the objective function. Defaults to True.
+        is_normalised (bool, optional): Whether the batch is normalised. Defaults to True.
+
+    Returns:
+        None
+    """
+    if not parallel:
+        for x in X:
+            objective_function.sample(x, is_normalised=is_normalised, add=add)
+    else:
+        if is_normalised:
+            X = objective_function.space.inverse_transform(X)
+        results = run_x_with_pool(X, n_evaluation_workers, objective_function.function)
+        if add:
+            for sample_dict in results:
+                objective_function.add_sample_dict(sample_dict)

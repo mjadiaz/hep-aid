@@ -1,0 +1,14 @@
+input_space:
+  x1:
+    lower: 0
+    upper: 31.41
+    distribution: uniform
+  x2:
+    lower: 0
+    upper: 31.41
+    distribution: uniform
+output_parameters:  ['f']
+objectives:
+  double_constraint:
+    f: [['gt', 80],['lt',160]]
+  single_constraint: 

@@ -1,0 +1,15 @@
+input_space:
+  t1:
+    lower: -5
+    upper: 5
+    distribution: uniform
+  t2:
+    lower: -5
+    upper: 5
+    distribution: uniform
+output_parameters:  ['him', 'boo']
+objectives:
+  double_constraint:
+    boo: [['gt', 2],['lt',4]]
+  single_constraint: 
+    him: ['lt', 3.]

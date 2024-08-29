@@ -34,7 +34,7 @@ In this work, we introduce a new Python library, `hep-aid`, which provides a mod
 
 ## Parameter Scan Algorithms
 
-This library was originally develop for experimentation for developing the [b-CASTOR](https://arxiv.org/abs/2404.18653) parameter scan method. Where a surrogate model to approximate the BSM model outputs and a search policy funtions needs to be defined. However, many Parameter Scans algorithms can be implemented following this paradigm and the current objectie of `hep-aid` is to ease the development, implementation and utilisation of general parameter scans algorithms. `hep-aid` currently includes: 
+This library was originally developed for experimentation in developing the b-CASTOR parameter scan method, where a surrogate model approximates the BSM model outputs and a search policy function needs to be defined. However, many parameter scan algorithms can be implemented following this paradigm, and the current objective of hep-aid is to ease the development, implementation, and utilization of general parameter scan algorithms. hep-aid currently includes:
 
 - [b-CASTOR](https://arxiv.org/abs/2404.18653)
 - [CAS](https://proceedings.mlr.press/v139/malkomes21a.html)

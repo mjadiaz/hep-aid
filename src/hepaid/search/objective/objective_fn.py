@@ -81,6 +81,13 @@ def identify_samples_which_satisfy_constraints(
         )
     return successful
 
+def check_keys_exist(dictionary, keys):
+    # Dictionary to hold the keys and their existence status
+    keys_status = {}
+    # Iterate over the keys to check if they exist in the dictionary
+    for key in keys:
+        keys_status[key] = key in dictionary
+    return keys_status
 
 def identify_samples_which_satisfy_constraints_non_cas(
     Y: np.ndarray, objectives: dict, output_parameters: dict
@@ -98,19 +105,22 @@ def identify_samples_which_satisfy_constraints_non_cas(
 
     """
     succ = np.ones_like(Y).astype(bool)
+    key_status = check_keys_exist(objectives, ['double_constraint', 'single_constraint'])
     for i, param in enumerate(output_parameters):
-        if param in objectives["double_constraint"]:
-            select = np.ones(len(Y)).astype(bool)
-            select *= Y[:, i] > objectives["double_constraint"][param][0][1]
-            select *= Y[:, i] < objectives["double_constraint"][param][1][1]
-            succ[:, i] = select
-        if param in objectives["single_constraint"]:
-            select = np.ones(len(Y)).astype(bool)
-            if objectives["single_constraint"][param][0] == "lt":
-                select *= Y[:, i] < objectives["single_constraint"][param][1]
-            else:
-                select *= Y[:, i] > objectives["single_constraint"][param][1]
-            succ[:, i] = select
+        if key_status['double_constraint'] == True:
+            if param in objectives["double_constraint"]:
+                select = np.ones(len(Y)).astype(bool)
+                select *= Y[:, i] > objectives["double_constraint"][param][0][1]
+                select *= Y[:, i] < objectives["double_constraint"][param][1][1]
+                succ[:, i] = select
+        if key_status['single_constraint'] == True:
+            if param in objectives["single_constraint"]:
+                select = np.ones(len(Y)).astype(bool)
+                if objectives["single_constraint"][param][0] == "lt":
+                    select *= Y[:, i] < objectives["single_constraint"][param][1]
+                else:
+                    select *= Y[:, i] > objectives["single_constraint"][param][1]
+                succ[:, i] = select
     return succ
 
 
@@ -126,11 +136,14 @@ def create_constraints_from_objectives(objectives: dict) -> list:
         List: A list of constraints extracted from the objectives dictionary.
     """
     constraints = []
-    for p in objectives["double_constraint"].keys():
-        constraints.append(objectives["double_constraint"][p][0])
-        constraints.append(objectives["double_constraint"][p][1])
-    for p in objectives["single_constraint"].keys():
-        constraints.append(objectives["single_constraint"][p])
+    key_status = check_keys_exist(objectives, ['double_constraint', 'single_constraint'])
+    if key_status['double_constraint'] == True:
+        for p in objectives["double_constraint"].keys():
+            constraints.append(objectives["double_constraint"][p][0])
+            constraints.append(objectives["double_constraint"][p][1])
+    if key_status['single_constraint'] == True:
+        for p in objectives["single_constraint"].keys():
+            constraints.append(objectives["single_constraint"][p])
     return constraints
 
 
@@ -170,16 +183,19 @@ def generate_y_from_sample(
     constraints = create_constraints_from_objectives(objectives)
     Y = np.zeros((1, len(constraints)))
     i = 0
-    for p in objectives["double_constraint"].keys():
-        Y1 = np.array(sample[p])
-        Y[:, i] = Y1
-        i += 1
-        Y[:, i] = Y1
-        i += 1
-    for p in objectives["single_constraint"].keys():
-        Y1 = np.array(sample[p])
-        Y[:, i] = Y1
-        i += 1
+    key_status = check_keys_exist(objectives, ['double_constraint', 'single_constraint'])
+    if key_status['double_constraint'] == True:
+        for p in objectives["double_constraint"].keys():
+            Y1 = np.array(sample[p])
+            Y[:, i] = Y1
+            i += 1
+            Y[:, i] = Y1
+            i += 1
+    if key_status['single_constraint'] == True:
+        for p in objectives["single_constraint"].keys():
+            Y1 = np.array(sample[p])
+            Y[:, i] = Y1
+            i += 1
     return Y
 
 

@@ -19,7 +19,7 @@ def save_config(config: Any, path: str) -> bool:
     return True
 
 
-def load_config(path: str, internal: bool = True) -> Any:
+def load_config(path: str, internal: bool = False) -> Any:
     """
     Loads a configuration from a file.
 

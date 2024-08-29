@@ -34,12 +34,30 @@ In this work, we introduce a new Python library, `hep-aid`, which provides a mod
 
 ## Parameter Scan Algorithms
 
-This library was originally develop for experimentation for developing the [b-CASTOR](https://arxiv.org/abs/2404.18653) parameter scan method. Where a surrogate model to approximate the BSM model outputs and a search policy funtions needs to be defined. However, many Parameter Scans algorithms can be implemented following this paradigm and the current objectie of `hep-aid` is to ease the development, implementation and utilisation of general parameter scans algorithms. `hep-aid` currently includes:
-  - 
+This library was originally develop for experimentation for developing the [b-CASTOR](https://arxiv.org/abs/2404.18653) parameter scan method. Where a surrogate model to approximate the BSM model outputs and a search policy funtions needs to be defined. However, many Parameter Scans algorithms can be implemented following this paradigm and the current objectie of `hep-aid` is to ease the development, implementation and utilisation of general parameter scans algorithms. `hep-aid` currently includes: 
+
+- [b-CASTOR](https://arxiv.org/abs/2404.18653)
+- [CAS](https://proceedings.mlr.press/v139/malkomes21a.html)
+- MCMC Metropolis Hastings
+- [Machine Learning Scan](https://arxiv.org/abs/1708.06615) 
 
 ## Installation
 
 To install the hep-aid library clone this repository, an install by:
 ```bash
 pip install .
+```
+
+## Cite
+A formal publication detailing this library is currently in preparation. In the interim, kindly cite the original work of b-CASTOR:
+```latex
+@misc{diaz2024bayesianactivesearchparameter,
+      title={Bayesian Active Search on Parameter Space: a 95 GeV Spin-0 Resonance in the ($B-L$)SSM}, 
+      author={Mauricio A. Diaz and Giorgio Cerro and Srinandan Dasmahapatra and Stefano Moretti},
+      year={2024},
+      eprint={2404.18653},
+      archivePrefix={arXiv},
+      primaryClass={hep-ph},
+      url={https://arxiv.org/abs/2404.18653}, 
+}
 ```

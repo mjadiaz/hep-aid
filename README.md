@@ -3,8 +3,6 @@
 
 **_aid._** Help, typically of a practical nature.
 
-~*aid.* **A**rtificial **I**ntelligence **D**evelopment~
-
 ## Overview
 
 In this work, we introduce a new Python library, `hep-aid`, which provides a modular framework for developing parameter scan algorithms for Beyond Standard Model (BSM) phenomenology. It manages High Energy Physics (HEP) software and provides components to ease the utilization, implementation, and development of parameter scan algorithms for phenomenological studies. The library comprises two main modules: the `hep` module and the `search` module.

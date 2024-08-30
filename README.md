@@ -68,7 +68,7 @@ In this case, the default hyperparameters include an initial dataset of 10 point
 
 The `bcastor.run()` method returns the following:
 - **Surrogate Model**: The model fitted in the last iteration.
-- **ECI Policy Function**: The function used for the ECI (Expected Improvement Criterion) policy.
+- **ECI Policy Function**: The function used for the ECI (Expected Coverage Improvement) policy.
 - **Optuna Study**: The study used to optimise the ECI function.
 - **Metrics Instance**: An instance from the `Metrics` class, which records common metrics for parameter scan algorithms.
 ### Defining a New Objective Function

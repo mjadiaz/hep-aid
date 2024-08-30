@@ -64,6 +64,7 @@ bcastor = bCASTOR(objective_function=obj_fn)
 surrogate, eci, study, metrics = bcastor.run()
 ```
 In this case, the default hyperparameters include an initial dataset of 10 points and batch sampling of 10 points per iteration, along with other more specific hyperparameters for the algorithm. The following animation shows how the search is performed:
+
 ![b-CASTOR search](files/bcastor_test_function.gif)
 
 The `bcastor.run()` method returns the following:

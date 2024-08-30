@@ -19,7 +19,7 @@ def save_config(config: Any, path: str) -> bool:
     return True
 
 
-def load_config(path: str, internal: bool = False) -> Any:
+def load_config(path: str) -> Any:
     """
     Loads a configuration from a file.
 
@@ -29,10 +29,6 @@ def load_config(path: str, internal: bool = False) -> Any:
     Returns:
         Any: The loaded configuration object.
     """
-    if internal: 
-        with pkg_resources.open_text('hepaid.search.objective.configs', path) as file:
-            loaded = OmegaConf.load(file)
-    else:
-        loaded = OmegaConf.load(path)
+    loaded = OmegaConf.load(path)
     return loaded
 

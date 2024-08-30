@@ -1,7 +1,30 @@
+"""
+Module that implements test objective functions, import init_function_name to 
+initialise the ObjectiveFunction class. Dimensions correspond search space 
+dimensionality and number of objectives:
+    - init_egg_box_fn: (2,1)
+    - init_him_boo_fn: (2,2)
+"""
+
 import numpy as np
 from hepaid.search.objective.objective_fn import ObjectiveFunction
-from hepaid.utils import load_config
+import importlib.resources as pkg_resources
+from omegaconf import OmegaConf
 
+
+def _load_config_test(path: str):
+    """
+    Loads a configuration from a file.
+
+    Parameters:
+        path (str): The path of the file from which to load the configuration.
+
+    Returns:
+        Any: The loaded configuration object.
+    """
+    with pkg_resources.open_text('hepaid.search.objective.configs', path) as file:
+        loaded = OmegaConf.load(file)
+    return loaded
 
 def booth(x):
     x, y = x[0], x[1]
@@ -49,7 +72,7 @@ def init_him_boo_fn(cas=False):
         ObjectiveFunction: An instance of the ObjectiveFunction class 
         initialized with the himmelblau_booth function and its configuration.
     """
-    function_config = load_config('hb_fn.yml', internal=True)
+    function_config = _load_config_test('hb_fn.yml')
     function = ObjectiveFunction(
             function=himmelblau_booth,
             function_config=function_config,
@@ -68,7 +91,7 @@ def init_egg_box_fn(cas=False):
     Returns:
         A function representing the egg box model.
     """
-    function_config = load_config('egg_box_fn.yml', internal=True)
+    function_config = _load_config_test('egg_box_fn.yml' )
     function = ObjectiveFunction(
             function=egg_box,
             function_config=function_config,

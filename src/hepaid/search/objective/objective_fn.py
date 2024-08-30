@@ -15,16 +15,20 @@ import time
 import torch
 
 
-from hepaid.search.policy.eci import tkwargs
 from hepaid.utils import load_config, save_config
 
+
+tkwargs = {
+    "device": torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+    "dtype": torch.double,
+}
 
 def obj_fn_export(
     objective_function,
     scaler=None
 ) -> Tuple[np.ndarray, Any, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
-    Exports the objective function data to a format required by PyTorch models and a CAS policy.
+    Exports the objective function data to a format required by PyTorch models and CAS.
 
     If a scaler is provided, it is applied to Y.
 

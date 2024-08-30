@@ -29,7 +29,6 @@ This library was originally developed for experimentation in developing the b-CA
 - [b-CASTOR](https://arxiv.org/abs/2404.18653)
 - [CAS](https://proceedings.mlr.press/v139/malkomes21a.html)
 - MCMC Metropolis Hastings
-- [Machine Learning Scan](https://arxiv.org/abs/1708.06615) 
 
 
 ### `search.objective` 

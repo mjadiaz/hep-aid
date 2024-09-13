@@ -10,15 +10,13 @@ In this work, we introduce a new Python library, `hep-aid`, which provides a mod
 ## Modules
 
 ### `hep` Module
-
-- **Purpose**: Facilitates the integration of the HEP software ecosystem into Python scripts.
+Facilitates the integration of the HEP software ecosystem into Python scripts.
 - **Features**:
-  - Allows users to perform a numerical point-wise evaluation of a parameter space point across a series of HEP software, wich we called HEP-Stacks.
+  - Allows users to perform a numerical point-wise evaluation of series of HEP software, wich we called HEP-Stacks, directly from python.
   - Currently, the SARAH family of programs is implemented: First generate the BSM model files with [SARAH](https://sarah.hepforge.org/). Then, [SPheno](https://spheno.hepforge.org/), [HiggsBounds](https://higgsbounds.hepforge.org/), [HiggsSignals](https://higgsbounds.hepforge.org/) and [MadGraph](https://launchpad.net/mg5amcnlo) can be run individually or sequentially as a HEP-Stack in `hep-aid`.
 
 ### `search` Module
-
-- **Purpose**: Manages Parameter Scans algorithms using an Active Search Paradigm.
+Manages Parameter Scans algorithms using an Active Search Paradigm.
 - **Features**:
   - Defines a Parameter Scan method as a combination between a *policy*, a *surrogate model* and an *objective-function*. Each of this components are implemented in `hep-aid` for every parameter scan method.
 

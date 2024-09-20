@@ -7,7 +7,7 @@ from typing import Callable, Tuple
 
 from pathlib import Path
 from hepaid.search.method.base import Method
-from hepaid.search.objective.objective_fn import ObjectiveFunction
+from hepaid.search.objective import Objective
 
 
 def sigmoid(x):
@@ -90,7 +90,7 @@ class MCMCMH(Method):
     MCMC-MH (Markov Chain Monte Carlo - Metropolis-Hastings) sampling policy for search.
 
     Parameters:
-        objective_function (ObjectiveFunction): The objective function instance.
+        objective_function (Objective): The objective function instance.
         hyper_parameters(DictConfig): Hyperparameters for the MCMC-MH algorithm.
         metrics(Metrics): Metrics instance. Default is None.
         likelihood(Callable): Custom likelihood function. Default is None.
@@ -107,7 +107,7 @@ class MCMCMH(Method):
     """
 
     def __init__(self,
-                 objective_function: ObjectiveFunction, 
+                 objective_function: Objective, 
                  hyper_parameters: DictConfig | str | None = None, 
                  likelihood: Callable | None = None,
                  ) -> None:
@@ -115,7 +115,7 @@ class MCMCMH(Method):
         Initializes the MCMCMH class.
 
         Parameters:
-            objective_function(ObjectiveFunction): The objective function instance.
+            objective_function(Objective): The objective function instance.
             hyper_parameters(DictConfig): Hyperparameters for the MCMC-MH algorithm.
             metrics(Metrics): Metrics for evaluating the performance of the algorithm. Default is None.
             likelihood(Callable): Custom likelihood function. Default is None.

@@ -16,8 +16,8 @@ from functools import partial
 
 from hepaid.search.method.eci import ExpectedCoverageImprovement
 from hepaid.search.models.model_list import get_model_list_gp, get_posterior
-from hepaid.search.objective.objective_fn import obj_fn_export, identify_samples_which_satisfy_constraints
-from hepaid.search.objective.objective_fn import ObjectiveFunction
+from hepaid.search.objective.objective import obj_fn_export, identify_samples_which_satisfy_constraints
+from hepaid.search.objective import Objective
 from hepaid.search.objective.utils import generate_initial_dataset
 
 from hepaid.search.method.base import Method
@@ -92,7 +92,7 @@ class CAS(Method):
     Experimental Design, G. Malkomes, B. Cheng, E.H. Lee, and M. McCourt
     
     Parameters:
-        objective_function (ObjectiveFunction): The ObjectiveFunction to perform the search.
+        objective_function (Objective): The Objective to perform the search.
         hyper_parameters (DictConfig | str): Hyperparameters for the CAS strategy.
 
     Attributes:
@@ -106,14 +106,14 @@ class CAS(Method):
 
     def __init__(
             self, 
-            objective_function: ObjectiveFunction,
+            objective_function: Objective,
             hyper_parameters: DictConfig | str | None = None
         ):
         """
         Initialise the CAS method.
 
         Parameters:
-            objective_function (ObjectiveFunction): The ObjectiveFunction to perform the search.
+            objective_function (Objective): The Objective to perform the search.
             hyper_parameters (DictConfig | str): Hyper parameters for the CAS strategy.
         """
         super().__init__(objective_function, hyper_parameters)

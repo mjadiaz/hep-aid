@@ -9,7 +9,7 @@ from omegaconf import DictConfig
 from typing import Any, Tuple, Callable
 
 from hepaid.search.method.eci import ECI
-from hepaid.search.objective.objective_fn import obj_fn_export
+from hepaid.search.objective.objective import obj_fn_export
 from hepaid.search.models.model_list import get_model_and_likelihood
 from hepaid.search.parallel.modules import run_x_with_pool
 from hepaid.search.objective.utils import generate_initial_dataset
@@ -291,7 +291,7 @@ class bCASTOR(Method):
     M. A. Diaz, G. Cerro, S. Dasmahapatra, S. Moretti. https://arxiv.org/abs/2404.18653 
     
     Parameters:
-        objective_function (ObjectiveFunction): The ObjectiveFunction to perform the search.
+        objective_function (Objective): The Objective to perform the search.
         hyper_parameters (DictConfig | str): Hyperparameters for the bCASTOR strategy.
 
     Attributes:
@@ -308,7 +308,7 @@ class bCASTOR(Method):
         Initialise the bCASTOR method.
 
         Parameters:
-            objective_function (ObjectiveFunction): The ObjectiveFunction to perform the search.
+            objective_function (Objective): The Objective to perform the search.
             hyper_parameters (DictConfig | str | None) = None: Hyperparameters for the CAS strategy.
         """
         super().__init__(objective_function, hyper_parameters)

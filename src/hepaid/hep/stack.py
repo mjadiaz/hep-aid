@@ -48,6 +48,9 @@ def hep_stack_fn(
     '''
     Single point usage of a HEP Stack class defined in hep_config.hep_stack
     '''
+    if isinstance(hep_config, str):
+        hep_config = load_config(hep_config)
+
     hepsmplr = HEPSTACK[hep_config.hep_stack.name](
         hep_config=hep_config,
         )

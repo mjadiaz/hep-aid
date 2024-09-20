@@ -33,7 +33,7 @@ def obj_fn_export(
     If a scaler is provided, it is applied to Y.
 
     Parameters:
-        objective_function (ObjectiveFunction): The objective function instance.
+        objective_function (Objective): The objective function instance.
         scaler (Scaler, optional): An optional scaler to apply to Y. Default is None.
 
     Returns:
@@ -59,6 +59,7 @@ def obj_fn_export(
     bounds = torch.tensor(objective_function.bounds).to(**tkwargs)
     constraints = objective_function.constraints
     return valid, constraints, bounds, train_x, train_y
+
 
 
 def identify_samples_which_satisfy_constraints(
@@ -261,8 +262,16 @@ def extract_input_parameters(space_config: Dict) -> List[str]:
     input_parameters = list(space_config.keys())
     return input_parameters
 
+def extract_output_parameters(config):
+    objectives = []
+    # Iterate through all constraint types in config
+    for constraint_type, constraints in config.items():
+        # Iterate through each objective within the constraint type
+        for objective in constraints:
+            objectives.append(objective)
+    return objectives
 
-class ObjectiveFunction:
+class Objective:
     def __init__(
         self,
         function_config: DictConfig | str,
@@ -270,7 +279,7 @@ class ObjectiveFunction:
         cas: bool = True,
     ) -> None:
         """
-        Initializes the ObjectiveFunction class.
+        Initializes the Objective class.
 
         Parameters:
             function_config (Dict | str): Configuration for the function. Can be a dictionary or a path to a configuration file.
@@ -293,13 +302,23 @@ class ObjectiveFunction:
         self.cas = cas
         self.counter = 0
 
+    def __repr__(self):
+        input_dim = len(self.input_parameters)
+        output_dim = len(self.output_parameters)
+        
+        repr_str = "Objective object\n"
+        repr_str += f"Input Parameter Space ({input_dim}D): {self.input_parameters}\n"
+        repr_str += f"Output Parameter Space ({output_dim}D): {self.output_parameters}\n"
+        repr_str += f"Number of data-points: {len(self._dataset)}\n"
+        return repr_str
+        
     def initialise_configs_and_space(self):
         """
         Initializes configurations and the input space.
         """
         self.input_space_config = self.config.input_space
         self.input_parameters = extract_input_parameters(self.input_space_config)
-        self.output_parameters = self.config.output_parameters
+        self.output_parameters = extract_output_parameters(self.config.objectives)
         self.objectives = self.config.objectives
         self.space = create_space(self.input_space_config)
 

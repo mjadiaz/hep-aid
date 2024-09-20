@@ -5,6 +5,7 @@ import string
 
 from pathlib import Path
 
+from hepaid.utils import load_config
 
 
 def id_generator(size=7, chars=string.ascii_lowercase + string.digits):
@@ -61,6 +62,9 @@ def create_simple_dict(obj_hep_config, sample_dict):
     Create one level dictionary from values located in chains of keys.
     '''
     # Simple output_dict
+    if isinstance(obj_hep_config, str):
+        obj_hep_config = load_config(obj_hep_config)
+
     output_dict = {}
     parameters = extract_parameter_key_chains(obj_hep_config)
     for param in parameters:

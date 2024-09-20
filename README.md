@@ -78,10 +78,10 @@ To define a new objective function, follow these steps:
 
 2. **Create a Configuration Dictionary**: Define the configuration either as a Python `dict` or as a `.yml` file.
 
-3. **Instantiate the `ObjectiveFunction` Class**: Pass the function and the configuration dictionary as parameters, as shown below:
+3. **Instantiate the `Objective` Class**: Pass the function and the configuration dictionary as parameters, as shown below:
 
 ```python
-from hepaid.search.objective import ObjectiveFunction
+from hepaid.search.objective import Objective
 from omegaconf import OmegaConf
 import np
 
@@ -101,7 +101,7 @@ function_config = OmegaConf.create({
     'single_constraint': {'h': ['lt', 3.0]}
     }}) 
 
-obj_fn = ObjectiveFunction(
+obj_fn = Objective(
   function_config=function_config,
   function=him_boo,
 )

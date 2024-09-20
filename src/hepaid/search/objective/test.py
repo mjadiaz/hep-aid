@@ -1,13 +1,13 @@
 """
 Module that implements test objective functions, import init_function_name to 
-initialise the ObjectiveFunction class. Dimensions correspond search space 
+initialise the Objective class. Dimensions correspond search space 
 dimensionality and number of objectives:
     - init_egg_box_fn: (2,1)
     - init_him_boo_fn: (2,2)
 """
 
 import numpy as np
-from hepaid.search.objective.objective_fn import ObjectiveFunction
+from hepaid.search.objective.objective import Objective
 import importlib.resources as pkg_resources
 from omegaconf import OmegaConf
 
@@ -65,15 +65,15 @@ def init_him_boo_fn(cas=False):
     combining the Himmelblau and Booth functions.
 
     This function loads the configuration from 'hb_fn.yml' and 
-    creates an ObjectiveFunction instance using the himmelblau_booth 
+    creates an Objective instance using the himmelblau_booth 
     function.
 
     Returns:
-        ObjectiveFunction: An instance of the ObjectiveFunction class 
+        Objective: An instance of the Objective class 
         initialized with the himmelblau_booth function and its configuration.
     """
     function_config = _load_config_test('hb_fn.yml')
-    function = ObjectiveFunction(
+    function = Objective(
             function=himmelblau_booth,
             function_config=function_config,
             cas=cas
@@ -92,7 +92,7 @@ def init_egg_box_fn(cas=False):
         A function representing the egg box model.
     """
     function_config = _load_config_test('egg_box_fn.yml' )
-    function = ObjectiveFunction(
+    function = Objective(
             function=egg_box,
             function_config=function_config,
             cas=cas

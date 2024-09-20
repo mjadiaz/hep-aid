@@ -1,1 +1,1 @@
-from .objective_fn import ObjectiveFunction
+from .objective import Objective

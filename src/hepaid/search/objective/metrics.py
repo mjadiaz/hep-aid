@@ -22,7 +22,7 @@ def in_jupyter_notebook():
 
 class Metrics:
     """
-    Class to track universal search metrics obtained from the ObjectiveFunction object.
+    Class to track universal search metrics obtained from the Objective object.
     To add custom metrics related to algorithms, use the new_custom_metrics method and update 
     accordingly with a metric dictionary.
 
@@ -94,7 +94,7 @@ class Metrics:
         Update universal metrics by appending new metrics values.
 
         Parameters:
-            objective_function (ObjectiveFunction): The ObjectiveFunction object to extract metrics from.
+            objective_function (Objective): The Objective object to extract metrics from.
             iteration (int): The current iteration number.
         """
         if isinstance(objective_function.Y, type(None)):

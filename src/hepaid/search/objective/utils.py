@@ -87,16 +87,19 @@ def generate_initial_dataset(
 
     X = lb + (ub - lb) * SobolEngine(dim, scramble=True).draw(n_points).cpu().numpy()
 
-    if parallel:
-        X = np.array(objective_function.space.inverse_transform(X))
+    try:
+        if parallel:
+            X = np.array(objective_function.space.inverse_transform(X))
+            results = run_x_with_pool(X=X, n_workers=n_workers, function=function)
+            for result in results:
+                objective_function.add_sample_dict(result)
+        else:
+            for x in X:
+                objective_function.sample(x.reshape(1, -1), True)
+        print(objective_function)
+    except Exception as e:
+        assert False, "Initial dataset failed"
 
-        results = run_x_with_pool(X=X, n_workers=n_workers, function=function)
-
-        for result in results:
-            objective_function.add_sample_dict(result)
-    else:
-        for x in X:
-            objective_function.sample(x.reshape(1, -1), True)
     return True
 
 

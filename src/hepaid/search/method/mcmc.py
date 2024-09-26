@@ -157,6 +157,11 @@ class MCMCMH(Method):
         initial_state = np.random.uniform(0,1, size=input_size)
         initial_likelihood = self.likelihood(initial_state, add=False)
 
+        # BSM cases often output None
+        while initial_likelihoood == None:
+            initial_state = np.random.uniform(0.2,.6,size=input_size)
+            initial_likelihoood = self.likelihood(initial_state, add=False)
+
         # Update current state and likelihood
         self.curr_state = initial_state
         self.curr_likeli = initial_likelihood

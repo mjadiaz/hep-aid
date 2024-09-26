@@ -59,31 +59,33 @@ def auto_likelihood(result: dict, objectives: dict, mode: str = 'mult') -> float
         likelihood = 0 
     if mode == 'mult':
         likelihood = 1
+    if any(value is None for value in result.values()):
+        return None
+    else:
+        for p in objectives["double_constraint"].keys():
+            constraint = objectives['double_constraint'][p]
+            error_msg = f"First double constraint should be a lower bound. ex: [['gt', 2],['lt', 4]]"
+            assert constraint[0][0] == 'gt', error_msg
+            lh = smooth_box_mask(result[p], constraint[0][1], constraint[1][1],  1e-3 )
+            if mode == 'sum':
+                likelihood += lh 
+            else:
+                likelihood *= lh
 
-    for p in objectives["double_constraint"].keys():
-        constraint = objectives['double_constraint'][p]
-        error_msg = f"First double constraint should be a lower bound. ex: [['gt', 2],['lt', 4]]"
-        assert constraint[0][0] == 'gt', error_msg
-        lh = smooth_box_mask(result[p], constraint[0][1], constraint[1][1],  1e-3 )
-        if mode == 'sum':
-            likelihood += lh 
-        else:
-            likelihood *= lh
+        for p in objectives["single_constraint"].keys():
+            constraint = objectives['single_constraint'][p]
+            error_msg = f"str condition should be in the first element. ex: ['lt', 4]]"
+            assert isinstance(constraint[0], str), error_msg
+            if constraint[0] == 'lt':
+                lh = 1 - smooth_mask(result[p], constraint[1], 1e-3)
+            else:
+                lh = smooth_mask(result[p], constraint[1], 1e-3)
 
-    for p in objectives["single_constraint"].keys():
-        constraint = objectives['single_constraint'][p]
-        error_msg = f"str condition should be in the first element. ex: ['lt', 4]]"
-        assert isinstance(constraint[0], str), error_msg
-        if constraint[0] == 'lt':
-            lh = 1 - smooth_mask(result[p], constraint[1], 1e-3)
-        else:
-            lh = smooth_mask(result[p], constraint[1], 1e-3)
-
-        if mode == 'sum':
-            likelihood += lh 
-        else:
-            likelihood *= lh
-    return likelihood
+            if mode == 'sum':
+                likelihood += lh 
+            else:
+                likelihood *= lh
+        return likelihood
 
 class MCMCMH(Method):
     """

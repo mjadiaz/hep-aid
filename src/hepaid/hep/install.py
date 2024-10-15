@@ -4,7 +4,7 @@ import subprocess
 import tarfile
 import requests
 import shutil
-
+import yaml
 from pathlib import Path
 
 def download_file(url, filename):
@@ -123,6 +123,7 @@ def install_spheno(
     make_command = ["make", f"Model={model_name}"]
     run_make_command(make_command, tool_dir )
     delete_file_or_directory(filename)
+    return tool_dir
     
 
 def install_higgsbounds(
@@ -146,6 +147,9 @@ def install_higgsbounds(
     
     run_make_command(["make"], cwd=build_dir)
     delete_file_or_directory(filename)
+    return build_dir 
+    
+
 
 def install_higgssignals(
     url='https://gitlab.com/higgsbounds/higgssignals/-/archive/master/higgssignals-master.tar.gz'
@@ -170,6 +174,7 @@ def install_higgssignals(
     
     run_make_command(["make"], cwd=build_dir)
     delete_file_or_directory(filename)
+    return build_dir
 
 def install_madgraph(
         url = "https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/MG5_aMC_v3.5.4.tar.gz",
@@ -188,6 +193,7 @@ def install_madgraph(
     shutil.copytree(model_dir, new_model_dir)
 
     delete_file_or_directory(filename)
+    return filepath
 
 def install_hepstack(
     spheno_url="https://spheno.hepforge.org/downloads?f=SPheno-4.0.4.tar.gz", 
@@ -201,23 +207,100 @@ def install_hepstack(
     madgraph_model_dir = 'BLSSM_UFO',
     madgraph_model_name = 'BLSSM'
     ):
-    install_spheno(
+    spheno_dir = install_spheno(
         spheno_url,
         spheno_compiler,
         spheno_on_mac,
         spheno_model_dir,
         spheno_model_name,
         )
-    install_higgsbounds(
+    hb_dir = install_higgsbounds(
         higgsbounds_url,
     )
-    install_higgssignals(
+    hs_dir = install_higgssignals(
         higgssignals_url
     )
-    install_madgraph(
+    mg_dir = install_madgraph(
         madgraph_url,
         madgraph_model_dir,
         madgraph_model_name 
     )
+    write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir)
+
+def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
+    """Write a configuration file template with blank values."""
+    config_template = {
+        'model': {
+            'name': 'BLSSM',
+            'input': {
+                'm0': {
+                    'block_index': 1,
+                    'block_name': 'MINPAR'
+                },
+                'm12': {
+                    'block_index': 2,
+                    'block_name': 'MINPAR'
+                },
+                'TanBeta': {
+                    'block_index': 3,
+                    'block_name': 'MINPAR'
+                },
+                'Azero': {
+                    'block_index': 5,
+                    'block_name': 'MINPAR'
+                },
+                'MuInput': {
+                    'block_index': 11,
+                    'block_name': 'EXTPAR'
+                },
+                'MuPInput': {
+                    'block_index': 12,
+                    'block_name': 'EXTPAR'
+                },
+                'BMuInput': {
+                    'block_index': 13,
+                    'block_name': 'EXTPAR'
+                },
+                'BMuPInput': {
+                    'block_index': 14,
+                    'block_name': 'EXTPAR'
+                }
+            }
+        },
+        'spheno': {
+            'model': 'BLSSM',
+            'reference_slha': 'configs/hep_files/diphoton_paper_v2',
+            'directory': spheno_dir
+        },
+        'higgsbounds': {
+            'neutral_higgs': 6,
+            'charged_higgs': 1,
+            'directory': hb_dir
+        },
+        'higgssignals': {
+            'neutral_higgs': 6,
+            'charged_higgs': 1,
+            'directory': hs_dir
+        },
+        'madgraph': {
+            'directory': mg_dir,
+            'scripts': {
+                'gghaa': 'configs/hep_files/mg5/blssm_pphaa_LHC13.txt'
+            }
+        },
+        'hep_stack': {
+            'name': 'SPhenoHBHSMG5',
+            'scan_dir': 'datasets/scans',
+            'final_dataset': 'datasets',
+            'delete_on_exit': True
+        }
+    }
+    
+    
+    # Write the configuration template to a YAML file
+    with open('hepstack_config.yaml', 'w') as file:
+        yaml.dump(config_template, file, default_flow_style=False)
+    
+    print(f"Configuration template written to {'hepstack_config.yaml'}")
 
 

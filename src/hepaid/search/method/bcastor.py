@@ -9,7 +9,7 @@ from omegaconf import DictConfig
 from typing import Any, Tuple, Callable
 
 from hepaid.search.method.eci import ECI
-from hepaid.search.objective.objective import obj_fn_export
+from hepaid.search.objective.objective import cas_obj_fn_export
 from hepaid.search.models.model_list import get_model_and_likelihood
 from hepaid.search.parallel.modules import run_x_with_pool
 from hepaid.search.objective.utils import generate_initial_dataset
@@ -291,7 +291,7 @@ class bCASTOR(Method):
     M. A. Diaz, G. Cerro, S. Dasmahapatra, S. Moretti. https://arxiv.org/abs/2404.18653 
     
     Parameters:
-        objective_function (Objective): The Objective to perform the search.
+        objective (Objective): The Objective to perform the search.
         hyper_parameters (DictConfig | str): Hyperparameters for the bCASTOR strategy.
 
     Attributes:
@@ -303,15 +303,15 @@ class bCASTOR(Method):
         metrics (Metrics): Metrics instance to collect and log performance metrics.
         iteration (int): Current iteration number.
     """
-    def __init__(self, objective_function, hyper_parameters = None):
+    def __init__(self, objective, hyper_parameters = None):
         """
         Initialise the bCASTOR method.
 
         Parameters:
-            objective_function (Objective): The Objective to perform the search.
+            objective (Objective): The Objective to perform the search.
             hyper_parameters (DictConfig | str | None) = None: Hyperparameters for the CAS strategy.
         """
-        super().__init__(objective_function, hyper_parameters)
+        super().__init__(objective, hyper_parameters)
         
         self.delta_r = abs(self.hp.resolution.initial - self.hp.resolution.final) / self.hp.resolution.r_decay_steps
         self.model = None
@@ -337,7 +337,7 @@ class bCASTOR(Method):
             generate_initial_dataset(
                 n_workers=self.hp.initial_dataset.n_workers,
                 n_points=self.hp.initial_dataset.n_points,
-                objective_function=self.objective_function,
+                objective=self.objective,
                 parallel=self.hp.parallel,
             )
         
@@ -349,19 +349,19 @@ class bCASTOR(Method):
                 self.iteration, self.iteration + self.hp.total_iterations)):
 
                 # Export objective function to CAS required format
-                valid, constraints, bounds, train_x, train_y = obj_fn_export(
-                    self.objective_function
+                valid, constraints, bounds, train_x, train_y = cas_obj_fn_export(
+                    self.objective
                     )
 
                 # Update current Objective Function metrics
-                self.metrics.update(self.objective_function, i)
+                self.metrics.update(self.objective, i)
 
                 # Initialise model and likelihood and train
                 self.model, self.likelihood = get_model_and_likelihood(train_x, train_y)
 
                 # Perform bCASTOR step
                 self.eci, self.study, X, trials, values, cr = bcastor_step(
-                    self.hp, self.objective_function.input_space_config, 
+                    self.hp, self.objective.input_space_config, 
                     constraints, bounds, train_x, train_y, 
                     self.model, self.delta_r, i)
 
@@ -371,16 +371,16 @@ class bCASTOR(Method):
                 # Evaluate points in objective function
                 if self.hp.parallel is False:
                     for x in X:
-                        self.objective_function.sample(x, True)
+                        self.objective.sample(x, True)
                 else:
-                    X = self.objective_function.space.inverse_transform(X)
+                    X = self.objective.space.inverse_transform(X)
                     results = run_x_with_pool(
                         X,
                         self.hp.batch_sampling.n_evaluation_workers,
-                        self.objective_function.function
+                        self.objective.function
                         )
                     for sample_dict in results:
-                        self.objective_function.add_sample_dict(sample_dict)                
+                        self.objective.add_sample_dict(sample_dict)                
 
 
                 # Log and save

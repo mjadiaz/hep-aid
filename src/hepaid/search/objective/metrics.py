@@ -34,7 +34,7 @@ class Metrics:
     Methods:
         new_custom_metrics(names): Create keys and lists for new custom metrics.
         update_custom(custom_metrics_dict): Update custom metrics by appending new custom metrics values.
-        update(objective_function, iteration): Update universal metrics by appending new metrics values.
+        update(objective, iteration): Update universal metrics by appending new metrics values.
         start_progress(description): Start a rich progress bar for logging progress.
         log(progress): Display metrics in the console. If used in a Jupyter notebook, display is turned off.
         save(save_path, iteration): Save metrics as a CSV dataset with the name 'metrics'.
@@ -89,20 +89,20 @@ class Metrics:
             if key in self._custom_metrics:
                 self._custom_metrics[key].append(custom_metrics_dict[key])
 
-    def update(self, objective_function, iteration):
+    def update(self, objective, iteration):
         """
         Update universal metrics by appending new metrics values.
 
         Parameters:
-            objective_function (Objective): The Objective object to extract metrics from.
+            objective (Objective): The Objective object to extract metrics from.
             iteration (int): The current iteration number.
         """
-        if isinstance(objective_function.Y, type(None)):
+        if isinstance(objective.Y, type(None)):
             warnings.warn("Objective function without data")
             valid = successful = np.array([])
         else:
-            valid = np.prod(~np.isnan(objective_function.Y), axis=1).astype(np.bool8)
-            successful = objective_function.satisfactory.prod(axis=-1).astype(bool)
+            valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool8)
+            successful = objective.satisfactory.prod(axis=-1).astype(bool)
 
         self._metrics["success_rate"].append(successful.sum() / len(successful))
         self._metrics["n_valid_points"].append(valid.sum())

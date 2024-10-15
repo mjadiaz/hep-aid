@@ -27,7 +27,7 @@ class Method:
     Creates a general save path.
 
     Attributes:
-        objective_function (Objective): The objective function to be optimized.
+        objective (Objective): The objective function.
         hp (DictConfig): The hyperparameters for the method.
         hp_name (str): The name of the hyperparameters file. Default is `hprms.yaml`.
         metrics (Metrics): An instance of the Metrics class to track performance.
@@ -35,7 +35,7 @@ class Method:
         iteration (int): The current iteration counter.
 
     Methods:
-        __init__(self, objective_function: Objective, hyper_parameters: DictConfig | str) -> None:
+        __init__(self, objective: Objective, hyper_parameters: DictConfig | str) -> None:
             Initialize the Method class.
         
         save_checkpoint(self, iteration: int) -> None:
@@ -48,7 +48,7 @@ class Method:
 
     def __init__(
         self,
-        objective_function: Objective,
+        objective: Objective,
         hyper_parameters: DictConfig | str | None,
     ) -> None:
         """
@@ -56,11 +56,11 @@ class Method:
         provided. Initialize metrics and iteration counter. Creates a general save path.
 
         Parameters:
-            objective_function (Objective): The objective function to be optimized.
+            objective (Objective): The objective function.
             hyper_parameters (DictConfig | str | None): The hyperparameters for the Method. 
                                             Can be a dictionary or a path to a configuration file.
         """
-        self.objective_function = objective_function
+        self.objective = objective
 
         if isinstance(hyper_parameters, str):
             self.hp = load_config(hyper_parameters)
@@ -93,7 +93,7 @@ class Method:
         """
         if (iteration % self.hp.checkpoint.n_step_save
                 == 0) or (iteration == self.hp.total_iterations):
-            self.objective_function.save(self.save_path /
+            self.objective.save(self.save_path /
                                          self.hp.checkpoint.name)
             self.metrics.save(self.save_path, iteration)
             save_config(self.hp, self.save_path / self.hp_name)
@@ -102,6 +102,6 @@ class Method:
         """
         Load the objective function and metrics to continue the search or for data analysis.
         """
-        self.objective_function.load(self.save_path / self.hp.checkpoint.name)
+        self.objective.load(self.save_path / self.hp.checkpoint.name)
         self.metrics.load(self.save_path)
         self.iteration = self.metrics.metrics['iteration'][-1]

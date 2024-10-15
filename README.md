@@ -57,7 +57,7 @@ Now, import the Parameter Scan method. In this example, we use b-CASTOR. Differe
 ```python
 from hepaid.search.method import bCASTOR
 
-bcastor = bCASTOR(objective_function=obj_fn)
+bcastor = bCASTOR(objective=obj_fn)
 surrogate, eci, study, metrics = bcastor.run()
 ```
 In this case, the default hyperparameters include an initial dataset of 10 points and batch sampling of 10 points per iteration, along with other more specific hyperparameters for the algorithm. The following animation shows how the search is performed:

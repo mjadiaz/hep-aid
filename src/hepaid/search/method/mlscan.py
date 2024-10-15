@@ -4,7 +4,14 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from hepaid.search.method.base import Method
+from hepaid.search.objective import Objective
 from typing import Callable, List, Optional, Tuple
+from omegaconf import DictConfig
+
+from hepaid.search.objective.utils import generate_initial_dataset
+from hepaid.search.objective.utils import batch_evaluation 
+
+
 
 def reshape_if_1d(array):
     array = np.asarray(array)
@@ -136,8 +143,8 @@ def train_model(
         train_losses.append(loss.item())
         val_losses.append(val_loss.item())
 
-        if (epoch + 1) % 10 == 0:
-            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}, LR: {scheduler.get_last_lr()}')
+        # if (epoch + 1) % 10 == 0:
+        #     print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}, LR: {scheduler.get_last_lr()}')
 
     return train_losses, val_losses
 
@@ -216,86 +223,119 @@ class MLScan(Method):
     """
 
     def __init__(self,
-                 objective_function: Objective, 
+                 objective: Objective, 
+                 likelihood: Callable,
                  hyper_parameters: DictConfig | str | None = None, 
-                 likelihood: Callable | None = None,
                  ) -> None:
         """
-        Initializes the MCMCMH class.
 
         Parameters:
-            objective_function(Objective): The objective function instance.
+            objective(Objective): The objective function instance.
             hyper_parameters(DictConfig): Hyperparameters for the MCMC-MH algorithm.
             likelihood(Callable): Custom likelihood function. Default is None.
         """
-        super().__init__(objective_function, hyper_parameters)
+        super().__init__(objective, hyper_parameters)
 
-        self.idx_burnin = self.hp.burn_in
-        self.scale = self.hp.initial_scale
-        self.adapt_frequency = self.hp.adapt_frequency
+        self.likelihood = likelihood
+
+        self.num_inputs = 2
+        self.num_outputs = 2 
         
-        if likelihood is None:
-            self.likelihood = lambda x, add: auto_likelihood(
-                result = self.objective_function.sample(x, add=add), 
-                objectives = self.objective_function.config.objectives,
-                mode = 'mult'
-            )
-        else:
-            self.likelihood = likelihood
+        self.lr = 0.01
+        self.num_epochs = 500
+        self.hidden_layers_neurons = [2,60, 60, 60,2]
+        
+        self.model =  MLP(self.hidden_layers_neurons)
 
+        self.criterion = nn.MSELoss()
+
+        self.num_samples = 100
+        self.input_dim = 2
 
         self.accepted = 0
+
+        self.train_losses_history = []
+        self.val_losses_history = []
 
     
     def run(self):
         """
-        Executes the MCMC-MH sampling algorithm.
-
-        The method initializes the state, performs the MCMC-MH sampling,
-        adapts the proposal distribution scale during the burn-in phase,
-        logs the progress, and saves checkpoints.
 
         Returns:
             bool: True if the algorithm runs successfully.
         """
-        # Generate the initial state automatically
-        input_size = len(self.objective_function.config.input_space.keys())
-        initial_state = np.random.uniform(0,1, size=input_size)
-        initial_likelihood = self.likelihood(initial_state, add=False)
-
-        # Update current state and likelihood
-        self.curr_state = initial_state
-        self.curr_likeli = initial_likelihood
-
+        if self.hp.initial_dataset.generate:
+            generate_initial_dataset(
+                n_workers=self.hp.n_workers,
+                n_points=self.hp.initial_dataset.n_points,
+                objective=self.objective,
+                parallel=self.hp.parallel,
+            )
         # Start rich progress logger
-        progress = self.metrics.start_progress(description='MCMC-MH Sampling ...')
+        progress = self.metrics.start_progress(description='MLScan Search ...')
+
+
+        # Initial preprocessing to stablish the scalers
+        initial_preprocess = pre_process_data(self.objective)
+        X_train, X_val, y_train, y_val, x_scaler_init, y_scaler_init = initial_preprocess
         with progress:
             for i in progress.track(range(
                 self.iteration, self.iteration + self.hp.total_iterations)):
 
-                # Update current Objective Function metrics
-                self.metrics.update(self.objective_function, i)
+                # Data scaling
+                X_train, X_val, y_train, y_val, _, _= pre_process_data(
+                    self.objective, x_scaler_init, y_scaler_init
+                    )
 
-                # Perform MH update
-                self.curr_state, self.curr_likeli, success = mcmc_updater(
-                    curr_state=self.curr_state,
-                    curr_likeli=self.curr_likeli,
-                    likelihood=partial(self.likelihood, add=True),
-                    proposal_distribution=proposal_distribution,
-                    scale=self.scale,
-                )
+                # Reset optimiser and scheduler
+                optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
+                scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.999)
 
-                self.accepted += 1 if success else 0
-
-                # Adapt scale during burn-in phase
-                if i < self.idx_burnin and (i + 1) % self.adapt_frequency == 0 and self.accepted > 1:
-                    acceptance_rate = self.accepted / self.adapt_frequency
-                    self.scale = tune(self.scale, acceptance_rate)
-                    self.accepted = 0  # Reset the counter
+                # Train loop
+                tr_losses, val_losses = train_model(
+                    num_epochs=self.num_epochs,
+                    model=self.model,
+                    X_train=X_train,
+                    y_train=y_train,
+                    X_val=X_val,
+                    y_val=y_val,
+                    criterion=self.criterion,
+                    optimizer=optimizer,
+                    scheduler=scheduler,
+                    best_loss=float('inf'),  
+                    threshold=1e-20, 
+                    patience=None)
                 
+
+                accepted_samples = rejection_sampling(
+                    self.model, 
+                    self.likelihood, 
+                    self.num_samples, 
+                    self.input_dim, 
+                    x_scaler=x_scaler_init, 
+                    y_scaler=y_scaler_init
+                    )
+
+                # Evaluate new points
+                batch_evaluation(
+                    X=accepted_samples, 
+                    objective=self.objective,
+                    parallel=self.hp.parallel,
+                    n_evaluation_workers=self.hp.n_workers,
+                    add=True,
+                    is_normalised=True
+                    )
+
+                # Update current Objective Function metrics
+                self.metrics.update(self.objective, i)
+
+
                 # Log and save
                 self.metrics.log(progress)
                 self.save_checkpoint(i)
-
+                
                 self.iteration = i
+                self.train_losses_history.append(tr_losses)
+                self.val_losses_history.append(val_losses)
+
         return True

@@ -1,6 +1,7 @@
 import json
 from omegaconf import OmegaConf
 
+import torch
 import numpy as np
 
 from typing import Callable, Dict, Any, List, Any
@@ -62,7 +63,7 @@ def us_ut_iteration(x, met, select, iteration_step):
 
 def generate_initial_dataset(
     n_points: int,
-    objective_function,
+    objective,
     parallel: bool = True,
     n_workers: int = 1,
 ) -> bool:
@@ -71,7 +72,7 @@ def generate_initial_dataset(
 
     Parameters:
         n_points (int): Number of points to generate.
-        objective_function (Any): The objective function instance containing the function and bounds.
+        objective (Any): The objective function instance containing the function and bounds.
         parallel (bool): Whether to run the function in parallel. Default is True.
         n_workers (int): Number of workers for parallel execution. Default is 1.
 
@@ -79,8 +80,8 @@ def generate_initial_dataset(
         bool 
     """
 
-    function = objective_function.function
-    bounds = objective_function.bounds
+    function = objective.function
+    bounds = objective.bounds
 
     lb, ub = bounds
     dim = len(lb)
@@ -89,14 +90,14 @@ def generate_initial_dataset(
 
     try:
         if parallel:
-            X = np.array(objective_function.space.inverse_transform(X))
+            X = np.array(objective.space.inverse_transform(X))
             results = run_x_with_pool(X=X, n_workers=n_workers, function=function)
             for result in results:
-                objective_function.add_sample_dict(result)
+                objective.add_sample_dict(result)
         else:
             for x in X:
-                objective_function.sample(x.reshape(1, -1), True)
-        print(objective_function)
+                objective.sample(x.reshape(1, -1), True)
+        print(objective)
     except Exception as e:
         assert False, "Initial dataset failed"
 
@@ -105,7 +106,7 @@ def generate_initial_dataset(
 
 def batch_evaluation(
     X: np.ndarray, 
-    objective_function: Objective, 
+    objective: Objective, 
     parallel: bool, 
     n_evaluation_workers: int, 
     add: bool = True, 
@@ -116,7 +117,7 @@ def batch_evaluation(
 
     Parameters:
         X (np.ndarray): A batch of points to evaluate.
-        objective_function (Objective): The objective function to evaluate the points.
+        objective (Objective): The objective function to evaluate the points.
         parallel (bool): Whether to run the evaluation in parallel.
         n_evaluation_workers (int): Number of workers to use for parallel evaluation.
         add (bool, optional): Whether to add the samples to the objective function. Defaults to True.
@@ -127,11 +128,11 @@ def batch_evaluation(
     """
     if not parallel:
         for x in X:
-            objective_function.sample(x, is_normalised=is_normalised, add=add)
+            objective.sample(x, is_normalised=is_normalised, add=add)
     else:
         if is_normalised:
-            X = objective_function.space.inverse_transform(X)
-        results = run_x_with_pool(X, n_evaluation_workers, objective_function.function)
+            X = objective.space.inverse_transform(X)
+        results = run_x_with_pool(X, n_evaluation_workers, objective.function)
         if add:
             for sample_dict in results:
-                objective_function.add_sample_dict(sample_dict)
+                objective.add_sample_dict(sample_dict)

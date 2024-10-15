@@ -23,8 +23,8 @@ tkwargs = {
     "dtype": torch.double,
 }
 
-def obj_fn_export(
-    objective_function,
+def cas_obj_fn_export(
+    objective,
     scaler=None
 ) -> Tuple[np.ndarray, Any, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
@@ -33,7 +33,7 @@ def obj_fn_export(
     If a scaler is provided, it is applied to Y.
 
     Parameters:
-        objective_function (Objective): The objective function instance.
+        objective (Objective): The objective function instance.
         scaler (Scaler, optional): An optional scaler to apply to Y. Default is None.
 
     Returns:
@@ -45,19 +45,19 @@ def obj_fn_export(
             - The valid input data as a PyTorch tensor.
             - The valid (and optionally scaled) output data as a PyTorch tensor.
     """
-    valid = np.prod(~np.isnan(objective_function.Y), axis=1).astype(np.bool8)
+    valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool8)
 
-    train_x_ = objective_function.X[valid]
+    train_x_ = objective.X[valid]
     train_x = torch.tensor(train_x_).to(**tkwargs)
 
-    Y = objective_function.Y[valid]
+    Y = objective.Y[valid]
     if scaler is not None:
         scaler.fit(Y)
         Y = scaler.transform(Y)
     train_y = torch.tensor(Y).to(**tkwargs)
 
-    bounds = torch.tensor(objective_function.bounds).to(**tkwargs)
-    constraints = objective_function.constraints
+    bounds = torch.tensor(objective.bounds).to(**tkwargs)
+    constraints = objective.constraints
     return valid, constraints, bounds, train_x, train_y
 
 

@@ -16,7 +16,7 @@ from functools import partial
 
 from hepaid.search.method.eci import ExpectedCoverageImprovement
 from hepaid.search.models.model_list import get_model_list_gp, get_posterior
-from hepaid.search.objective.objective import obj_fn_export, identify_samples_which_satisfy_constraints
+from hepaid.search.objective.objective import cas_obj_fn_export, identify_samples_which_satisfy_constraints
 from hepaid.search.objective import Objective
 from hepaid.search.objective.utils import generate_initial_dataset
 
@@ -45,8 +45,8 @@ def eci_step(
         resolution (float): The hyper-sphere radius for the ECI acquisition function.
         X (np.ndarray): The input data points.
         Y (np.ndarray): The outputs values corresponding to the input data points.
-        constraints (list): A list of constraints (given by obj_fn_export()).
-        bounds (np.ndarray): The bounds for the optimization variables (given by obj_fn_export()).
+        constraints (list): A list of constraints (given by cas_obj_fn_export()).
+        bounds (np.ndarray): The bounds for the optimization variables (given by cas_obj_fn_export()).
 
     Returns:
         x_next (np.ndarray): The next suggested input point by the ECI acquisition function.
@@ -92,7 +92,7 @@ class CAS(Method):
     Experimental Design, G. Malkomes, B. Cheng, E.H. Lee, and M. McCourt
     
     Parameters:
-        objective_function (Objective): The Objective to perform the search.
+        objective (Objective): The Objective to perform the search.
         hyper_parameters (DictConfig | str): Hyperparameters for the CAS strategy.
 
     Attributes:
@@ -106,17 +106,17 @@ class CAS(Method):
 
     def __init__(
             self, 
-            objective_function: Objective,
+            objective: Objective,
             hyper_parameters: DictConfig | str | None = None
         ):
         """
         Initialise the CAS method.
 
         Parameters:
-            objective_function (Objective): The Objective to perform the search.
+            objective (Objective): The Objective to perform the search.
             hyper_parameters (DictConfig | str): Hyper parameters for the CAS strategy.
         """
-        super().__init__(objective_function, hyper_parameters)
+        super().__init__(objective, hyper_parameters)
 
         self.delta_r = abs(self.hp.resolution.initial - self.hp.resolution.final) / self.hp.resolution.r_decay_steps
         self.model = None
@@ -142,7 +142,7 @@ class CAS(Method):
             generate_initial_dataset(
                 n_workers=self.hp.initial_dataset.n_workers,
                 n_points=self.hp.initial_dataset.n_points,
-                objective_function=self.objective_function,
+                objective=self.objective,
                 parallel=self.hp.parallel,
             )
         
@@ -154,11 +154,11 @@ class CAS(Method):
                 self.iteration, self.iteration + self.hp.total_iterations)):
 
                 # Export objective function to CAS required format
-                valid, constraints, bounds, train_x, train_y = obj_fn_export(
-                    self.objective_function)
+                valid, constraints, bounds, train_x, train_y = cas_obj_fn_export(
+                    self.objective)
 
                 # Update current Objective Function metrics
-                self.metrics.update(self.objective_function, i)
+                self.metrics.update(self.objective, i)
 
                 # Update resolution parameter cr
                 if self.hp.resolution.constant_resolution:
@@ -176,7 +176,7 @@ class CAS(Method):
                     cr, train_x, train_y, constraints, bounds
                 )
                 # Sample the x_next configuration
-                self.objective_function.sample(x_next)
+                self.objective.sample(x_next)
 
 
                 # Log and save

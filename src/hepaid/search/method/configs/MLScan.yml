@@ -1,0 +1,10 @@
+checkpoint:
+  n_step_save: 500
+  name: chckpnt
+run_name: mlscan_save/run_1
+total_iterations: 20
+parallel: False
+n_workers: 4
+initial_dataset:
+  generate: True,
+  n_points: 10

@@ -92,7 +92,7 @@ class MCMCMH(Method):
     MCMC-MH (Markov Chain Monte Carlo - Metropolis-Hastings) sampling policy for search.
 
     Parameters:
-        objective_function (Objective): The objective function instance.
+        objective (Objective): The objective function instance.
         hyper_parameters(DictConfig): Hyperparameters for the MCMC-MH algorithm.
         metrics(Metrics): Metrics instance. Default is None.
         likelihood(Callable): Custom likelihood function. Default is None.
@@ -109,7 +109,7 @@ class MCMCMH(Method):
     """
 
     def __init__(self,
-                 objective_function: Objective, 
+                 objective: Objective, 
                  hyper_parameters: DictConfig | str | None = None, 
                  likelihood: Callable | None = None,
                  ) -> None:
@@ -117,12 +117,12 @@ class MCMCMH(Method):
         Initializes the MCMCMH class.
 
         Parameters:
-            objective_function(Objective): The objective function instance.
+            objective(Objective): The objective function instance.
             hyper_parameters(DictConfig): Hyperparameters for the MCMC-MH algorithm.
             metrics(Metrics): Metrics for evaluating the performance of the algorithm. Default is None.
             likelihood(Callable): Custom likelihood function. Default is None.
         """
-        super().__init__(objective_function, hyper_parameters)
+        super().__init__(objective, hyper_parameters)
 
         self.idx_burnin = self.hp.burn_in
         self.scale = self.hp.initial_scale
@@ -130,8 +130,8 @@ class MCMCMH(Method):
         
         if likelihood is None:
             self.likelihood = lambda x, add: auto_likelihood(
-                result = self.objective_function.sample(x, add=add), 
-                objectives = self.objective_function.config.objectives,
+                result = self.objective.sample(x, add=add), 
+                objectives = self.objective.config.objectives,
                 mode = 'mult'
             )
         else:
@@ -153,7 +153,7 @@ class MCMCMH(Method):
             bool: True if the algorithm runs successfully.
         """
         # Generate the initial state automatically
-        input_size = len(self.objective_function.config.input_space.keys())
+        input_size = len(self.objective.config.input_space.keys())
         initial_state = np.random.uniform(0,1, size=input_size)
         initial_likelihood = self.likelihood(initial_state, add=False)
 
@@ -173,7 +173,7 @@ class MCMCMH(Method):
                 self.iteration, self.iteration + self.hp.total_iterations)):
 
                 # Update current Objective Function metrics
-                self.metrics.update(self.objective_function, i)
+                self.metrics.update(self.objective, i)
 
                 # Perform MH update
                 self.curr_state, self.curr_likeli, success = mcmc_updater(

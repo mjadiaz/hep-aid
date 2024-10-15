@@ -185,7 +185,7 @@ class CAS(Method):
 
                 self.iteration = i
 
-        return self.model, self.likelihood, self.eci, self.metrics
+        return True
 
 
     

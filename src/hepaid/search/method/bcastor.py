@@ -389,4 +389,4 @@ class bCASTOR(Method):
                 
                 self.iteration = i
 
-        return self.model, self.likelihood, self.eci, self.study, self.metrics
+        return True

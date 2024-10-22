@@ -7,17 +7,19 @@ import shutil
 import yaml
 from pathlib import Path
 
+
 def download_file(url, filename):
-  """Downloads a file from the specified URL and saves it with the given filename."""
+    """Downloads a file from the specified URL and saves it with the given filename."""
+    
+    response = requests.get(url)
 
-  response = requests.get(url)
+    # Check if the download was successful
+    assert response.status_code == 200, f"Download failed with status code: {response.status_code} for {url}"
 
-  if response.status_code == 200:  
     with open(filename, "wb") as file:
-      file.write(response.content)
+        file.write(response.content)
+    
     print(f"Downloaded {filename} successfully!")
-  else:
-    print(f"Download failed with status code: {response.status_code}")
 
 def delete_file_or_directory(path):
     """Deletes the specified file or directory."""
@@ -85,6 +87,10 @@ def install_spheno(
 
     filename = url.split("/")[-1]
     filepath = Path(filename.replace('.tar.gz', "").replace("downloads?f=", ""))
+    if filepath.exists():
+        print(f"SPheno is already installed at {filepath}")
+        return filepath
+
     download_file(url, filename)
     extract_targz(filename, extract_path=".")
     
@@ -130,13 +136,16 @@ def install_higgsbounds(
     url='https://gitlab.com/higgsbounds/higgsbounds/-/archive/master/higgsbounds-master.tar.gz',
     ):
     filename= 'higgsbounds.tar.gz'
-    filepath = 'higgsbounds-master'
+    filepath = Path('higgsbounds-master')
+    if filepath.exists():
+        print(f"HiggsBounds is already installed at {filepath}")
+        return filepath
     download_file(url, filename)
 
     extract_targz(filename, extract_path=".")
 
     
-    source_dir = Path(filepath)
+    source_dir = filepath
     build_dir = source_dir /"build"
 
     
@@ -156,13 +165,16 @@ def install_higgssignals(
     ):
 
     filename= 'higgssignals.tar.gz'
-    filepath = 'higgssignals-master'
+    filepath = Path('higgssignals-master')
+    if filepath.exists():
+        print(f"HiggsSignals is already installed at {filepath}")
+        return filepath
     download_file(url, filename)
 
     extract_targz(filename, extract_path=".")
 
     
-    source_dir = Path(filepath)
+    source_dir = filepath
     build_dir = source_dir /"build"
 
     
@@ -177,16 +189,19 @@ def install_higgssignals(
     return build_dir
 
 def install_madgraph(
-        url = "https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/MG5_aMC_v3.5.4.tar.gz",
+        url = "https://launchpad.net/mg5amcnlo/3.0/3.6.x/+download/MG5_aMC_v3.5.6.tar.gz",
         model_dir = 'BLSSM_UFO',
         model_name = 'BLSSM'
 ):
 
     filename=url.split("/")[-1]
+    filepath = Path(filename.replace('.tar.gz', "").replace(".", "_"))
+    if filepath.exists():
+        print(f"MadGraph5 is already installed at {filepath}")
+        return filepath
     download_file(url, filename)
     extract_targz(filename)
 
-    filepath = Path(filename.replace('.tar.gz', "").replace(".", "_"))
 
     model_dir = Path(model_dir)
     new_model_dir = filepath / 'models' / model_name
@@ -203,7 +218,7 @@ def install_hepstack(
     spheno_model_name="BLSSM",
     higgsbounds_url='https://gitlab.com/higgsbounds/higgsbounds/-/archive/master/higgsbounds-master.tar.gz',
     higgssignals_url='https://gitlab.com/higgsbounds/higgssignals/-/archive/master/higgssignals-master.tar.gz',
-    madgraph_url = "https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/MG5_aMC_v3.5.4.tar.gz",
+    madgraph_url = "https://launchpad.net/mg5amcnlo/3.0/3.6.x/+download/MG5_aMC_v3.5.6.tar.gz",
     madgraph_model_dir = 'BLSSM_UFO',
     madgraph_model_name = 'BLSSM'
     ):
@@ -229,6 +244,7 @@ def install_hepstack(
 
 def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
     """Write a configuration file template with blank values."""
+    cwd = Path.cwd()
     config_template = {
         'model': {
             'name': 'BLSSM',
@@ -269,29 +285,29 @@ def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
         },
         'spheno': {
             'model': 'BLSSM',
-            'reference_slha': 'configs/hep_files/diphoton_paper_v2',
-            'directory': spheno_dir
+            'reference_slha': str(cwd/'configs/hep_files/diphoton_paper_v2'),
+            'directory': str(spheno_dir.absolute())
         },
         'higgsbounds': {
             'neutral_higgs': 6,
             'charged_higgs': 1,
-            'directory': hb_dir
+            'directory': str((hb_dir/"build").absolute())
         },
         'higgssignals': {
             'neutral_higgs': 6,
             'charged_higgs': 1,
-            'directory': hs_dir
+            'directory': str((hs_dir/"build").absolute())
         },
         'madgraph': {
-            'directory': mg_dir,
+            'directory': str(mg_dir.absolute()),
             'scripts': {
-                'gghaa': 'configs/hep_files/mg5/blssm_pphaa_LHC13.txt'
+                'gghaa': str(cwd/'configs/hep_files/mg5/blssm_pphaa_LHC13.txt')
             }
         },
         'hep_stack': {
             'name': 'SPhenoHBHSMG5',
-            'scan_dir': 'datasets/scans',
-            'final_dataset': 'datasets',
+            'scan_dir': str(cwd/'datasets/scans'),
+            'final_dataset': str(cwd/'datasets'),
             'delete_on_exit': True
         }
     }
@@ -299,7 +315,7 @@ def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
     
     # Write the configuration template to a YAML file
     with open('hepstack_config.yaml', 'w') as file:
-        yaml.dump(config_template, file, default_flow_style=False)
+        yaml.dump(config_template, file, default_flow_style=False,sort_keys=False)
     
     print(f"Configuration template written to {'hepstack_config.yaml'}")
 

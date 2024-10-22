@@ -8,7 +8,7 @@ from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 from matplotlib.colors import Normalize, rgb2hex
 from pathlib import Path
-
+import torch
 
 text_configuration = {
     'usetex': True,
@@ -262,3 +262,36 @@ class CornerPlot:
         self.fig.savefig(path, dpi=300)
 
 
+
+def generate_mesh_predictions(model, ranges, num_points=50):
+    """
+    Generate model predictions on a grid sampled from specified ranges across any number of dimensions.
+    
+    Parameters:
+    - model: The trained PyTorch model.
+    - ranges: A list of tuples [(min1, max1), (min2, max2), ...] defining the range for each dimension.
+    - num_points: Number of points to sample per dimension for the grid (default: 50).
+    
+    Returns:
+    - grid: The grid of points across all dimensions (n_points, n_dimensions).
+    - predictions: The model predictions for each point on the grid.
+    """
+    n_dimensions = len(ranges)  # Number of input dimensions
+    bounds = []
+    
+    # Create linearly spaced points for each dimension based on the given ranges
+    for dim_range in ranges:
+        min_val, max_val = dim_range
+        bounds.append(np.linspace(min_val, max_val, num_points))
+    
+    # Create a grid of points by taking the Cartesian product of the bounds across dimensions
+    grid = np.array(np.meshgrid(*bounds)).T.reshape(-1, n_dimensions)
+    
+    # Convert the grid to a PyTorch tensor
+    grid_tensor = torch.tensor(grid, dtype=torch.float32)
+    
+    # Get model predictions
+    with torch.no_grad():
+        predictions = model(grid_tensor).numpy()  # Assuming the model output is convertible to numpy
+    
+    return grid, predictions

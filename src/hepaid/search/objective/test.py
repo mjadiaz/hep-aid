@@ -59,7 +59,7 @@ def egg_box(x):
     return output
 
 
-def init_him_boo_fn(cas=False):
+def init_him_boo_fn(cas=True):
     """
     Initializes a test function for multi-objective search 
     combining the Himmelblau and Booth functions.
@@ -80,7 +80,7 @@ def init_him_boo_fn(cas=False):
     )
     return function
 
-def init_egg_box_fn(cas=False):
+def init_egg_box_fn(cas=True):
     """
     Initializes the egg box model as described in the original paper on arXiv:1708.06615.
 

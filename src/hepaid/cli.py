@@ -15,7 +15,7 @@ def cli():
 @click.option('--spheno_model_name', default="BLSSM", help='Name of the Spheno model.')
 @click.option('--higgsbounds_url', default='https://gitlab.com/higgsbounds/higgsbounds/-/archive/master/higgsbounds-master.tar.gz', help='URL for HiggsBounds.')
 @click.option('--higgssignals_url', default='https://gitlab.com/higgsbounds/higgssignals/-/archive/master/higgssignals-master.tar.gz', help='URL for HiggsSignals.')
-@click.option('--madgraph_url', default="https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/MG5_aMC_v3.5.4.tar.gz", help='URL for MadGraph installation.')
+@click.option('--madgraph_url', default="https://launchpad.net/mg5amcnlo/3.0/3.6.x/+download/MG5_aMC_v3.5.6.tar.gz", help='URL for MadGraph installation.')
 @click.option('--madgraph_model_dir', default='BLSSM_UFO', help='Directory for the MadGraph model.')
 @click.option('--madgraph_model_name', default='BLSSM', help='Name of the MadGraph model.')
 def install_hepstack_cli(spheno_url, spheno_compiler, spheno_on_mac, spheno_model_dir, spheno_model_name, higgsbounds_url, higgssignals_url, madgraph_url, madgraph_model_dir, madgraph_model_name):
@@ -44,6 +44,6 @@ def install_hepstack_cli(spheno_url, spheno_compiler, spheno_on_mac, spheno_mode
 def generate_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
     """Generate a configuration template."""
     write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir)
-    
+
 if __name__ == '__main__':
     cli()

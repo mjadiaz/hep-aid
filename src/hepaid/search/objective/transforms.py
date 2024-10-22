@@ -230,8 +230,8 @@ class Standardize(Transformer):
             The data to compute the statistics on.
         """
         X = np.asarray(X)
-        self.mean = np.mean(X)
-        self.std = np.std(X) + self.epsilon
+        self.mean = np.mean(X, axis=0)
+        self.std = np.std(X, axis=0) + self.epsilon
 
     def transform(self, X):
         """

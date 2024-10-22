@@ -152,8 +152,7 @@ class BaseStack:
         else:
             self.hp = hep_config
 
-        self.hp = hep_config
-        self.hp_input = hep_config.model.input
+        self.hp_input = self.hp.model.input
         self.scan_dir = Path(self.hp.hep_stack.scan_dir)
         self.scan_dir.mkdir(parents=True, exist_ok=True)
 

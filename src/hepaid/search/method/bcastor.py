@@ -10,11 +10,16 @@ from typing import Any, Tuple, Callable
 
 from hepaid.search.method.eci import ECI
 from hepaid.search.objective.objective import cas_obj_fn_export
-from hepaid.search.models.model_list import get_model_and_likelihood
+#from hepaid.search.models.model_list import get_model_and_likelihood
 from hepaid.search.parallel.modules import run_x_with_pool
 from hepaid.search.objective.utils import generate_initial_dataset
 from hepaid.search.method.base import Method 
 from hepaid.utils import load_config
+
+from hepaid.search.models.multitask_gp import get_model_and_likelihood, predict
+from hepaid.search.models.multitask_gp import MultiTaskGP
+from hepaid.search.models.model_list import BotorchModelListGP
+
 
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -357,7 +362,12 @@ class bCASTOR(Method):
                 self.metrics.update(self.objective, i)
 
                 # Initialise model and likelihood and train
-                self.model, self.likelihood = get_model_and_likelihood(train_x, train_y)
+                #self.model, self.likelihood = get_model_and_likelihood(train_x, train_y)
+                #self.model = get_model_and_likelihood(train_x, train_y)
+                self.model = BotorchModelListGP(
+                    hyper_parameters=self.hp.get('model_hyperparameters', None)
+                    )
+                self.model.train(train_x, train_y)
 
                 # Perform bCASTOR step
                 self.eci, self.study, X, trials, values, cr = bcastor_step(

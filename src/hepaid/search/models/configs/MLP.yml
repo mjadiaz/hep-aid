@@ -1,0 +1,8 @@
+layer_sizes: [2, 60,60,60,2]
+dropout_prob: 0.0
+learning_rate: 0.01
+num_epochs: 500
+step_size: 5
+gamma: 0.999
+threshold: 1e-8
+

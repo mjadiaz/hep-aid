@@ -1,4 +1,4 @@
-run_name: 'hb_bcastor_local/run_1'
+run_name: 'cas/run'
 parallel: False
 initial_dataset:
   generate: True,

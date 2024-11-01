@@ -105,19 +105,14 @@ class MLScan(Method):
 
         self.likelihood = likelihood
 
-        self.num_inputs = 2
-        self.num_outputs = 2 
+        self.num_inputs = len(self.objective.input_parameters)
+        self.num_outputs = len(self.objective.output_parameters)
+        self.num_samples = self.hp.num_samples
         
-        self.lr = 0.01
-        self.num_epochs = 500
-        self.hidden_layers_neurons = [2,60, 60, 60,2]
-        
-        self.model =  MLP(self.hidden_layers_neurons)
+        self.model =  MLP(
+            hyper_parameters=self.hp.get('model_hyperparameters', None)
+            )
 
-        self.criterion = nn.MSELoss()
-
-        self.num_samples = 100
-        self.input_dim = 2
 
         self.accepted = 0
 
@@ -155,31 +150,17 @@ class MLScan(Method):
                     self.objective, x_scaler_init, y_scaler_init
                     )
 
-                # Reset optimiser and scheduler
-                optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
-                scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.999)
+                # Update current Objective Function metrics
+                self.metrics.update(self.objective, i)
 
-                # Train loop
-                tr_losses, val_losses = train_model(
-                    num_epochs=self.num_epochs,
-                    model=self.model,
-                    X_train=X_train,
-                    y_train=y_train,
-                    X_val=X_val,
-                    y_val=y_val,
-                    criterion=self.criterion,
-                    optimizer=optimizer,
-                    scheduler=scheduler,
-                    best_loss=float('inf'),  
-                    threshold=1e-20, 
-                    patience=None)
-                
+                self.model.train(X_train, y_train, X_val, y_val)
+
 
                 accepted_samples = rejection_sampling(
-                    self.model, 
+                    self.model.model, 
                     self.likelihood, 
                     self.num_samples, 
-                    self.input_dim, 
+                    self.num_inputs, 
                     x_scaler=x_scaler_init, 
                     y_scaler=y_scaler_init
                     )
@@ -194,16 +175,12 @@ class MLScan(Method):
                     is_normalised=True
                     )
 
-                # Update current Objective Function metrics
-                self.metrics.update(self.objective, i)
-
-
                 # Log and save
                 self.metrics.log(progress)
                 self.save_checkpoint(i)
                 
                 self.iteration = i
-                self.train_losses_history.append(tr_losses)
-                self.val_losses_history.append(val_losses)
+                self.train_losses_history.append(self.model.tr_losses)
+                self.val_losses_history.append(self.model.val_losses)
 
         return True

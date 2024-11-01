@@ -6,6 +6,8 @@ from gpytorch.mlls import ExactMarginalLogLikelihood
 from botorch.fit import fit_gpytorch_mll
 import torch
 
+from hepaid.search.models.base import Model
+
 def get_and_fit_gp(X, Y):
     """
     Simple method for creating and fitting a Gaussian Process (GP) with one output dimension.
@@ -72,3 +74,14 @@ def predict(model, x):
     mean, lower, upper = get_posterior(model, x)
     return mean, lower, upper 
 
+class BotorchModelListGP(Model):
+    def __init__(self, hyper_parameters = None):
+        super().__init__(hyper_parameters=hyper_parameters)
+    
+    def train(self, train_x, train_y):
+        self.model, self.likelihood = get_model_and_likelihood(train_x, train_y)
+
+    def predict(self, test_x):
+        posterior = self.model.posterior(test_x)
+        return posterior.mean, posterior.variance.sqrt()
+    

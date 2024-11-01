@@ -1,0 +1,2 @@
+training_iterations: 500
+learning_rate: 0.1

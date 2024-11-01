@@ -65,8 +65,8 @@ class CornerPlot:
         figsize (tuple, optional): Size of the figure. Defaults to (6, 5).
     """
     def __init__(
-        self, colormap, parameters, labels=None,
-        n_ticks_per_axs=4, figsize=(6,5)
+        self, parameters, labels=None,
+        n_ticks_per_axs=4, figsize=(6,5), colormap='viridis'
         ):
         """
         Constructor to initialize the CornerPlot object.
@@ -262,36 +262,54 @@ class CornerPlot:
         self.fig.savefig(path, dpi=300)
 
 
-
-def generate_mesh_predictions(model, ranges, num_points=50):
+def generate_meshgrid(dim_ranges, steps_per_dim):
     """
-    Generate model predictions on a grid sampled from specified ranges across any number of dimensions.
+    Generate a meshgrid for an arbitrary number of dimensions and return it in shape (N, m),
+    where N is the total number of grid points, and m is the number of dimensions.
     
     Parameters:
-    - model: The trained PyTorch model.
-    - ranges: A list of tuples [(min1, max1), (min2, max2), ...] defining the range for each dimension.
-    - num_points: Number of points to sample per dimension for the grid (default: 50).
+        dim_ranges (list of tuples): Each tuple contains (start, end) for each dimension.
+        steps_per_dim (list of int): Number of steps for each dimension.
     
     Returns:
-    - grid: The grid of points across all dimensions (n_points, n_dimensions).
-    - predictions: The model predictions for each point on the grid.
+        grid_points (Tensor): A tensor of shape (N, m) containing the grid points.
     """
-    n_dimensions = len(ranges)  # Number of input dimensions
-    bounds = []
     
-    # Create linearly spaced points for each dimension based on the given ranges
-    for dim_range in ranges:
-        min_val, max_val = dim_range
-        bounds.append(np.linspace(min_val, max_val, num_points))
+    # Generate a list of linspace tensors for each dimension
+    linspaces = [torch.linspace(start, end, steps) for (start, end), steps in zip(dim_ranges, steps_per_dim)]
     
-    # Create a grid of points by taking the Cartesian product of the bounds across dimensions
-    grid = np.array(np.meshgrid(*bounds)).T.reshape(-1, n_dimensions)
+    # Generate the meshgrid for all dimensions
+    meshgrid = torch.meshgrid(*linspaces, indexing='ij')
+    meshgrid_numpy =  [mesh.numpy() for mesh in meshgrid]
+    # Flatten each dimension's mesh and stack them together
+    flattened_grids = [grid.flatten() for grid in meshgrid]
     
-    # Convert the grid to a PyTorch tensor
-    grid_tensor = torch.tensor(grid, dtype=torch.float32)
+    # Concatenate all flattened grids into a tensor of shape (N, m)
+    grid_points = torch.stack(flattened_grids, dim=-1)
     
-    # Get model predictions
-    with torch.no_grad():
-        predictions = model(grid_tensor).numpy()  # Assuming the model output is convertible to numpy
+    return grid_points, meshgrid_numpy
+
+def reshape_model_output(model_output, steps_per_dim):
+    """
+    Reshape the model output from (N, 1) back into the original grid shape.
+
+    Parameters:
+        model_output (Tensor): The output of the model with shape (N, 1).
+        steps_per_dim (list of int): The number of steps for each dimension, used to reshape the output.
     
-    return grid, predictions
+    Returns:
+        reshaped_output (Tensor): The reshaped model output with shape corresponding to the grid dimensions.
+    """
+    # Ensure model_output is (N, 1)
+    if len(model_output.shape) == 1:
+        model_output = model_output.reshape(-1,1)
+    #assert model_output.shape[1] == 1, "Model output must have shape (N, 1)"
+    
+    # Compute the total number of grid points (N) from the steps_per_dim
+    N = torch.prod(torch.tensor(steps_per_dim))
+    assert model_output.shape[0] == N, "Model output size does not match the total number of grid points"
+    
+    # Reshape the model output using the steps_per_dim
+    reshaped_output = model_output.view(*steps_per_dim)
+    
+    return reshaped_output

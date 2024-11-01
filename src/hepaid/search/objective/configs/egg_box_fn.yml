@@ -11,4 +11,3 @@ output_parameters:  ['f']
 objectives:
   double_constraint:
     f: [['gt', 80],['lt',160]]
-  single_constraint: 

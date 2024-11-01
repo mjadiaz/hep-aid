@@ -1,22 +1,22 @@
-run_name: 'hb_bcastor_local/run_1'
+run_name: 'bcastor/run'
 parallel: False
 initial_dataset:
   generate: True,
   n_workers: 4
-  n_points: 10
+  n_points: 20
 checkpoint:
   name: 'checkpoint'
   n_step_save: 1
-total_iterations: 30
+total_iterations: 20
 resolution:
   value: 0.002
-  constant_resolution: True
+  constant_resolution: False
   r_decay_steps: 30
   initial: 1e-2
   final: 1e-3
 batch_sampling:
-  tpe_trials: 500
-  rank_samples: 10
+  tpe_trials: 200
+  rank_samples: 5
   n_evaluation_workers: 4
   alpha: 2
 eci:

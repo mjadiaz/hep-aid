@@ -135,7 +135,9 @@ class MCMCMH(Method):
                 mode = 'mult'
             )
         else:
-            self.likelihood = likelihood
+            self.likelihood = lambda x, add: likelihood(
+                self.objective.sample(x, add=add)
+            )
 
 
         self.accepted = 0

@@ -11,6 +11,8 @@ from omegaconf import DictConfig
 from hepaid.search.objective.utils import generate_initial_dataset
 from hepaid.search.objective.utils import batch_evaluation 
 
+from hepaid.search.models.base import Model
+
 def reshape_if_1d(array):
     array = np.asarray(array)
     if array.ndim == 1:
@@ -54,9 +56,9 @@ def pre_process_data(
     
     return X_train, X_val, y_train, y_val, x_scaler, y_scaler
 
-class MLP(nn.Module):
+class MultiLayerPerceptron(nn.Module):
     def __init__(self, layer_sizes, dropout_prob=None):
-        super(MLP, self).__init__()
+        super().__init__()
         layers = []
         for i in range(len(layer_sizes) - 1):
             layers.append(nn.Linear(layer_sizes[i], layer_sizes[i+1]))
@@ -121,3 +123,55 @@ def train_model(
         val_losses.append(val_loss.item())
 
     return train_losses, val_losses
+
+
+
+class MLP(Model):
+    def __init__(self, hyper_parameters = None):
+        super().__init__(hyper_parameters=hyper_parameters)
+        # Initialise model
+        self.model = MultiLayerPerceptron(
+            layer_sizes=self.hp.layer_sizes,
+            dropout_prob=self.hp.dropout_prob,
+        )
+        # Collect config hyper parameters
+        self.lr = self.hp.learning_rate
+        self.step_size = self.hp.step_size
+        self.gamma = self.hp.gamma
+        self.num_epochs = self.hp.num_epochs
+        self.threshold = self.hp.threshold
+
+        # Initialise loss
+        self.criterion = nn.MSELoss()
+
+    def train(self,train_x, train_y, val_x, val_y):
+
+        # Reset optimiser and scheduler
+        self.optimizer = torch.optim.Adam(
+            self.model.parameters(), lr=self.lr
+            )
+        self.scheduler = torch.optim.lr_scheduler.StepLR(
+            self.optimizer, 
+            self.step_size, 
+            self.gamma
+            )
+        # Train loop
+        self.tr_losses, self.val_losses = train_model(
+            num_epochs=self.num_epochs,
+            model=self.model,
+            X_train=train_x,
+            y_train=train_y,
+            X_val=val_x,
+            y_val=val_y,
+            criterion=self.criterion,
+            optimizer=self.optimizer,
+            best_loss=float('inf')
+        )
+    
+
+    def predict(self, test_x):
+        # Set model to evaluation mode
+        self.model.eval()
+        with torch.no_grad():  
+            output = self.model(test_x)
+        return output

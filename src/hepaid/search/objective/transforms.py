@@ -6,6 +6,7 @@ from __future__ import division
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.utils import column_or_1d
+import torch
 
 
 class Transformer(object):
@@ -101,6 +102,82 @@ class Normalize(Transformer):
             return np.round(X_orig).astype(np.int)
         return X_orig
 
+
+class TorchNormalize:
+    """
+    Scales each dimension into the interval [0, 1].
+
+    Parameters
+    ----------
+    low : float
+        Lower bound.
+
+    high : float
+        Higher bound.
+
+    is_int : bool, default=False
+        Round and cast the return value of `inverse_transform` to integer. Set
+        to `True` when applying this transform to integers.
+    """
+    def __init__(self, low, high, is_int=False):
+        self.low = float(low)
+        self.high = float(high)
+        self.is_int = is_int
+        self._eps = 1e-8
+
+    def transform(self, X):
+        """
+        Transforms the data by scaling it to the range [0, 1].
+
+        Parameters
+        ----------
+        X : torch.Tensor
+            The data to transform.
+        """
+        if not isinstance(X, torch.Tensor):
+            raise TypeError("Input should be a torch.Tensor")
+        
+        if self.is_int:
+            if torch.any(torch.round(X) > self.high):
+                raise ValueError(f"All integer values should be less than {self.high}")
+            if torch.any(torch.round(X) < self.low):
+                raise ValueError(f"All integer values should be greater than {self.low}")
+        else:
+            if torch.any(X > self.high + self._eps):
+                raise ValueError(f"All values should be less than {self.high}")
+            if torch.any(X < self.low - self._eps):
+                raise ValueError(f"All values should be greater than {self.low}")
+        
+        if (self.high - self.low) == 0.0:
+            return X * 0.0
+        
+        if self.is_int:
+            return (torch.round(X).int() - self.low) / (self.high - self.low)
+        else:
+            return (X - self.low) / (self.high - self.low)
+
+    def inverse_transform(self, X):
+        """
+        Reverses the normalization transformation.
+
+        Parameters
+        ----------
+        X : torch.Tensor
+            The data to inverse transform.
+        """
+        if not isinstance(X, torch.Tensor):
+            raise TypeError("Input should be a torch.Tensor")
+
+        if torch.any(X > 1.0 + self._eps):
+            raise ValueError("All values should be less than 1.0")
+        if torch.any(X < 0.0 - self._eps):
+            raise ValueError("All values should be greater than 0.0")
+
+        X_orig = X * (self.high - self.low) + self.low
+
+        if self.is_int:
+            return torch.round(X_orig).int()
+        return X_orig
 
 class Pipeline(Transformer):
     """
@@ -201,6 +278,74 @@ class Rescale(Transformer):
         return X_orig
 
 
+class TorchStandardize:
+    """
+    Standardizes each dimension to have zero mean and unit variance.
+
+    Parameters
+    ----------
+    epsilon : float, default=1e-8
+        A small constant added to the standard deviation to prevent division by zero.
+
+    is_int : bool, default=False
+        Round and cast the return value of `inverse_transform` to integer. Set
+        to `True` when applying this transform to integers.
+    """
+    def __init__(self, epsilon=1e-8, is_int=False):
+        self.mean = None
+        self.std = None
+        self.epsilon = epsilon
+        self.is_int = is_int
+
+    def fit(self, X):
+        """
+        Computes the mean and standard deviation of the data.
+        
+        Parameters
+        ----------
+        X : torch.Tensor
+            The data to compute the statistics on.
+        """
+        if not isinstance(X, torch.Tensor):
+            raise TypeError("Input should be a torch.Tensor")
+
+        self.mean = torch.mean(X, dim=0)
+        self.std = torch.std(X, dim=0) + self.epsilon
+
+    def transform(self, X):
+        """
+        Transforms the data using the computed mean and standard deviation.
+
+        Parameters
+        ----------
+        X : torch.Tensor
+            The data to transform.
+        """
+        if not isinstance(X, torch.Tensor):
+            raise TypeError("Input should be a torch.Tensor")
+
+        X_standardized = (X - self.mean) / self.std
+        if self.is_int:
+            return torch.round(X_standardized).int()
+        return X_standardized
+
+    def inverse_transform(self, X):
+        """
+        Reverses the standardization transformation.
+
+        Parameters
+        ----------
+        X : torch.Tensor
+            The data to inverse transform.
+        """
+        if not isinstance(X, torch.Tensor):
+            raise TypeError("Input should be a torch.Tensor")
+
+        X_original = X * self.std + self.mean
+        if self.is_int:
+            return torch.round(X_original).int()
+        return X_original
+    
 class Standardize(Transformer):
     """
     Standardizes each dimension to have zero mean and unit variance.

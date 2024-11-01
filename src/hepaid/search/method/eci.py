@@ -11,6 +11,7 @@ from botorch.acquisition.objective import IdentityMCObjective
 from botorch.utils.sampling import sample_hypersphere
 from botorch.utils.transforms import t_batch_mode_transform
 
+from hepaid.search.models.multitask_gp import predict
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -147,14 +148,15 @@ class ECI:
         Returns:
             torch.Tensor: Probabilities of satisfying the constraints at the given points.
         """
-        posterior = surrogate_model.posterior(X=points)
-        mus, sigma2s = posterior.mean, posterior.variance
+        #posterior = surrogate_model.posterior(X=points)
+        mus, sigma2s = surrogate_model.predict(points)
+        #mus, sigma2s = posterior.mean, posterior.variance
         if scaler is not None:
             mus = torch.tensor(scaler.inverse_transform(mus.detach())).to(points)
             sigma2s = torch.tensor(scaler.inverse_transform(sigma2s.detach())).to(
                 sigma2s
             )
-        dist = torch.distributions.normal.Normal(mus, sigma2s.sqrt())
+        dist = torch.distributions.normal.Normal(mus, sigma2s)
         norm_cdf = dist.cdf(self._thresholds)
         probs = torch.ones(points.shape[:-1]).to(points)
         for i, (direction, _) in enumerate(self.constraints):

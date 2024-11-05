@@ -244,7 +244,18 @@ def install_hepstack(
 
 def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
     """Write a configuration file template with blank values."""
-    cwd = Path.cwd()
+
+    spheno_dir = Path(spheno_dir) if not isinstance(spheno_dir, Path) else spheno_dir
+    hb_dir = Path(hb_dir) if not isinstance(hb_dir, Path) else hb_dir
+    hs_dir = Path(hs_dir) if not isinstance(hs_dir, Path) else hs_dir
+    mg_dir = Path(mg_dir) if not isinstance(mg_dir, Path) else mg_dir
+    
+    if not hb_dir.as_posix().endswith('/build'):
+        hb_dir = hb_dir / 'build'
+    if not hs_dir.as_posix().endswith('/build'):
+        hs_dir = hs_dir / 'build'
+
+    cwd = Path.cwd().parent
     config_template = {
         'model': {
             'name': 'BLSSM',
@@ -291,12 +302,12 @@ def write_config_template(spheno_dir, hb_dir, hs_dir, mg_dir):
         'higgsbounds': {
             'neutral_higgs': 6,
             'charged_higgs': 1,
-            'directory': str((hb_dir/"build").absolute())
+            'directory': str((hb_dir).absolute())
         },
         'higgssignals': {
             'neutral_higgs': 6,
             'charged_higgs': 1,
-            'directory': str((hs_dir/"build").absolute())
+            'directory': str((hs_dir).absolute())
         },
         'madgraph': {
             'directory': str(mg_dir.absolute()),

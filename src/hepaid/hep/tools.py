@@ -143,6 +143,11 @@ class SPheno:
         else:
             raise TypeError(f"Invalid input_file type: Expected str or SLHA, got {type(input_file).__name__}")
 
+        run_commands =  [
+                self.executable,
+                input_file_path,
+                self.output_file_path,
+            ]
         run = subprocess.run(
             [
                 self.executable,
@@ -154,6 +159,7 @@ class SPheno:
             cwd=self.output_dir,
         )
         self.stdout = run.stdout
+        print(self.stdout)
 
 
 

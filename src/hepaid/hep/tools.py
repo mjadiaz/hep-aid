@@ -1,10 +1,10 @@
 """
-This module provides classes and methods for managing and executing various high-energy 
-physics tools such as SPheno, Madgraph, HiggsBounds, and HiggsSignals. 
+This module provides classes and methods for managing and executing various high-energy
+physics tools such as SPheno, Madgraph, HiggsBounds, and HiggsSignals.
 
-Classes defined within this module facilitate the setup, execution, and analysis of outputs from these tools. 
-Each class corresponds to a specific tool, abstracting away the complexities of file management, 
-command-line argument construction, and result parsing, thereby simplifying the process of integrating these tools into 
+Classes defined within this module facilitate the setup, execution, and analysis of outputs from these tools.
+Each class corresponds to a specific tool, abstracting away the complexities of file management,
+command-line argument construction, and result parsing, thereby simplifying the process of integrating these tools into
 larger computational workflows. Each tool has the form of the `BaseTool` class, with the run and results methods.
 
 Key features include:
@@ -12,7 +12,7 @@ Key features include:
 - Automatic handling of input and output files, including creation of necessary directories.
 - Parsing of tool-specific output formats into structured Python objects for further analysis.
 
-This module is designed to be easily extendable, allowing for the addition of support for further tools or 
+This module is designed to be easily extendable, allowing for the addition of support for further tools or
 customised configurations as needed.
 """
 import os
@@ -30,16 +30,16 @@ from hepaid.hep.read import read_mg_generation_info
 class BaseTool:
     """
     Base class for a HEP tool supported by this module.
-    
-    This class provides a common interface for running and retrieving results from various tools 
-    like SPheno, Madgraph, HiggsBounds, and HiggsSignals. Subclasses should implement their own logic 
+
+    This class provides a common interface for running and retrieving results from various tools
+    like SPheno, Madgraph, HiggsBounds, and HiggsSignals. Subclasses should implement their own logic
     for the `run` and `results` methods according to the specifics of the tool they represent.
     """
 
     def __init__(self, heptool_dir: str, output_dir: str):
         """
         Initialises a new instance of the BaseTool class.
-        
+
         Parameters:
             heptool_dir (str): The directory path containing the tool's executables.
             output_dir (str): The directory path where the tool's output will be stored.
@@ -51,9 +51,9 @@ class BaseTool:
     def run(self, *args, **kwargs):
         """
         Executes the tool with the provided arguments.
-        
+
         This method should be overridden by subclasses to implement the actual execution logic of the tool.
-        
+
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
@@ -63,11 +63,11 @@ class BaseTool:
     def results(self):
         """
         Retrieves the results produced by the tool.
-        
-        This method should parse the tool's output and return the results in a structured format. 
+
+        This method should parse the tool's output and return the results in a structured format.
         The implementation details depend on the specific output format of the tool.
         If no additional arguments are needed is recommended to use the @property decorator.
-        
+
         Returns:
             Any: The results parsed from the tool's output.
         """
@@ -91,14 +91,14 @@ class SPheno:
     Methods:
         __init__(self, heptool_dir, output_dir, model_name):
             Initializes the SPheno object with required directory and model information.
-        
+
         run(self, input_file):
             Executes SPheno with the provided input file or SLHA object.
     """
     def __init__(self, heptool_dir: str, output_dir: str , model_name: str):
         """Initializes a new SPheno object.
 
-        Parameters: 
+        Parameters:
             spheno_dir (str): Path to the directory containing SPheno.
             output_dir (str): Path to the directory where SPheno output should be saved.
             model_name (str): Name of the SUSY model to be used.
@@ -114,7 +114,7 @@ class SPheno:
         self.output_file_path = self.output_dir / self.output_file_name
 
         self.standard_input_file_name = f'LesHouches.in.{self.model_name}'
-    
+
     @property
     def results(self):
         if self.output_file_path.exists():
@@ -127,13 +127,13 @@ class SPheno:
         """Runs the SPheno calculation.
 
         Parameters:
-            input_file (str or SLHA): Either a path to an input SLHA (LesHouches.in.Model) 
+            input_file (str or SLHA): Either a path to an input SLHA (LesHouches.in.Model)
                                         file (str) or an SLHA object containing the SLHA file.
 
         Returns:
             tuple: A tuple containing:
                 - Path: The path to the output file if the run was successful, or None if it failed.
-                - str:  The standard output (stdout) from the SPheno process. 
+                - str:  The standard output (stdout) from the SPheno process.
         """
         if isinstance(input_file, str):
             input_file_path = Path(input_file)
@@ -149,17 +149,12 @@ class SPheno:
                 self.output_file_path,
             ]
         run = subprocess.run(
-            [
-                self.executable,
-                input_file_path,
-                self.output_file_path,
-            ],
+            run_commands,
             capture_output=True,
             text=True,
             cwd=self.output_dir,
         )
         self.stdout = run.stdout
-        print(self.stdout)
 
 
 
@@ -173,7 +168,7 @@ class Madgraph:
         output_dir (str): The directory where Madgraph output will be stored.
         executable (str): The full path to the Madgraph mg5_aMC executable.
     """
-          
+
     def __init__(self, heptool_dir, output_dir):
         self.heptool_dir = Path(heptool_dir)
 
@@ -183,11 +178,11 @@ class Madgraph:
         self.executable = self.heptool_dir / "bin/mg5_aMC"
 
 
-    
+
     def results(self, output_path: str):
         """
         Results from MadGraph depends on the output folder which is internal to the script.
-        Then, we need to give it as an input in output_path. It assumes a single process with 
+        Then, we need to give it as an input in output_path. It assumes a single process with
         one run.
 
         Parameters:
@@ -202,7 +197,7 @@ class Madgraph:
 
     def run(self, input_file: str):
         """
-        Run madgraph with a script in `input_file` (an example script can be created by the MG5Script class) in within work_dir. 
+        Run madgraph with a script in `input_file` (an example script can be created by the MG5Script class) in within work_dir.
 
         Parameters:
             input_file (str): Madgraph script.
@@ -270,7 +265,7 @@ class HiggsBounds:
         """Executes HiggsBounds.
 
         Runs HiggsBounds with the specified parameters and returns the output file path and stdout.
-        
+
         Returns:
             tuple: A tuple containing:
                 - output_file_path (Path): Path to the HiggsBounds_results.dat file.
@@ -347,7 +342,7 @@ class HiggsSignals:
         """Executes HiggsSignals.
 
         Runs HiggsSignals with the specified parameters and returns the output file path and stdout.
-        
+
         Returns:
             tuple: A tuple containing:
                 - output_file_path (Path): Path to the HiggsSignals_results.dat file.
@@ -372,4 +367,3 @@ class HiggsSignals:
             cwd=self.output_dir,
         )
         self.stdout = run.stdout
-

@@ -1,7 +1,7 @@
 """
 This module provides infrastructure for managing and executing High Energy Physics (HEP) software stacks, a collection of HEP tools that run sequentially.
 It aims to simplify the setup and execution of complex HEP analyses by abstracting away the details of tool initialisation and execution.
-It defines a base class `BaseStack` for initializing and running HEP tools such as SPheno, HiggsBounds, HiggsSignals, 
+It defines a base class `BaseStack` for initializing and running HEP tools such as SPheno, HiggsBounds, HiggsSignals,
 and Madgraph based on a configuration object (`hep_config`). Every HEPStack is saved into the `HEPSTACK` dictionary.
 
 Key features include:
@@ -10,8 +10,8 @@ Key features include:
 - Support for converting input vectors to SLHA/LesHouches format for parameter updates.
 - Flexible execution of HEP stacks through the `hep_stack_fn` function, allowing for single-point usage of any registered HEP stack.
 
-Each HEP tool-specific stack implementation (e.g., `SPhenoStack`, `SPhenoHBHS`, `SPhenoHBHSMG5`) extends the `BaseStack` class, 
-providing tool-specific initialization and execution logic. These classes enable the automatic modification of SLHA files, 
+Each HEP tool-specific stack implementation (e.g., `SPhenoStack`, `SPhenoHBHS`, `SPhenoHBHSMG5`) extends the `BaseStack` class,
+providing tool-specific initialization and execution logic. These classes enable the automatic modification of SLHA files,
 execution of the HEP tools, and collection of results into a standardized format.
 
 
@@ -43,7 +43,6 @@ def register(hep_stack: Callable[..., Any]) -> Callable[..., Any]:
 def hep_stack_fn(
     x,
     hep_config,
-    close=True,
     ):
     '''
     Single point usage of a HEP Stack class defined in hep_config.hep_stack
@@ -80,7 +79,7 @@ def input_vector_to_slha(
         block_name = model_input[name]["block_name"]
         index = model_input[name]["block_index"]
         slha[block_name][index] = value
-    return slha 
+    return slha
 
 
 # def input_vector_to_lhs(
@@ -115,15 +114,15 @@ class BaseStack:
     """
     Base class for managing HEP Software Stacks.
 
-    This class handles the initialization of HEP tools. Based on the hep_config, 
-    the stack can sample from an array that automatically changes the SLHA file 
-    and runs the HEP tools. The 'run_stack_from_input_slha' method must be 
+    This class handles the initialization of HEP tools. Based on the hep_config,
+    the stack can sample from an array that automatically changes the SLHA file
+    and runs the HEP tools. The 'run_stack_from_input_slha' method must be
     implemented in a subclass to be able to sample, and it must return a dictionary
     hep_stack_data point.
 
     Parameters:
         hep_config (DictConfig): Configuration object containing HEP settings.
-        stack_id (str | None, optional): Unique identifier for the stack. 
+        stack_id (str | None, optional): Unique identifier for the stack.
                                         If None, an ID is auto-generated. Defaults to None.
 
     Attributes:
@@ -146,7 +145,7 @@ class BaseStack:
     ):
         """Initialize the HEP tools"""
 
-        
+
         if isinstance(hep_config, str):
             self.hp = load_config(hep_config)
         else:
@@ -184,7 +183,7 @@ class BaseStack:
             parameter_point (np.ndarray): Array of parameter values.
 
         Returns:
-            Dict[str, float] | None: Dictionary of results from the HEP stack, 
+            Dict[str, float] | None: Dictionary of results from the HEP stack,
         """
         _ = input_vector_to_slha(parameter_point, self.input_slha, self.hp_input)
         hep_stack_data = self.run_stack_from_input_slha()
@@ -197,21 +196,21 @@ class BaseStack:
     def run_stack_from_input_slha(self) -> dict:
         raise NotImplementedError(
             "The 'run_stack_from_input_slha' method must be implemented in a subclass."
-            ) 
+            )
 
 @register
 class SPhenoStack(BaseStack):
     """
     SPheno Stack.
 
-    This class handles the initialization of SPheno. Based on the hep_config, 
-    the stack can sample from an array that automatically changes the input SLHA file 
-    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented 
-    to run SPheno and return a dictionary containing the output SLHA. 
+    This class handles the initialization of SPheno. Based on the hep_config,
+    the stack can sample from an array that automatically changes the input SLHA file
+    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented
+    to run SPheno and return a dictionary containing the output SLHA.
 
     Parameters:
         hep_config (DictConfig): Configuration object containing HEP settings.
-        stack_id (str | None, optional): Unique identifier for the stack. 
+        stack_id (str | None, optional): Unique identifier for the stack.
                                         If None, an ID is auto-generated. Defaults to None.
 
     Attributes:
@@ -226,12 +225,12 @@ class SPhenoStack(BaseStack):
     Methods:
         sample(self, parameter_point): Runs the HEPStack from an numpy array where each element corresponds
                                         to an parameter in the SLHA file.
-        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.  
+        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
     """
     def __init__(
         self,
         hep_config: DictConfig | str,
-        stack_id: str | None = None, 
+        stack_id: str | None = None,
     ):
         super().__init__(hep_config, stack_id)
 
@@ -245,19 +244,19 @@ class SPhenoStack(BaseStack):
             file=self.hp.spheno.reference_slha,
         )
 
-    
+
 
     def run_stack_from_input_slha(self):
         """Runs the HEP stack using the input SLHA file.
 
-        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute. 
+        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
 
         Returns:
             dict: A dictionary containing the HEP stack data, with keys:
                 - "LHS": The input SLHA file as a dictionary (converted using `as_dict()`).
                 - "SLHA": The output SLHA file as a dictionary (or None if no output was produced).
         """
-        
+
         self.spheno.run(self.input_slha)
         self.output_slha = self.spheno.results
         if self.output_slha is not None:
@@ -273,20 +272,20 @@ class SPhenoStack(BaseStack):
         return hep_stack_data
 
 
-    
+
 @register
 class SPhenoHBHS(SPhenoStack):
     """
     SPheno-HiggsBounds-HiggsSignals Stack.
 
-    This class handles the initialization of SPheno, HiggsBounds and HiggsSignals. Based on the hep_config, 
-    the stack can sample from an array that automatically changes the input SLHA file 
-    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented 
-    to run SPheno and return a dictionary containing the output SLHA. 
+    This class handles the initialization of SPheno, HiggsBounds and HiggsSignals. Based on the hep_config,
+    the stack can sample from an array that automatically changes the input SLHA file
+    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented
+    to run SPheno and return a dictionary containing the output SLHA.
 
     Parameters:
         hep_config (DictConfig): Configuration object containing HEP settings.
-        stack_id (str | None, optional): Unique identifier for the stack. 
+        stack_id (str | None, optional): Unique identifier for the stack.
                                         If None, an ID is auto-generated. Defaults to None.
 
     Attributes:
@@ -301,7 +300,7 @@ class SPhenoHBHS(SPhenoStack):
     Methods:
         sample(self, parameter_point): Runs the HEPStack from an numpy array where each element corresponds
                                         to an parameter in the SLHA file.
-        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.  
+        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
     """
     def __init__(
         self,
@@ -326,7 +325,7 @@ class SPhenoHBHS(SPhenoStack):
     def run_stack_from_input_slha(self):
         """Runs the HEP stack using the input SLHA file.
 
-        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute. 
+        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
 
         Returns:
             dict: A dictionary containing the HEP stack data, with keys:
@@ -335,7 +334,7 @@ class SPhenoHBHS(SPhenoStack):
                 - "HB": The output from HiggsBounds as a dictionary (or None if no output was produced).
                 - "HS": The output from HiggsSignals as a dictionary (or None if no output was produced).
         """
-        
+
         self.spheno.run(self.input_slha)
         self.output_slha = self.spheno.results
         if self.output_slha is not None:
@@ -362,14 +361,14 @@ class SPhenoHBHSMG5(SPhenoHBHS):
     """
     SPheno-HiggsBounds-HiggsSignals-MagGraph Stack.
 
-    This class handles the initialization of SPheno, HiggsBounds, HiggsSignals and Magraph. 
-    Based on the hep_config, the stack can sample from an array that automatically changes the input SLHA file 
-    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented 
-    to run SPheno and return a dictionary containing the output SLHA. 
+    This class handles the initialization of SPheno, HiggsBounds, HiggsSignals and Magraph.
+    Based on the hep_config, the stack can sample from an array that automatically changes the input SLHA file
+    and runs the HEPStack. The 'run_stack_from_input_slha' method is implemented
+    to run SPheno and return a dictionary containing the output SLHA.
 
     Parameters:
         hep_config (DictConfig): Configuration object containing HEP settings.
-        stack_id (str | None, optional): Unique identifier for the stack. 
+        stack_id (str | None, optional): Unique identifier for the stack.
                                         If None, an ID is auto-generated. Defaults to None.
 
     Attributes:
@@ -384,7 +383,7 @@ class SPhenoHBHSMG5(SPhenoHBHS):
     Methods:
         sample(self, parameter_point): Runs the HEPStack from an numpy array where each element corresponds
                                         to an parameter in the SLHA file.
-        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.  
+        run_stack_from_input_slha(self): This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
         update_mg5_script(self, process, mg5_script): Takes the template madgraph script and updated with current directories
                                                         to be consistent with the HEPSTACK.
     """
@@ -429,7 +428,7 @@ class SPhenoHBHSMG5(SPhenoHBHS):
     def run_stack_from_input_slha(self):
         """Runs the HEP stack using the input SLHA file.
 
-        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute. 
+        This method executes the HEP Stack processing pipeline with the SLHA file specified in the `self.input_slha` attribute.
 
         Returns:
             dict: A dictionary containing the HEP stack data, with keys:
@@ -439,7 +438,7 @@ class SPhenoHBHSMG5(SPhenoHBHS):
                 - "HS": The output from HiggsSignals as a dictionary (or None if no output was produced).
                 - "MG5": The output from Madgraph as a dictionary (or None if no output was produced).
         """
-        
+
         self.spheno.run(self.input_slha)
         self.output_slha = self.spheno.results
         if self.output_slha is not None:
@@ -483,5 +482,3 @@ class SPhenoHBHSMG5(SPhenoHBHS):
                 "MG5": mg5_result,
             }
         return hep_stack_data
-
-

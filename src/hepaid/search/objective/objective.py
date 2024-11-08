@@ -305,13 +305,13 @@ class Objective:
     def __repr__(self):
         input_dim = len(self.input_parameters)
         output_dim = len(self.output_parameters)
-        
+
         repr_str = "Objective object\n"
         repr_str += f"Input Parameter Space ({input_dim}D): {self.input_parameters}\n"
         repr_str += f"Output Parameter Space ({output_dim}D): {self.output_parameters}\n"
         repr_str += f"Number of data-points: {len(self._dataset)}\n"
         return repr_str
-        
+
     def initialise_configs_and_space(self):
         """
         Initializes configurations and the input space.
@@ -553,12 +553,18 @@ class Objective:
             pd.DataFrame: A DataFrame representation of the dataset.
         """
         # Convert the internal dataset to a DataFrame
+        valid = np.prod(~np.isnan(self.Y), axis=1).astype(np.bool8)
         df = pd.DataFrame(self._dataset)
 
         # Optionally add a 'satisfactory' column based on the product of elements in each row
         if satisfactory:
             if hasattr(self, "satisfactory") and self.satisfactory.size > 0:
-                df["satisfactory"] = self.satisfactory.prod(axis=1)
+                # Satisfactory prod is already taken over the valid points
+                satisfactory_prod = self.satisfactory.prod(axis=1)
+                # Set df['satisfactory'] only for valid rows
+                df['satisfactory'] = 0  # Initialize, or ensure it exists
+                df.loc[valid, 'satisfactory'] = satisfactory_prod
+                #df["satisfactory"] = self.satisfactory.prod(axis=1)
             else:
                 raise ValueError("The 'satisfactory' attribute is missing or empty.")
 

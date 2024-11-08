@@ -146,7 +146,7 @@ class CornerPlot:
 
             ax.yaxis.tick_right()
             ax.yaxis.set_label_position("right")
-            ax.set_ylabel(r'$\mathrm{Counts}$')
+            #ax.set_ylabel(r'$\mathrm{Counts}$')
 
             custom_text = r"({},{})".format(i,j)  # Your custom text
             ax.text(
@@ -180,7 +180,7 @@ class CornerPlot:
     def initialise_fig(self):
         """
         Initializes the figure by setting labels and configuring ticks.
-        """        
+        """
         # Set labels
         for i in range(self.d):
             self.axs[-1,i].set_xlabel('{}'.format(self.labels[i]))
@@ -266,27 +266,27 @@ def generate_meshgrid(dim_ranges, steps_per_dim):
     """
     Generate a meshgrid for an arbitrary number of dimensions and return it in shape (N, m),
     where N is the total number of grid points, and m is the number of dimensions.
-    
+
     Parameters:
         dim_ranges (list of tuples): Each tuple contains (start, end) for each dimension.
         steps_per_dim (list of int): Number of steps for each dimension.
-    
+
     Returns:
         grid_points (Tensor): A tensor of shape (N, m) containing the grid points.
     """
-    
+
     # Generate a list of linspace tensors for each dimension
     linspaces = [torch.linspace(start, end, steps) for (start, end), steps in zip(dim_ranges, steps_per_dim)]
-    
+
     # Generate the meshgrid for all dimensions
     meshgrid = torch.meshgrid(*linspaces, indexing='ij')
     meshgrid_numpy =  [mesh.numpy() for mesh in meshgrid]
     # Flatten each dimension's mesh and stack them together
     flattened_grids = [grid.flatten() for grid in meshgrid]
-    
+
     # Concatenate all flattened grids into a tensor of shape (N, m)
     grid_points = torch.stack(flattened_grids, dim=-1)
-    
+
     return grid_points, meshgrid_numpy
 
 def reshape_model_output(model_output, steps_per_dim):
@@ -296,7 +296,7 @@ def reshape_model_output(model_output, steps_per_dim):
     Parameters:
         model_output (Tensor): The output of the model with shape (N, 1).
         steps_per_dim (list of int): The number of steps for each dimension, used to reshape the output.
-    
+
     Returns:
         reshaped_output (Tensor): The reshaped model output with shape corresponding to the grid dimensions.
     """
@@ -304,12 +304,12 @@ def reshape_model_output(model_output, steps_per_dim):
     if len(model_output.shape) == 1:
         model_output = model_output.reshape(-1,1)
     #assert model_output.shape[1] == 1, "Model output must have shape (N, 1)"
-    
+
     # Compute the total number of grid points (N) from the steps_per_dim
     N = torch.prod(torch.tensor(steps_per_dim))
     assert model_output.shape[0] == N, "Model output size does not match the total number of grid points"
-    
+
     # Reshape the model output using the steps_per_dim
     reshaped_output = model_output.view(*steps_per_dim)
-    
+
     return reshaped_output

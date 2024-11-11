@@ -7,9 +7,10 @@ import re
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 from matplotlib.colors import Normalize, rgb2hex
+import matplotlib.cm as cm
+
 from pathlib import Path
 import torch
-
 text_configuration = {
     'usetex': True,
     'axes_labels_size': 12,
@@ -50,6 +51,19 @@ def next_color_hex(cmap_name, index=0, n_traces=3):
     color = cmap[index]
     index = (index + 1) % len(cmap)
     return rgb2hex(color)
+
+def add_colorbar(fig, color_dimension, label, color_map):
+    z = color_dimension # your custom values for the color bar
+    norm = Normalize(vmin=np.min(z), vmax=np.max(z))  # normalize based on z values
+    cmap = cm.get_map(color_map)  # choose any matplotlib colormap you like
+    # Create the color bar
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])  # ScalarMappable needs an array, but we won't use it
+
+    # Manually add a color bar axis to the right of the figure
+    cbar_ax = fig.add_axes([0.92, 0.3, 0.01, 0.4])  # [left, bottom, width, height]
+    cbar = fig.colorbar(sm, cax=cbar_ax)
+    cbar.set_label(label)
 
 class CornerPlot:
     """
@@ -94,28 +108,36 @@ class CornerPlot:
         self.initialise_fig()
         self.colors = []
 
-    def add_trace(self, data, trace_name, alpha=0.2):
+    def add_trace(self, data, trace_name=None, alpha=0.8, color_dimension=None, color_label='', color_bar_cmap=None):
         """
         Adds a new trace to the corner plot.
 
         Parameters:
             data (pandas.DataFrame): DataFrame containing the data for the trace.
             trace_name (str): Name of the trace.
-            alpha (float, optional): Transparency level of the trace. Defaults to 0.2.
+            alpha (float, optional): Transparency level of the trace. Defaults to 0.8.
+            color_dimension (str, optional): Column name in the DataFrame used for color encoding. Defaults to None.
+            color_label (str, optional): Label for the color dimension in the plot. Defaults to ''.
+            color_bar_cmap (str, optional): Colormap to use for the color bar. Defaults to None.
         """
         column_ranges = np.ptp(data, axis=0)
-        color = next_color_hex(
+
+        single_color = next_color_hex(
                     self.cmap, self.color_counter
                     )
-        self.colors.append(color)
+        self.colors.append(single_color)
 
         self.legend_elements.append(
             Line2D(
-                [0], [0], marker='o',  color=color,
+                [0], [0], marker='o',  color=single_color,
                label=trace_name,linestyle='None')
             )
         data_ = data.to_numpy()
-        # Plot scatter plots on the off-diagonal
+
+        if color_dimension is not None:
+            color = color_dimension
+        else:
+            color = single_color
 
         for i in range(self.d):
             for j in range(i+1, self.d):
@@ -123,7 +145,7 @@ class CornerPlot:
                 #xlim, ylim = ax.get_xlim(), ax.get_ylim()
                 ax.scatter(
                     data_[:, i], data_[:, j],
-                    s=1, alpha=alpha, c=color
+                    s=1, alpha=alpha, c=color, cmap=self.cmap
                 )
 
                # Adding custom text box for as helper
@@ -134,21 +156,25 @@ class CornerPlot:
                     )
                 ax.set_rasterized(True)
 
+        # Add colobar if needed
+        if color_dimension is not None:
+            cmap = color_bar_cmap if color_bar_cmap is not None else self.cmap
+            add_colorbar(self.fig, color_dimension, color_label, color_map=cmap)
         # Add marginal histograms
         for i in range(self.d):
             ax = self.axs[i, i]
             if i != self.d-1 :
                 ax.set_xticklabels([])
 
-            ax.hist(data_[:, i], alpha=0.2, color=color, histtype='stepfilled')
-            ax.hist(data_[:, i], alpha=0.5, color=color, histtype='step')
+            ax.hist(data_[:, i], alpha=0.2, color=single_color, histtype='stepfilled')
+            ax.hist(data_[:, i], alpha=0.5, color=single_color, histtype='step')
             #ax.set_xscale('log')
 
             ax.yaxis.tick_right()
             ax.yaxis.set_label_position("right")
             #ax.set_ylabel(r'$\mathrm{Counts}$')
 
-            custom_text = r"({},{})".format(i,j)  # Your custom text
+            custom_text = r"({},{})".format(i,i)  # Your custom text
             ax.text(
                 1.3, 1.3, custom_text, fontsize=8,
                 bbox=dict(facecolor='white', alpha=0.1, boxstyle='round')

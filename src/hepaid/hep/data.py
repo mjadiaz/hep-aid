@@ -39,7 +39,7 @@ class HEPDataSet:
         load_json(path: str): Loads data from a gzipped JSON file.
         load_from_directory(directory: str, percentage: float = 1.0, data_name: str = "HEPDataSet"):
             Loads multiple datasets from a directory.
-        is_none(idx: int, stack: str = "SLHA"): Checks if a data point is valid. 
+        is_none(idx: int, stack: str = "SLHA"): Checks if a data point is valid.
         feature_vector(keys: list, as_numpy: bool = False): Extracts a feature vector from the data.
         as_dataframe(keys_dict: dict, as_numpy: bool = True): Converts the dataset to a DataFrame.
     """
@@ -94,12 +94,12 @@ class HEPDataSet:
     def add(self, data: Union[List, Dict]):
         """Adds new data to the dataset.
 
-        This method supports adding either a single data point (as a dictionary) 
+        This method supports adding either a single data point (as a dictionary)
         or multiple data points (as a list of dictionaries).
 
         Args:
-            data (Union[list, dict]): The data to add. If a list, it should be a list of 
-                dictionaries representing individual data points. If a dictionary, it 
+            data (Union[list, dict]): The data to add. If a list, it should be a list of
+                dictionaries representing individual data points. If a dictionary, it
                 represents a single data point.
 
         Raises:
@@ -128,7 +128,7 @@ class HEPDataSet:
         """Saves the dataset to a gzipped JSON file.
 
         Parameters:
-            path (str): The full path where the dataset should be saved, including the desired filename 
+            path (str): The full path where the dataset should be saved, including the desired filename
                 (e.g., "path/to/dataset.json.gz").
 
         Returns:
@@ -150,7 +150,7 @@ class HEPDataSet:
         """Loads data from a gzipped JSON file and appends it to the internal data store.
 
         Parameters:
-            path (str): The path to the JSON file. The path can include or 
+            path (str): The path to the JSON file. The path can include or
                         not the extension (with a ".json.gz").
 
         Returns:
@@ -169,22 +169,22 @@ class HEPDataSet:
         self.counter += len_new_data
 
     def load_from_directory(
-        self, 
-        directory: str, 
-        percentage: float = 1.0, 
+        self,
+        directory: str,
+        percentage: float = 1.0,
         data_name: str = "HEPDataSet"
     ) -> None:
         """Loads HEPDataSet files from a directory.
 
-        This method searches for HEPDataSet files within the specified directory, 
-        optionally loading only a percentage of them. It then attempts to load each 
+        This method searches for HEPDataSet files within the specified directory,
+        optionally loading only a percentage of them. It then attempts to load each
         selected file and reports any corrupted files encountered.
 
         Parameters:
             directory (str): The path to the directory containing the HEPDataSet files.
-            percentage (float, optional): The percentage (0.0 to 1.0) of files to load. 
+            percentage (float, optional): The percentage (0.0 to 1.0) of files to load.
                 Defaults to 1.0 (load all files).
-            data_name (str, optional): The file name pattern to search for (e.g., "HEPDataSet*"). 
+            data_name (str, optional): The file name pattern to search for (e.g., "HEPDataSet*").
                 Defaults to "HEPDataSet".
 
         Returns:
@@ -198,29 +198,33 @@ class HEPDataSet:
             corrupted_files += 1 if not loaded else 0
         print("EOFError: corrupted files: ", corrupted_files)
 
-    def is_none(self, idx: int, stack: str = "SLHA"):
+    def is_none(self, idx: int) -> bool:
         """
-        Checks if a data file in the Stack is None.
+        Checks if any key in the dictionary at the given index contains a None value.
 
         Parameters:
-            idx (int): query number for the dataset
-            stack (str): Name of the data file to be checked
+            idx (int): Query number for the dataset.
+
         Returns:
-            bool: True if the data file is empty (None).
+            bool: True if any value in the dictionary is None, False otherwise.
         """
-        return True if self._data[idx][stack] is None else False
+        # Access the dictionary at the given index
+        data_dict = self._data[idx]
+
+        # Check if any value in the dictionary is None
+        return any(value is None for value in data_dict.values())
 
     def feature_vector(self, keys: list, as_numpy: bool = False):
         """Creates an array from the values associated with the final key of a list of keys to query a nested dictionary (HEPDataSet).
 
         Parameters:
             keys (list): A list of keys to traverse within the dictionary.
-            as_numpy (bool, optional):  If True, returns a NumPy array. 
+            as_numpy (bool, optional):  If True, returns a NumPy array.
                                         Otherwise, returns a list. Defaults to False.
 
         Returns:
             list or numpy.ndarray: An array containing the values associated with the final key
-                in the `keys` list for each data point in the dataset. 
+                in the `keys` list for each data point in the dataset.
         """
 
         if as_numpy:
@@ -234,7 +238,7 @@ class HEPDataSet:
         The dictionary of has the form: {'variable' : [key1, key2, ..., final_key], ...}.
 
         Parameters:
-            keys_dict (dict): A dictionary where each key is a variable name and 
+            keys_dict (dict): A dictionary where each key is a variable name and
                 the value is a list of keys to extract from the underlying data.
             as_numpy (bool, optional): If True, returns values as NumPy arrays. Defaults to True.
 

@@ -56,7 +56,7 @@ def auto_likelihood(result: dict, objectives: dict, mode: str = 'mult') -> float
     likelihood = auto_likelihood(result, objectives, mode='sum')
     """
     if mode == 'sum':
-        likelihood = 0 
+        likelihood = 0
     if mode == 'mult':
         likelihood = 1
     if any(value is None for value in result.values()):
@@ -68,7 +68,7 @@ def auto_likelihood(result: dict, objectives: dict, mode: str = 'mult') -> float
             assert constraint[0][0] == 'gt', error_msg
             lh = smooth_box_mask(result[p], constraint[0][1], constraint[1][1],  1e-3 )
             if mode == 'sum':
-                likelihood += lh 
+                likelihood += lh
             else:
                 likelihood *= lh
 
@@ -82,7 +82,7 @@ def auto_likelihood(result: dict, objectives: dict, mode: str = 'mult') -> float
                 lh = smooth_mask(result[p], constraint[1], 1e-3)
 
             if mode == 'sum':
-                likelihood += lh 
+                likelihood += lh
             else:
                 likelihood *= lh
         return likelihood
@@ -98,7 +98,7 @@ class MCMCMH(Method):
         likelihood(Callable): Custom likelihood function. Default is None.
 
     Attributes:
-        idx_burnin (int): Number of iterations for the burn-in phase. 
+        idx_burnin (int): Number of iterations for the burn-in phase.
         scale (float): Initial scale of the proposal distribution.
         adapt_frequency (int): Frequency of adapting the proposal distribution scale.
         likelihood (Callable): Likelihood function used in the MCMC-MH algorithm.
@@ -109,8 +109,8 @@ class MCMCMH(Method):
     """
 
     def __init__(self,
-                 objective: Objective, 
-                 hyper_parameters: DictConfig | str | None = None, 
+                 objective: Objective,
+                 hyper_parameters: DictConfig | str | None = None,
                  likelihood: Callable | None = None,
                  ) -> None:
         """
@@ -127,10 +127,11 @@ class MCMCMH(Method):
         self.idx_burnin = self.hp.burn_in
         self.scale = self.hp.initial_scale
         self.adapt_frequency = self.hp.adapt_frequency
-        
+        self.target_acceptance_rate = self.hp.target_acceptance_rate
+
         if likelihood is None:
             self.likelihood = lambda x, add: auto_likelihood(
-                result = self.objective.sample(x, add=add), 
+                result = self.objective.sample(x, add=add),
                 objectives = self.objective.config.objectives,
                 mode = 'mult'
             )
@@ -142,7 +143,7 @@ class MCMCMH(Method):
 
         self.accepted = 0
 
-    
+
     def run(self):
         """
         Executes the MCMC-MH sampling algorithm.
@@ -191,9 +192,9 @@ class MCMCMH(Method):
                 # Adapt scale during burn-in phase
                 if i < self.idx_burnin and (i + 1) % self.adapt_frequency == 0 and self.accepted > 1:
                     acceptance_rate = self.accepted / self.adapt_frequency
-                    self.scale = tune(self.scale, acceptance_rate)
+                    self.scale = tune(self.scale, acceptance_rate, self.target_acceptance_rate)
                     self.accepted = 0  # Reset the counter
-                
+
                 # Log and save
                 self.metrics.log(progress)
                 self.save_checkpoint(i)
@@ -203,16 +204,16 @@ class MCMCMH(Method):
 
 
 def mcmc_updater(
-        curr_state:np.ndarray, 
-        curr_likeli: float, 
-        likelihood: Callable, 
-        proposal_distribution: Callable, 
+        curr_state:np.ndarray,
+        curr_likeli: float,
+        likelihood: Callable,
+        proposal_distribution: Callable,
         scale: float
     ) -> Tuple[np.ndarray, float, bool]:
     """
-    MCMC-MH update. Generate a proposal state using the proposal distribution. 
+    MCMC-MH update. Generate a proposal state using the proposal distribution.
     Ensure the proposal state is within bounds. Calculate the acceptance criterion.
-    Generate a random number between 0 and 1. If acceptance criterion is greater than 
+    Generate a random number between 0 and 1. If acceptance criterion is greater than
     random number proposal is accepted.
 
     Parameters:
@@ -232,12 +233,12 @@ def mcmc_updater(
     # if is not within bounds
     while not all(0 < element < 1 for element in proposal_state):
         proposal_state = proposal_distribution(curr_state, stepsize=scale)
-    
+
     # Calculate the acceptance criterion
     prop_likeli = likelihood(proposal_state)
 
     if isinstance(prop_likeli, type(None)):
-        # In HEPStack Likelihoods can be None 
+        # In HEPStack Likelihoods can be None
         return curr_state, curr_likeli, False
     else:
         accept_crit = prop_likeli / curr_likeli
@@ -254,12 +255,12 @@ def mcmc_updater(
 
 def proposal_distribution(x: np.ndarray, stepsize: float = 0.5) -> np.ndarray:
     """
-    Generates a  simple proposal state using a normal distribution centered on the 
+    Generates a  simple proposal state using a normal distribution centered on the
     current state.
 
     Parameters:
         x (np.ndarray): Current state in the parameter space.
-        stepsize (float): Step size or scale parameter for the proposal distribution. 
+        stepsize (float): Step size or scale parameter for the proposal distribution.
                         Default is 0.5.
 
     Returns:
@@ -275,7 +276,7 @@ def tune(scale: float, acceptance: float, target_acceptance: float = 0.234) -> f
     """
     Adjusts the scale of the proposal distribution based on the acceptance rate.
 
-    This function is borrowed from PyMC3 and is used to adapt the scale to achieve a 
+    This function is borrowed from PyMC3 and is used to adapt the scale to achieve a
     target acceptance rate.
 
     Parameters:

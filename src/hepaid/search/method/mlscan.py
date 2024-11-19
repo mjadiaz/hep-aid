@@ -8,7 +8,7 @@ from omegaconf import DictConfig
 from typing import Callable, List, Optional, Tuple
 
 from hepaid.search.objective.utils import generate_initial_dataset
-from hepaid.search.objective.utils import batch_evaluation 
+from hepaid.search.objective.utils import batch_evaluation
 
 from hepaid.search.models.mlp import MLP, train_model
 from hepaid.search.models.mlp import reshape_if_1d, pre_process_data
@@ -90,9 +90,9 @@ class MLScan(Method):
     """
 
     def __init__(self,
-                 objective: Objective, 
+                 objective: Objective,
                  likelihood: Callable,
-                 hyper_parameters: DictConfig | str | None = None, 
+                 hyper_parameters: DictConfig | str | None = None,
                  ) -> None:
         """
 
@@ -108,7 +108,8 @@ class MLScan(Method):
         self.num_inputs = len(self.objective.input_parameters)
         self.num_outputs = len(self.objective.output_parameters)
         self.num_samples = self.hp.num_samples
-        
+        self.m_factor = self.hp.m_factor
+        self.extra_random_samples = self.hp.extra_random_samples
         self.model =  MLP(
             hyper_parameters=self.hp.get('model_hyperparameters', None)
             )
@@ -119,7 +120,7 @@ class MLScan(Method):
         self.train_losses_history = []
         self.val_losses_history = []
 
-    
+
     def run(self):
         """
 
@@ -157,17 +158,19 @@ class MLScan(Method):
 
 
                 accepted_samples = rejection_sampling(
-                    self.model.model, 
-                    self.likelihood, 
-                    self.num_samples, 
-                    self.num_inputs, 
-                    x_scaler=x_scaler_init, 
-                    y_scaler=y_scaler_init
+                    self.model.model,
+                    self.likelihood,
+                    self.num_samples,
+                    self.num_inputs,
+                    x_scaler=x_scaler_init,
+                    y_scaler=y_scaler_init,
+                    m_factor=self.m_factor,
+                    extra_random_samples=self.extra_random_samples
                     )
 
                 # Evaluate new points
                 batch_evaluation(
-                    X=accepted_samples, 
+                    X=accepted_samples,
                     objective=self.objective,
                     parallel=self.hp.parallel,
                     n_evaluation_workers=self.hp.n_workers,
@@ -178,7 +181,7 @@ class MLScan(Method):
                 # Log and save
                 self.metrics.log(progress)
                 self.save_checkpoint(i)
-                
+
                 self.iteration = i
                 self.train_losses_history.append(self.model.tr_losses)
                 self.val_losses_history.append(self.model.val_losses)

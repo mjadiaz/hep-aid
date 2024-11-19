@@ -13,7 +13,7 @@ from hepaid.search.objective.objective import cas_obj_fn_export
 #from hepaid.search.models.model_list import get_model_and_likelihood
 from hepaid.search.parallel.modules import run_x_with_pool
 from hepaid.search.objective.utils import generate_initial_dataset
-from hepaid.search.method.base import Method 
+from hepaid.search.method.base import Method
 from hepaid.utils import load_config
 
 from hepaid.search.models.multitask_gp import get_model_and_likelihood, predict
@@ -29,10 +29,10 @@ tkwargs = {
     "dtype": torch.double,
 }
 
-    
+
 def create_optuna_objective(
-        trial: optuna.trial.Trial, 
-        space_config: dict, 
+        trial: optuna.trial.Trial,
+        space_config: dict,
         eci: Callable
         ) -> np.ndarray:
     """
@@ -52,7 +52,7 @@ def create_optuna_objective(
         trials.append(
             trial.suggest_float(feature, 0 , 1)
         )
-  
+
     point = torch.tensor(trials).float().reshape(
         1,len(space_config)
         ).to(**tkwargs)
@@ -104,7 +104,7 @@ def optuna_study_cmaes(objective, n_trials=100):
     return study
 
 def study_to_array(
-        study: optuna.study.Study, 
+        study: optuna.study.Study,
         space_config: dict
         ) -> Tuple[np.ndarray, np.ndarray]:
     """
@@ -120,14 +120,14 @@ def study_to_array(
     """
     df = study.trials_dataframe()
     loc_params = [f'params_{p}' for p in space_config.keys()]
-    df = df.loc[:,['value'] + loc_params] 
+    df = df.loc[:,['value'] + loc_params]
     trials = df.loc[:,loc_params]
     values = df.value
     return trials.to_numpy(), values.to_numpy()
 
 def sort_and_get_n_maximum(
-        trials: np.ndarray, 
-        values: np.ndarray, 
+        trials: np.ndarray,
+        values: np.ndarray,
         n_points: int
         )->np.ndarray:
     """
@@ -146,14 +146,14 @@ def sort_and_get_n_maximum(
     return trials[:n_points]
 
 def rank_based_sampling(
-        trials: np.ndarray, 
-        values: np.ndarray, 
-        n_points: int, 
+        trials: np.ndarray,
+        values: np.ndarray,
+        n_points: int,
         alpha: int | float = 2
         ) -> np.ndarray:
     """
     Sorts the trials based on their ECI values. Sample n_points according to the rank-based probabilities,
-    described in [1]. The argument alpha is the degree of prioritisation.  
+    described in [1]. The argument alpha is the degree of prioritisation.
 
     Parameters:
         trials (np.ndarray): Array of trial configurations.
@@ -168,7 +168,7 @@ def rank_based_sampling(
     # sort the array by the last column
     n_trials = len(trials)
     trials = sort_and_get_n_maximum(trials, values, n_trials)
-    
+
 
     priorities = np.power(1/np.arange(1,len(trials)+1), alpha)
     probs = priorities/priorities.sum()
@@ -189,16 +189,16 @@ def bcastor_step(
         train_y: torch.tensor,
         model: Any,
         delta_r: float,
-        step: int 
+        step: int
         ):
     """
     Perform a single step of the bCASTOR algorithm.
 
-    ECI is optimized by the Tree-structured Parzen Estimator (TPE) algorithm. 
-    The optimization history, referred to as trials, is sampled using a rank-sampling strategy, 
+    ECI is optimized by the Tree-structured Parzen Estimator (TPE) algorithm.
+    The optimization history, referred to as trials, is sampled using a rank-sampling strategy,
     where the rank is determined by the ECI value of each trial. This sampling strategy enables
-    batch sampling, enhancing the discovery rate of the S region. bCASTOR reinterprets the ratio 
-    of the hyper-spheres as a measure of the desired filling of samples, aiming to accumulate as many 
+    batch sampling, enhancing the discovery rate of the S region. bCASTOR reinterprets the ratio
+    of the hyper-spheres as a measure of the desired filling of samples, aiming to accumulate as many
     diverse samples as possible.
 
     Parameters:
@@ -275,26 +275,26 @@ def bcastor_step(
 
 class bCASTOR(Method):
     """
-    bCASTOR [1] is a variant of the Constraint Active Search (CAS) algorithm. 
-    CAS is an alternative approach to the multiobjective design problem, formulated 
-    as an Active Search Problem. In CAS, objectives are treated as constraints with known 
-    desired threshold values, and the goal is to find diverse samples that satisfy all 
-    the thresholds. These thresholds define the satisfactory region in the input space, 
+    bCASTOR [1] is a variant of the Constraint Active Search (CAS) algorithm.
+    CAS is an alternative approach to the multiobjective design problem, formulated
+    as an Active Search Problem. In CAS, objectives are treated as constraints with known
+    desired threshold values, and the goal is to find diverse samples that satisfy all
+    the thresholds. These thresholds define the satisfactory region in the input space,
     denoted as S.
 
-    To measure diversity, CAS uses Expected Coverage Improvement (ECI), which places hyper-spheres 
+    To measure diversity, CAS uses Expected Coverage Improvement (ECI), which places hyper-spheres
     around input data samples and aggregates the volume covered by each data point.
-    
-    ECI is optimized by the Tree-structured Parzen Estimator (TPE) algorithm. 
-    The optimization history, referred to as trials, is sampled using a rank-sampling strategy, 
+
+    ECI is optimized by the Tree-structured Parzen Estimator (TPE) algorithm.
+    The optimization history, referred to as trials, is sampled using a rank-sampling strategy,
     where the rank is determined by the ECI value of each trial. This sampling strategy enables
-    batch sampling, enhancing the discovery rate of the S region. bCASTOR reinterprets the ratio 
-    of the hyper-spheres as a measure of the desired filling of samples, aiming to accumulate as many 
+    batch sampling, enhancing the discovery rate of the S region. bCASTOR reinterprets the ratio
+    of the hyper-spheres as a measure of the desired filling of samples, aiming to accumulate as many
     diverse samples as possible.
 
-    [1]: Bayesian Active Search on Parameter Space: a 95 GeV Spin-0 Resonance in the (B - L) SSM. 
-    M. A. Diaz, G. Cerro, S. Dasmahapatra, S. Moretti. https://arxiv.org/abs/2404.18653 
-    
+    [1]: Bayesian Active Search on Parameter Space: a 95 GeV Spin-0 Resonance in the (B - L) SSM.
+    M. A. Diaz, G. Cerro, S. Dasmahapatra, S. Moretti. https://arxiv.org/abs/2404.18653
+
     Parameters:
         objective (Objective): The Objective to perform the search.
         hyper_parameters (DictConfig | str): Hyperparameters for the bCASTOR strategy.
@@ -317,7 +317,7 @@ class bCASTOR(Method):
             hyper_parameters (DictConfig | str | None) = None: Hyperparameters for the CAS strategy.
         """
         super().__init__(objective, hyper_parameters)
-        
+
         self.delta_r = abs(self.hp.resolution.initial - self.hp.resolution.final) / self.hp.resolution.r_decay_steps
         self.model = None
         self.likelihood = None
@@ -326,7 +326,7 @@ class bCASTOR(Method):
 
         self.metrics.new_custom_metrics(['r_parameter'])
 
-    
+
     def run(self):
         """
         Executes the bCASTOR search algorithm.
@@ -340,12 +340,12 @@ class bCASTOR(Method):
         """
         if self.hp.initial_dataset.generate:
             generate_initial_dataset(
-                n_workers=self.hp.initial_dataset.n_workers,
+                n_workers=self.hp.n_workers,
                 n_points=self.hp.initial_dataset.n_points,
                 objective=self.objective,
                 parallel=self.hp.parallel,
             )
-        
+
         # Start rich progress logger
         progress = self.metrics.start_progress(description='bCASTOR Search ...')
 
@@ -371,8 +371,8 @@ class bCASTOR(Method):
 
                 # Perform bCASTOR step
                 self.eci, self.study, X, trials, values, cr = bcastor_step(
-                    self.hp, self.objective.input_space_config, 
-                    constraints, bounds, train_x, train_y, 
+                    self.hp, self.objective.input_space_config,
+                    constraints, bounds, train_x, train_y,
                     self.model, self.delta_r, i)
 
                 # Update custom metrics, bCASTOR handles cr internally
@@ -386,17 +386,17 @@ class bCASTOR(Method):
                     X = self.objective.space.inverse_transform(X)
                     results = run_x_with_pool(
                         X,
-                        self.hp.batch_sampling.n_evaluation_workers,
+                        self.hp.n_workers,
                         self.objective.function
                         )
                     for sample_dict in results:
-                        self.objective.add_sample_dict(sample_dict)                
+                        self.objective.add_sample_dict(sample_dict)
 
 
                 # Log and save
                 self.metrics.log(progress)
                 self.save_checkpoint(i)
-                
+
                 self.iteration = i
 
         return True

@@ -1,11 +1,11 @@
-run_name: 'bcastor/run'
+run_name: "bcastor/run"
 parallel: False
+n_workers: 4
 initial_dataset:
   generate: True,
-  n_workers: 4
   n_points: 20
 checkpoint:
-  name: 'checkpoint'
+  name: "checkpoint"
   n_step_save: 1
 total_iterations: 20
 resolution:
@@ -17,7 +17,6 @@ resolution:
 batch_sampling:
   tpe_trials: 200
   rank_samples: 5
-  n_evaluation_workers: 4
   alpha: 2
 eci:
   num_samples: 128 # Fixed samples

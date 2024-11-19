@@ -1,6 +1,6 @@
-num_inputs: 2
-num_outputs: 2
 num_samples: 100
+m_factor: 2
+extra_random_samples: 10
 checkpoint:
   n_step_save: 500
   name: chckpnt
@@ -11,3 +11,11 @@ n_workers: 4
 initial_dataset:
   generate: True,
   n_points: 10
+model_hyperparameters:
+  layer_sizes: [2, 60, 60, 60, 2]
+  dropout_prob: 0.0
+  learning_rate: 0.01
+  num_epochs: 500
+  step_size: 5
+  gamma: 0.999
+  threshold: 1.0e-08

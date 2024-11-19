@@ -37,9 +37,17 @@ def run_x_with_pool(
         ]
 
     pool = ActorPool(workers)
-    results = pool.map_unordered(
+    # results = pool.map_unordered(
+    #     lambda w, x: w.sample.remote(x), X
+    #     )
+
+    # Use map_unordered to execute tasks in parallel
+    results_iterator = pool.map_unordered(
         lambda w, x: w.sample.remote(x), X
-        )
+    )
+
+    # Collect results to enforce waiting for all computations
+    results = list(results_iterator)
 
     return results
 
@@ -56,7 +64,6 @@ def run_x_with_mp_pool(
     with multiprocessing.Pool(processes=n_workers) as pool:
         # Distribute the tasks among the workers and collect the results
         results = pool.map(function, X)
-    
+
     # Return the collected results
     return results
-

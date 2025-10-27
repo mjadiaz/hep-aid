@@ -82,8 +82,7 @@ To define a new objective function, follow these steps:
 
 ```python
 from hepaid.search.objective import Objective
-from omegaconf import OmegaConf
-import np
+import numpy as np 
 
 def him_boo(x):
     x, y = x[0], x[1]
@@ -91,7 +90,7 @@ def him_boo(x):
     b =  np.log((x+2*y-7)**2 + (2*x+y-5)**2)
     return  {'x': x, 'y': y, 'h': h, 'b': b }
 
-function_config = OmegaConf.create({
+function_config = {
   'input_space': {
     'x': {'lower': -5, 'upper': 5, 'distribution': 'uniform'}, 
     'y': {'lower': -5, 'upper': 5, 'distribution': 'uniform'}}, 
@@ -99,7 +98,7 @@ function_config = OmegaConf.create({
   'objectives': {
     'double_constraint': {'b': [['gt', 2], ['lt', 4]]}, 
     'single_constraint': {'h': ['lt', 3.0]}
-    }}) 
+    }} 
 
 obj_fn = Objective(
   function_config=function_config,

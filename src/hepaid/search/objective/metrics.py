@@ -1,4 +1,4 @@
-import math 
+import math
 import numpy as np
 import pandas as pd
 from typing import Any
@@ -23,7 +23,7 @@ def in_jupyter_notebook():
 class Metrics:
     """
     Class to track universal search metrics obtained from the Objective object.
-    To add custom metrics related to algorithms, use the new_custom_metrics method and update 
+    To add custom metrics related to algorithms, use the new_custom_metrics method and update
     accordingly with a metric dictionary.
 
     Attributes:
@@ -54,7 +54,7 @@ class Metrics:
 
         self._custom_metrics = None
         self.metrics_name = 'metrics.csv'
-    
+
     @property
     def metrics(self):
         """
@@ -65,7 +65,7 @@ class Metrics:
         """
         return self._metrics
 
-    
+
     def new_custom_metrics(self, names: list[str]):
         """
         Create keys and lists for new custom metrics. If custom metrics are already loaded, do nothing.
@@ -101,7 +101,7 @@ class Metrics:
             warnings.warn("Objective function without data")
             valid = successful = np.array([])
         else:
-            valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool8)
+            valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool)
             successful = objective.satisfactory.prod(axis=-1).astype(bool)
 
         self._metrics["success_rate"].append(successful.sum() / len(successful))
@@ -109,7 +109,7 @@ class Metrics:
         self._metrics["n_total_points"].append(len(valid))
         self._metrics["n_satisfactory_points"].append(successful.sum())
         self._metrics["iteration"].append(iteration)
-        
+
     def start_progress(self, description = "CAS search"):
         """
         Start a rich progress bar for logging progress.
@@ -145,7 +145,7 @@ class Metrics:
                     last_element = value[-1]
                     output += f"{key}: {last_element}\n"
             progress.print(output)
-    
+
     def save(self, save_path, iteration):
         """
         Save metrics as a CSV dataset with the name 'metrics'.
@@ -160,7 +160,7 @@ class Metrics:
             total_metrics = self._metrics
         metrics_df = pd.DataFrame(total_metrics)
         metrics_df.to_csv(save_path / self.metrics_name, index=False)
-    
+
     def load(self, path):
         """
         Load previous metrics from a CSV file.
@@ -182,43 +182,43 @@ class MeanEuclideanDistance:
         self.points = []
         self._history = []
         self.counter = 0
-    
+
     @property
     def history(self):
         return np.array(self._history)
-    
+
     @property
     def distances(self):
         return self._distances
-    
+
     @property
     def distance_matrix(self):
         return squareform(self._distances)
-    
+
     def add(self, point):
         if self.counter == 0:
             self.points = np.array(point).reshape(-1, self.dimension)
         else:
-            self.points = np.vstack((self.points,point.reshape(1, -1)))  
+            self.points = np.vstack((self.points,point.reshape(1, -1)))
 
             distances = pdist(self.points)
             mean_distance = distances.sum()/len(distances)
             self._history.append(mean_distance)
             self._distances = distances
-        
+
         self.counter += 1
 
 def generate_random_points_in_sphere(n, r, dimensions):
     # Generate random unit vectors
     random_unit_vectors = np.random.normal(size=(n, dimensions))
     random_unit_vectors /= np.linalg.norm(random_unit_vectors, axis=1)[:, np.newaxis]
-    
+
     # Generate random radii
     random_radii = np.power(np.random.uniform(0, 1, n), 1/dimensions) * r
-    
+
     # Convert to Cartesian coordinates
     random_points = random_radii[:, np.newaxis] * random_unit_vectors
-    
+
     return random_points
 
 def n_dimensional_sphere_volume(n, radius):
@@ -233,12 +233,12 @@ def n_dimensional_sphere_volume(n, radius):
 
     return volume
 
- 
+
 class VolumeCoverage:
     def __init__(
-        self, 
+        self,
         radius: float | None = None,
-        x_dim: int = 2, 
+        x_dim: int = 2,
         points_per_sphere: int = 500
         ):
         self.dimension = x_dim
@@ -251,14 +251,14 @@ class VolumeCoverage:
         self._cumulative = []
 
         self.counter = 0
-    
+
     @property
     def history(self) -> np.ndarray:
         '''History of volumes per added sphere.
         '''
         return np.array(self._history)
-    
-    @property 
+
+    @property
     def spheres(self) -> list:
         '''History of samples per added sphere.
         '''
@@ -272,17 +272,17 @@ class VolumeCoverage:
 
     def add(self, point: np.ndarray, radius: float | None = None) -> None:
         '''
-        If is the first just add the first set of points per sphere. Then 
-        calculate if any of the previous spheres might overlap with the new 
-        point sphere. For each overlapping sphere, remove the points of the new 
-        sphere that overlap. For the remaining points P_r, calculate the ratio 
-        of the original total `points_per_sphere` used to sample the sphere. Multiply 
-        the ratio with the exact volume. 
+        If is the first just add the first set of points per sphere. Then
+        calculate if any of the previous spheres might overlap with the new
+        point sphere. For each overlapping sphere, remove the points of the new
+        sphere that overlap. For the remaining points P_r, calculate the ratio
+        of the original total `points_per_sphere` used to sample the sphere. Multiply
+        the ratio with the exact volume.
         '''
         if radius == None:
             radius = self.radius
         if self.counter == 0:
-            
+
             ball = generate_random_points_in_sphere(
                 self.points_per_sphere, radius, self.dimension
                 )
@@ -305,26 +305,26 @@ class VolumeCoverage:
                 distances = cdist(ball,self.points[i].reshape(1, -1))
                 select = distances.flatten() < radius
                 ball = ball[~select]
-            
+
             # Volume by formula and ratio
             ratio = len(ball)/self.points_per_sphere
             exact_volume = n_dimensional_sphere_volume(2, radius)
             self._history.append(exact_volume*ratio + 1e-8)
-            
-            self._spheres.append(ball) 
-        
-            self.points = np.vstack((self.points,point.reshape(1, -1))) 
-           
 
-            
+            self._spheres.append(ball)
+
+            self.points = np.vstack((self.points,point.reshape(1, -1)))
+
+
+
         self._cumulative.append(
             sum(
                 self._history
             )
         )
         self.counter += 1
-            
-            
+
+
 def s_ns_history(
     volumes: np.ndarray, tau: np.ndarray[bool] | list[bool]
     )-> tuple[np.ndarray, np.ndarray]:
@@ -345,7 +345,7 @@ def s_ns_history(
         sat_vol.append(sat_vol_value)
         non_sat_vol.append(non_sat_vol_value)
     return np.array(sat_vol), np.array(non_sat_vol)
-            
+
 if __name__ == "__main__":
     pass
    # vc = VolumeCoverage(0.01)
@@ -353,4 +353,3 @@ if __name__ == "__main__":
    # for p in points:
    #     vc.add(p)
    #     print(vc.cumulative[-1])
-    

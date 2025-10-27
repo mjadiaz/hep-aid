@@ -12,13 +12,13 @@ import matplotlib.cm as cm
 from pathlib import Path
 import torch
 text_configuration = {
-    'usetex': True,
+    'usetex': False,
     'axes_labels_size': 12,
     'ticks_labels_size': 10,
     'legend_font_size': 10
 }
 
-plt.rc('text', usetex=True)
+plt.rc('text', usetex=text_configuration['usetex'])
 plt.rc('axes', titlesize=text_configuration['axes_labels_size'])
 plt.rc('axes', labelsize=text_configuration['axes_labels_size'])
 plt.rc('xtick', labelsize=text_configuration['ticks_labels_size'])

@@ -45,7 +45,7 @@ def cas_obj_fn_export(
             - The valid input data as a PyTorch tensor.
             - The valid (and optionally scaled) output data as a PyTorch tensor.
     """
-    valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool8)
+    valid = np.prod(~np.isnan(objective.Y), axis=1).astype(np.bool)
 
     train_x_ = objective.X[valid]
     train_x = torch.tensor(train_x_).to(**tkwargs)
@@ -274,7 +274,7 @@ def extract_output_parameters(config):
 class Objective:
     def __init__(
         self,
-        function_config: DictConfig | str,
+        function_config: DictConfig | str | dict,
         function: Callable[..., Dict[str, Any]] | None = None,
         cas: bool = True,
     ) -> None:
@@ -290,6 +290,8 @@ class Objective:
 
         if isinstance(function_config, str):
             self.config = load_config(function_config)
+        if isinstance(function_config, dict):
+            self.config = OmegaConf.create(function_config)
         else:
             self.config = function_config
 
@@ -359,7 +361,7 @@ class Objective:
         Returns:
             np.ndarray: A binary array where each element represents whether the corresponding point satisfies all objectives.
         """
-        valid = np.prod(~np.isnan(self.Y), axis=1).astype(np.bool8)
+        valid = np.prod(~np.isnan(self.Y), axis=1).astype(np.bool)
         if self.cas:
             succ = identify_samples_which_satisfy_constraints(
                 self.Y[valid], self.constraints
@@ -553,7 +555,7 @@ class Objective:
             pd.DataFrame: A DataFrame representation of the dataset.
         """
         # Convert the internal dataset to a DataFrame
-        valid = np.prod(~np.isnan(self.Y), axis=1).astype(np.bool8)
+        valid = np.prod(~np.isnan(self.Y), axis=1).astype(np.bool)
         df = pd.DataFrame(self._dataset)
 
         # Optionally add a 'satisfactory' column based on the product of elements in each row
